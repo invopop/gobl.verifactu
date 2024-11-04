@@ -4,6 +4,7 @@ import (
 	"errors"
 	"time"
 
+	"github.com/invopop/gobl.verifactu/internal/doc"
 	"github.com/invopop/gobl/l10n"
 	"github.com/invopop/xmldsig"
 )
@@ -31,9 +32,9 @@ func newValidationError(text string) error {
 	return &ValidationError{errors.New(text)}
 }
 
-// Client provides the main interface to the TicketBAI package.
+// Client provides the main interface to the VeriFactu package.
 type Client struct {
-	software *Software
+	software *doc.Software
 	// list       *gateways.List
 	cert *xmldsig.Certificate
 	// env        gateways.Environment
@@ -45,23 +46,12 @@ type Client struct {
 // Option is used to configure the client.
 type Option func(*Client)
 
-// WithCurrentTime defines the current time to use when generating the TicketBAI
+// WithCurrentTime defines the current time to use when generating the VeriFactu
 // document. Useful for testing.
 func WithCurrentTime(curTime time.Time) Option {
 	return func(c *Client) {
 		c.curTime = curTime
 	}
-}
-
-// Software defines the details about the software that is using this library to
-// generate TicketBAI documents. These details are included in the final
-// document.
-type Software struct {
-	License     string
-	NIF         string
-	Name        string
-	CompanyName string
-	Version     string
 }
 
 // PreviousInvoice stores the fields from the previously generated invoice
@@ -73,9 +63,9 @@ type PreviousInvoice struct {
 	Signature string
 }
 
-// New creates a new TicketBAI client with shared software and configuration
+// New creates a new VeriFactu client with shared software and configuration
 // options for creating and sending new documents.
-func New(software *Software, opts ...Option) (*Client, error) {
+func New(software *doc.Software, opts ...Option) (*Client, error) {
 	c := new(Client)
 	c.software = software
 
@@ -101,7 +91,7 @@ func New(software *Software, opts ...Option) (*Client, error) {
 }
 
 // CurrentTime returns the current time to use when generating
-// the TicketBAI document.
+// the VeriFactu document.
 func (c *Client) CurrentTime() time.Time {
 	if !c.curTime.IsZero() {
 		return c.curTime
