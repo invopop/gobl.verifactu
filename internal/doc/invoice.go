@@ -1,106 +1,70 @@
 package doc
 
-type RegistroAlta struct {
-	IDVersion                           string                `xml:"IDVersion"`
-	IDFactura                           IDFactura             `xml:"IDFactura"`
-	RefExterna                          string                `xml:"RefExterna,omitempty"`
-	NombreRazonEmisor                   string                `xml:"NombreRazonEmisor"`
-	Subsanacion                         string                `xml:"Subsanacion,omitempty"`
-	RechazoPrevio                       string                `xml:"RechazoPrevio,omitempty"`
-	TipoFactura                         string                `xml:"TipoFactura"`
-	TipoRectificativa                   string                `xml:"TipoRectificativa,omitempty"`
-	FacturasRectificadas                []*FacturaRectificada `xml:"FacturasRectificadas>FacturaRectificada,omitempty"`
-	FacturasSustituidas                 []*FacturaSustituida  `xml:"FacturasSustituidas>FacturaSustituida,omitempty"`
-	ImporteRectificacion                ImporteRectificacion  `xml:"ImporteRectificacion,omitempty"`
-	FechaOperacion                      string                `xml:"FechaOperacion"`
-	DescripcionOperacion                string                `xml:"DescripcionOperacion"`
-	FacturaSimplificadaArt7273          string                `xml:"FacturaSimplificadaArt7273,omitempty"`
-	FacturaSinIdentifDestinatarioArt61d string                `xml:"FacturaSinIdentifDestinatarioArt61d,omitempty"`
-	Macrodato                           string                `xml:"Macrodato,omitempty"`
-	EmitidaPorTerceroODestinatario      string                `xml:"EmitidaPorTerceroODestinatario,omitempty"`
-	Tercero                             Tercero               `xml:"Tercero,omitempty"`
-	Destinatarios                       []*Destinatario       `xml:"Destinatarios>Destinatario,omitempty"`
-	Cupon                               string                `xml:"Cupon,omitempty"`
-	Desglose                            Desglose              `xml:"Desglose"`
-	CuotaTotal                          float64               `xml:"CuotaTotal"`
-	ImporteTotal                        float64               `xml:"ImporteTotal"`
-	Encadenamiento                      Encadenamiento        `xml:"Encadenamiento"`
-	SistemaInformatico                  Software              `xml:"SistemaInformatico"`
-	FechaHoraHusoGenRegistro            string                `xml:"FechaHoraHusoGenRegistro"`
-	NumRegistroAcuerdoFacturacion       string                `xml:"NumRegistroAcuerdoFacturacion,omitempty"`
-	IdAcuerdoSistemaInformatico         string                `xml:"IdAcuerdoSistemaInformatico,omitempty"`
-	TipoHuella                          string                `xml:"TipoHuella"`
-	Huella                              string                `xml:"Huella"`
-	Signature                           string                `xml:"Signature"`
+import (
+	"fmt"
+
+	"github.com/invopop/gobl/bill"
+	"github.com/invopop/gobl/cbc"
+)
+
+func newInvoice(inv *bill.Invoice) (*RegistroAlta, error) {
+	// Create new RegistroAlta with required fields
+	reg := &RegistroAlta{
+		IDVersion: "1.0",
+		IDFactura: IDFactura{
+			IDEmisorFactura:        inv.Supplier.TaxID.Code.String(),
+			NumSerieFactura:        invoiceNumber(inv.Series, inv.Code),
+			FechaExpedicionFactura: inv.IssueDate.Time().Format("02-01-2006"),
+		},
+		NombreRazonEmisor:    inv.Supplier.Name,
+		FechaOperacion:       inv.IssueDate.Format("02-01-2006"),
+		DescripcionOperacion: inv.Notes.String(),
+		ImporteTotal:         inv.Totals.Total.Float64(),
+		CuotaTotal:           inv.Totals.Tax.Float64(),
+	}
+
+	// Set TipoFactura based on invoice type
+	switch inv.Type {
+	case bill.InvoiceTypeStandard:
+		reg.TipoFactura = "F1"
+	case bill.InvoiceTypeCreditNote:
+		reg.TipoFactura = "R1"
+		reg.TipoRectificativa = "I" // Por diferencias
+	case bill.InvoiceTypeDebitNote:
+		reg.TipoFactura = "R1"
+		reg.TipoRectificativa = "I"
+	}
+
+	// Add destinatarios if customer exists
+	if inv.Customer != nil {
+		dest := &Destinatario{
+			IDDestinatario: IDDestinatario{
+				NombreRazon: inv.Customer.Name,
+			},
+		}
+
+		// Handle tax ID
+		if inv.Customer.TaxID != nil {
+			if inv.Customer.TaxID.Country.Is("ES") {
+				dest.IDDestinatario.NIF = inv.Customer.TaxID.Code.String()
+			} else {
+				dest.IDDestinatario.IDOtro = IDOtro{
+					CodigoPais: inv.Customer.TaxID.Country.String(),
+					IDType:     "04", // NIF-IVA
+					ID:         inv.Customer.TaxID.Code.String(),
+				}
+			}
+		}
+
+		reg.Destinatarios = []*Destinatario{dest}
+	}
+
+	return reg, nil
 }
 
-type IDFactura struct {
-	IDEmisorFactura        string `xml:"IDEmisorFactura"`
-	NumSerieFactura        string `xml:"NumSerieFactura"`
-	FechaExpedicionFactura string `xml:"FechaExpedicionFactura"`
-}
-
-type FacturaRectificada struct {
-	IDFactura IDFactura `xml:"IDFactura"`
-}
-
-type FacturaSustituida struct {
-	IDFactura IDFactura `xml:"IDFactura"`
-}
-
-type ImporteRectificacion struct {
-	BaseRectificada         float64 `xml:"BaseRectificada"`
-	CuotaRectificada        float64 `xml:"CuotaRectificada"`
-	CuotaRecargoRectificado float64 `xml:"CuotaRecargoRectificado"`
-}
-
-type Tercero struct {
-	Nif         string `xml:"Nif,omitempty"`
-	NombreRazon string `xml:"NombreRazon"`
-	IDOtro      string `xml:"IDOtro,omitempty"`
-}
-
-type Destinatario struct {
-	IDDestinatario IDDestinatario `xml:"IDDestinatario"`
-}
-
-type IDDestinatario struct {
-	NIF         string `xml:"NIF,omitempty"`
-	NombreRazon string `xml:"NombreRazon"`
-	IDOtro      IDOtro `xml:"IDOtro,omitempty"`
-}
-
-type IDOtro struct {
-	CodigoPais string `xml:"CodigoPais"`
-	IDType     string `xml:"IDType"`
-	ID         string `xml:"ID"`
-}
-
-type Desglose struct {
-	DetalleDesglose []*DetalleDesglose `xml:"DetalleDesglose"`
-}
-
-type DetalleDesglose struct {
-	Impuesto                      string `xml:"Impuesto"`
-	ClaveRegimen                  string `xml:"ClaveRegimen"`
-	CalificacionOperacion         string `xml:"CalificacionOperacion,omitempty"`
-	OperacionExenta               string `xml:"OperacionExenta,omitempty"`
-	TipoImpositivo                string `xml:"TipoImpositivo,omitempty"`
-	BaseImponibleOImporteNoSujeto string `xml:"BaseImponibleOImporteNoSujeto"`
-	BaseImponibleACoste           string `xml:"BaseImponibleACoste,omitempty"`
-	CuotaRepercutida              string `xml:"CuotaRepercutida,omitempty"`
-	TipoRecargoEquivalencia       string `xml:"TipoRecargoEquivalencia,omitempty"`
-	CuotaRecargoEquivalencia      string `xml:"CuotaRecargoEquivalencia,omitempty"`
-}
-
-type Encadenamiento struct {
-	PrimerRegistro   string           `xml:"PrimerRegistro"`
-	RegistroAnterior RegistroAnterior `xml:"RegistroAnterior,omitempty"`
-}
-
-type RegistroAnterior struct {
-	IDEmisorFactura        string `xml:"IDEmisorFactura"`
-	NumSerieFactura        string `xml:"NumSerieFactura"`
-	FechaExpedicionFactura string `xml:"FechaExpedicionFactura"`
-	Huella                 string `xml:"Huella"`
+func invoiceNumber(series cbc.Code, code cbc.Code) string {
+	if series == "" {
+		return code.String()
+	}
+	return fmt.Sprintf("%s-%s", series, code)
 }
