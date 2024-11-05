@@ -17,14 +17,15 @@ type Codes struct {
 }
 
 const (
-	BaseURL = "https://prewww2.aeat.es/wlpl/TIKE-CONT/ValidarQR?"
+	TestURL = "https://prewww2.aeat.es/wlpl/TIKE-CONT/ValidarQR?"
+	ProdURL = "https://www2.agenciatributaria.gob.es/wlpl/TIKE-CONT/ValidarQR?nif=89890001K&numserie=12345678-G33&fecha=01-09-2024&importe=241.4"
 )
 
 // var crcTable = crc8.MakeTable(crc8.CRC8)
 
 // generateCodes will generate the QR and URL codes for the invoice
-func (doc *VeriFactu) generateCodes(inv *RegistroAlta) *Codes {
-	urlCode := doc.generateURLCode(inv)
+func (doc *VeriFactu) generateCodes() *Codes {
+	urlCode := doc.generateURLCodeAlta()
 	// qrCode := doc.generateQRCode(urlCode)
 
 	return &Codes{
@@ -34,16 +35,17 @@ func (doc *VeriFactu) generateCodes(inv *RegistroAlta) *Codes {
 }
 
 // generateURLCode generates the encoded URL code with parameters.
-func (doc *VeriFactu) generateURLCode(inv *RegistroAlta) string {
+func (doc *VeriFactu) generateURLCodeAlta() string {
+
 	// URL encode each parameter
-	nif := url.QueryEscape(doc.Cabecera.Obligado.NIF)
-	numSerie := url.QueryEscape(inv.IDFactura.NumSerieFactura)
-	fecha := url.QueryEscape(inv.IDFactura.FechaExpedicionFactura)
-	importe := url.QueryEscape(fmt.Sprintf("%.2f", inv.ImporteTotal))
+	nif := url.QueryEscape(doc.RegistroFactura.RegistroAlta.IDFactura.IDEmisorFactura)
+	numSerie := url.QueryEscape(doc.RegistroFactura.RegistroAlta.IDFactura.NumSerieFactura)
+	fecha := url.QueryEscape(doc.RegistroFactura.RegistroAlta.IDFactura.FechaExpedicionFactura)
+	importe := url.QueryEscape(doc.RegistroFactura.RegistroAlta.ImporteTotal)
 
 	// Build the URL
 	urlCode := fmt.Sprintf("%snif=%s&numserie=%s&fecha=%s&importe=%s",
-		BaseURL, nif, numSerie, fecha, importe)
+		TestURL, nif, numSerie, fecha, importe)
 
 	return urlCode
 }

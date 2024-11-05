@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sum:Verifactu xmlns:sum="https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/tike/cont/ws/SuministroLR.xsd" xmlns:sum1="https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/tike/cont/ws/SuministroInformacion.xsd">
+  <sum:Cabecera>
+    <sum1:Obligado>
+      <sum1:NombreRazon>Provide One S.L.</sum1:NombreRazon>
+      <sum1:NIF>B98602642</sum1:NIF>
+    </sum1:Obligado>
+  </sum:Cabecera>
+  <sum:RegistroFactura>
+    <sum1:RegistroAlta>
+      <sum1:IDVersion>1.0</sum1:IDVersion>
+      <sum1:IDFactura>
+        <sum1:IDEmisorFactura>B98602642</sum1:IDEmisorFactura>
+        <sum1:NumSerieFactura>SAMPLE-001</sum1:NumSerieFactura>
+        <sum1:FechaExpedicionFactura>01-02-2022</sum1:FechaExpedicionFactura>
+      </sum1:IDFactura>
+      <sum1:NombreRazonEmisor>Provide One S.L.</sum1:NombreRazonEmisor>
+      <sum1:TipoFactura>F1</sum1:TipoFactura>
+      <sum1:FacturasRectificadas></sum1:FacturasRectificadas>
+      <sum1:FacturasSustituidas></sum1:FacturasSustituidas>
+      <sum1:FechaOperacion></sum1:FechaOperacion>
+      <sum1:DescripcionOperacion>This is a sample invoice</sum1:DescripcionOperacion>
+      <sum1:Destinatarios>
+        <sum1:Destinatario>
+          <sum1:IDDestinatario>
+            <sum1:NIF>54387763P</sum1:NIF>
+            <sum1:NombreRazon>Sample Consumer</sum1:NombreRazon>
+            <sum1:IDOtro>
+              <sum1:CodigoPais></sum1:CodigoPais>
+              <sum1:IDType></sum1:IDType>
+              <sum1:ID></sum1:ID>
+            </sum1:IDOtro>
+          </sum1:IDDestinatario>
+        </sum1:Destinatario>
+      </sum1:Destinatarios>
+      <sum1:Desglose>
+        <sum1:DetalleDesglose>
+          <sum1:Impuesto>VAT</sum1:Impuesto>
+          <sum1:ClaveRegimen></sum1:ClaveRegimen>
+          <sum1:CalificacionOperacion>1</sum1:CalificacionOperacion>
+          <sum1:TipoImpositivo>21.0%</sum1:TipoImpositivo>
+          <sum1:BaseImponibleOImporteNoSujeto>1620.00</sum1:BaseImponibleOImporteNoSujeto>
+          <sum1:CuotaRepercutida>340.20</sum1:CuotaRepercutida>
+        </sum1:DetalleDesglose>
+        <sum1:DetalleDesglose>
+          <sum1:Impuesto>VAT</sum1:Impuesto>
+          <sum1:ClaveRegimen></sum1:ClaveRegimen>
+          <sum1:CalificacionOperacion>1</sum1:CalificacionOperacion>
+          <sum1:TipoImpositivo>0.0%</sum1:TipoImpositivo>
+          <sum1:BaseImponibleOImporteNoSujeto>10.00</sum1:BaseImponibleOImporteNoSujeto>
+          <sum1:CuotaRepercutida>0.00</sum1:CuotaRepercutida>
+        </sum1:DetalleDesglose>
+      </sum1:Desglose>
+      <sum1:CuotaTotal>340.20</sum1:CuotaTotal>
+      <sum1:ImporteTotal>1970.20</sum1:ImporteTotal>
+      <sum1:SistemaInformatico>
+        <NombreRazon>xxxxxxxx</NombreRazon>
+        <NIF>0123456789</NIF>
+        <IdSistemaInformatico></IdSistemaInformatico>
+        <NombreSistemaInformatico></NombreSistemaInformatico>
+        <NumeroInstalacion>1</NumeroInstalacion>
+        <TipoUsoPosibleSoloVerifactu></TipoUsoPosibleSoloVerifactu>
+        <TipoUsoPosibleMultiOT></TipoUsoPosibleMultiOT>
+        <IndicadorMultiplesOT></IndicadorMultiplesOT>
+        <Version>1.0</Version>
+      </sum1:SistemaInformatico>
+      <sum1:FechaHoraHusoGenRegistro>2024-11-05T18:13:09+01:00</sum1:FechaHoraHusoGenRegistro>
+      <sum1:TipoHuella></sum1:TipoHuella>
+      <sum1:Huella></sum1:Huella>
+    </sum1:RegistroAlta>
+  </sum:RegistroFactura>
+</sum:Verifactu>

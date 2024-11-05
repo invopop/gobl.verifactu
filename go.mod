@@ -25,6 +25,7 @@ require (
 	github.com/invopop/jsonschema v0.12.0 // indirect
 	github.com/invopop/validation v0.7.0 // indirect
 	github.com/invopop/yaml v0.3.1 // indirect
+	github.com/joho/godotenv v1.5.1 // indirect
 	github.com/kr/text v0.2.0 // indirect
 	github.com/magefile/mage v1.15.0 // indirect
 	github.com/mailru/easyjson v0.7.7 // indirect

@@ -1,7 +1,5 @@
 package doc
 
-import "github.com/invopop/gobl/bill"
-
 type Software struct {
 	NombreRazon                 string
 	NIF                         string
@@ -14,14 +12,14 @@ type Software struct {
 	Version                     string
 }
 
-func newSoftware(inv *bill.Invoice) *Software {
+func newSoftware() *Software {
 	software := &Software{
-		NombreRazon:          "Invopop SL",
-		NIF:                  inv.Supplier.TaxID.Code.String(),
-		IDOtro:               "04",
-		IDSistemaInformatico: "F1",
-		Version:              "1.0",
-		NumeroInstalacion:    "1",
+		NombreRazon: "xxxxxxxx",
+		NIF:         "0123456789",
+		// IDOtro:               "04",
+		// IDSistemaInformatico: "F1",
+		Version:           "1.0",
+		NumeroInstalacion: "1",
 	}
 	return software
 }

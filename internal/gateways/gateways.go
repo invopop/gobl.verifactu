@@ -58,7 +58,7 @@ func (v *VerifactuConn) Post(ctx context.Context, doc doc.VeriFactu) error {
 	res, err := v.client.R().
 		SetContext(ctx).
 		SetBody(payload).
-		Post()
+		Post(v.client.BaseURL)
 
 	if err != nil {
 		return fmt.Errorf("%w: verifactu: %s", ErrConnection, err.Error())

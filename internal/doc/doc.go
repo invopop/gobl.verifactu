@@ -12,14 +12,30 @@ import (
 // for needed for timezones
 var location *time.Location
 
-type VeriFactu struct {
-	Cabecera        *Cabecera
-	RegistroFactura *RegistroFactura
+// IssuerRole defines the role of the issuer in the invoice.
+type IssuerRole string
+
+// IssuerRole constants
+const (
+	IssuerRoleSupplier   IssuerRole = "E"
+	IssuerRoleCustomer   IssuerRole = "D"
+	IssuerRoleThirdParty IssuerRole = "T"
+)
+
+// ValidationError is a simple wrapper around validation errors
+type ValidationError struct {
+	text string
 }
 
-type RegistroFactura struct {
-	RegistroAlta      *RegistroAlta
-	RegistroAnulacion *RegistroAnulacion
+// Error implements the error interface for ValidationError.
+func (e *ValidationError) Error() string {
+	return e.text
+}
+
+func validationErr(text string, args ...any) error {
+	return &ValidationError{
+		text: fmt.Sprintf(text, args...),
+	}
 }
 
 func init() {
@@ -31,19 +47,10 @@ func init() {
 }
 
 func NewVeriFactu(inv *bill.Invoice, ts time.Time) (*VeriFactu, error) {
-	if inv.Type == bill.InvoiceTypeCreditNote {
-
-		if err := inv.Invert(); err != nil {
-			return nil, err
-		}
-	}
-
-	// goblWithoutIncludedTaxes, err := inv.RemoveIncludedTaxes()
-	// if err != nil {
-	// 	return nil, err
-	// }
 
 	doc := &VeriFactu{
+		SUMNamespace:  SUM,
+		SUM1Namespace: SUM1,
 		Cabecera: &Cabecera{
 			Obligado: Obligado{
 				NombreRazon: inv.Supplier.Name,
@@ -53,7 +60,19 @@ func NewVeriFactu(inv *bill.Invoice, ts time.Time) (*VeriFactu, error) {
 		RegistroFactura: &RegistroFactura{},
 	}
 
-	doc.RegistroFactura.RegistroAlta.FechaHoraHusoGenRegistro = formatDateTimeZone(ts)
+	if inv.Type == bill.InvoiceTypeCreditNote {
+		reg, err := NewRegistroAnulacion(inv, ts)
+		if err != nil {
+			return nil, err
+		}
+		doc.RegistroFactura.RegistroAnulacion = reg
+	} else {
+		reg, err := NewRegistroAlta(inv, ts)
+		if err != nil {
+			return nil, err
+		}
+		doc.RegistroFactura.RegistroAlta = reg
+	}
 
 	return doc, nil
 }
@@ -86,15 +105,6 @@ func toBytes(doc any) ([]byte, error) {
 
 func toBytesIndent(doc any) ([]byte, error) {
 	buf, err := buffer(doc, xml.Header, true)
-	if err != nil {
-		return nil, err
-	}
-
-	return buf.Bytes(), nil
-}
-
-func toBytesCanonical(doc any) ([]byte, error) {
-	buf, err := buffer(doc, "", false)
 	if err != nil {
 		return nil, err
 	}

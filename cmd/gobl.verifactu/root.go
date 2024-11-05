@@ -16,7 +16,7 @@ func root() *rootOpts {
 
 func (o *rootOpts) cmd() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:           "gobl.verifactu",
+		Use:           name,
 		SilenceUsage:  true,
 		SilenceErrors: true,
 	}

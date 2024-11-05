@@ -1,16 +1,20 @@
-// Package main is the entry point for the gobl.verifactu command.
+// Package main provides a CLI interface for the library
 package main
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"os"
 	"os/signal"
 	"syscall"
+
+	"github.com/joho/godotenv"
 )
 
 // build data provided by goreleaser and mage setup
 var (
+	name    = "gobl.verifactu"
 	version = "dev"
 	date    = ""
 )
@@ -25,6 +29,12 @@ func main() {
 func run() error {
 	ctx, cancel := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
 	defer cancel()
+
+	if err := godotenv.Load(".env"); err != nil {
+		if !errors.Is(err, os.ErrNotExist) {
+			return fmt.Errorf("failed to load .env file: %w", err)
+		}
+	}
 
 	return root().cmd().ExecuteContext(ctx)
 }

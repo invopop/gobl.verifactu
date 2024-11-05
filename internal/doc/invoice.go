@@ -2,6 +2,7 @@ package doc
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/invopop/gobl/bill"
 	"github.com/invopop/gobl/cbc"
@@ -10,8 +11,13 @@ import (
 	"github.com/invopop/gobl/tax"
 )
 
-func newInvoice(inv *bill.Invoice) (*RegistroAlta, error) {
+func NewRegistroAlta(inv *bill.Invoice, ts time.Time) (*RegistroAlta, error) {
 	description, err := newDescription(inv.Notes)
+	if err != nil {
+		return nil, err
+	}
+
+	desglose, err := newDesglose(inv)
 	if err != nil {
 		return nil, err
 	}
@@ -23,12 +29,14 @@ func newInvoice(inv *bill.Invoice) (*RegistroAlta, error) {
 			NumSerieFactura:        invoiceNumber(inv.Series, inv.Code),
 			FechaExpedicionFactura: inv.IssueDate.Time().Format("02-01-2006"),
 		},
-		NombreRazonEmisor:    inv.Supplier.Name,
-		TipoFactura:          mapInvoiceType(inv),
-		DescripcionOperacion: description,
-		ImporteTotal:         newImporteTotal(inv),
-		CuotaTotal:           newTotalTaxes(inv),
-		SistemaInformatico:   newSoftware(inv),
+		NombreRazonEmisor:        inv.Supplier.Name,
+		TipoFactura:              mapInvoiceType(inv),
+		DescripcionOperacion:     description,
+		ImporteTotal:             newImporteTotal(inv),
+		CuotaTotal:               newTotalTaxes(inv),
+		SistemaInformatico:       newSoftware(),
+		Desglose:                 desglose,
+		FechaHoraHusoGenRegistro: formatDateTimeZone(ts),
 	}
 
 	if inv.Customer != nil {
@@ -54,7 +62,11 @@ func newInvoice(inv *bill.Invoice) (*RegistroAlta, error) {
 	}
 
 	if inv.HasTags(tax.TagSimplified) {
-		reg.FacturaSimplificadaArt7273 = "S"
+		if inv.Type == bill.InvoiceTypeStandard {
+			reg.FacturaSimplificadaArt7273 = "S"
+		} else {
+			reg.FacturaSinIdentifDestinatarioArt61d = "S"
+		}
 	}
 
 	return reg, nil

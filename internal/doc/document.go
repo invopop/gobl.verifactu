@@ -1,11 +1,24 @@
 package doc
 
-// "github.com/invopop/gobl/pkg/xmldsig"
+import "encoding/xml"
 
 const (
 	SUM  = "https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/tike/cont/ws/SuministroLR.xsd"
 	SUM1 = "https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/tike/cont/ws/SuministroInformacion.xsd"
 )
+
+type VeriFactu struct {
+	XMLName         xml.Name         `xml:"sum:Verifactu"`
+	Cabecera        *Cabecera        `xml:"sum:Cabecera"`
+	RegistroFactura *RegistroFactura `xml:"sum:RegistroFactura"`
+	SUMNamespace    string           `xml:"xmlns:sum,attr"`
+	SUM1Namespace   string           `xml:"xmlns:sum1,attr"`
+}
+
+type RegistroFactura struct {
+	RegistroAlta      *RegistroAlta      `xml:"sum1:RegistroAlta,omitempty"`
+	RegistroAnulacion *RegistroAnulacion `xml:"sum1:RegistroAnulacion,omitempty"`
+}
 
 type Cabecera struct {
 	Obligado              Obligado               `xml:"sum1:Obligado"`

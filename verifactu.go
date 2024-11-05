@@ -2,11 +2,14 @@ package verifactu
 
 import (
 	"errors"
+	"fmt"
 	"time"
 
+	"github.com/invopop/gobl"
 	"github.com/invopop/gobl.verifactu/internal/doc"
-	"github.com/invopop/gobl/l10n"
-	"github.com/invopop/xmldsig"
+	"github.com/invopop/gobl.verifactu/internal/gateways"
+	"github.com/invopop/gobl/bill"
+	// "github.com/invopop/gobl/l10n"
 )
 
 // Standard error responses.
@@ -23,6 +26,18 @@ type ValidationError struct {
 	err error
 }
 
+type Software struct {
+	NombreRazon                 string
+	NIF                         string
+	IdSistemaInformatico        string
+	NombreSistemaInformatico    string
+	NumeroInstalacion           string
+	TipoUsoPosibleSoloVerifactu string
+	TipoUsoPosibleMultiOT       string
+	IndicadorMultiplesOT        string
+	Version                     string
+}
+
 // Error implements the error interface for ClientError.
 func (e *ValidationError) Error() string {
 	return e.err.Error()
@@ -34,13 +49,12 @@ func newValidationError(text string) error {
 
 // Client provides the main interface to the VeriFactu package.
 type Client struct {
-	software *doc.Software
+	software *Software
 	// list       *gateways.List
-	cert *xmldsig.Certificate
-	// env        gateways.Environment
-	// issuerRole doc.IssuerRole
-	curTime time.Time
-	zone    l10n.Code
+	env        gateways.Environment
+	issuerRole doc.IssuerRole
+	curTime    time.Time
+	// zone    l10n.Code
 }
 
 // Option is used to configure the client.
@@ -65,17 +79,17 @@ type PreviousInvoice struct {
 
 // New creates a new VeriFactu client with shared software and configuration
 // options for creating and sending new documents.
-func New(software *doc.Software, opts ...Option) (*Client, error) {
+func New(software *Software, opts ...Option) (*Client, error) {
 	c := new(Client)
 	c.software = software
 
 	// Set default values that can be overwritten by the options
-	// c.env = gateways.EnvironmentTesting
-	// c.issuerRole = doc.IssuerRoleSupplier
+	c.env = gateways.EnvironmentTesting
+	c.issuerRole = doc.IssuerRoleSupplier
 
-	// for _, opt := range opts {
-	// 	opt(c)
-	// }
+	for _, opt := range opts {
+		opt(c)
+	}
 
 	// // Create a new gateway list if none was created by the options
 	// if c.list == nil && c.cert != nil {
@@ -88,6 +102,18 @@ func New(software *doc.Software, opts ...Option) (*Client, error) {
 	// }
 
 	return c, nil
+}
+
+func (c *Client) NewVerifactu(env *gobl.Envelope) (*doc.VeriFactu, error) {
+	inv, ok := env.Extract().(*bill.Invoice)
+	if !ok {
+		return nil, fmt.Errorf("invalid type %T", env.Document)
+	}
+	doc, err := doc.NewVeriFactu(inv, c.CurrentTime())
+	if err != nil {
+		return nil, err
+	}
+	return doc, nil
 }
 
 // CurrentTime returns the current time to use when generating
