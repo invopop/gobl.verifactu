@@ -6,12 +6,11 @@ import (
 
 	"github.com/invopop/gobl/bill"
 	"github.com/invopop/gobl/cbc"
-	"github.com/invopop/gobl/l10n"
 	"github.com/invopop/gobl/num"
 	"github.com/invopop/gobl/tax"
 )
 
-func NewRegistroAlta(inv *bill.Invoice, ts time.Time) (*RegistroAlta, error) {
+func NewRegistroAlta(inv *bill.Invoice, ts time.Time, role IssuerRole) (*RegistroAlta, error) {
 	description, err := newDescription(inv.Notes)
 	if err != nil {
 		return nil, err
@@ -40,25 +39,12 @@ func NewRegistroAlta(inv *bill.Invoice, ts time.Time) (*RegistroAlta, error) {
 	}
 
 	if inv.Customer != nil {
-		dest := &Destinatario{
-			IDDestinatario: IDDestinatario{
-				NombreRazon: inv.Customer.Name,
-			},
-		}
+		reg.Destinatarios = newDestinatario(inv.Customer)
+	}
 
-		if inv.Customer.TaxID != nil {
-			if inv.Customer.TaxID.Country == l10n.ES.Tax() {
-				dest.IDDestinatario.NIF = inv.Customer.TaxID.Code.String()
-			} else {
-				dest.IDDestinatario.IDOtro = IDOtro{
-					CodigoPais: inv.Customer.TaxID.Country.String(),
-					IDType:     "04", // Code for foreign tax IDs L7
-					ID:         inv.Customer.TaxID.Code.String(),
-				}
-			}
-		}
-
-		reg.Destinatarios = []*Destinatario{dest}
+	if role == IssuerRoleThirdParty {
+		reg.EmitidaPorTerceroODestinatario = "T"
+		reg.Tercero = newTercero(inv.Supplier)
 	}
 
 	if inv.HasTags(tax.TagSimplified) {

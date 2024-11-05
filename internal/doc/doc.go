@@ -46,7 +46,7 @@ func init() {
 	}
 }
 
-func NewVeriFactu(inv *bill.Invoice, ts time.Time) (*VeriFactu, error) {
+func NewVeriFactu(inv *bill.Invoice, ts time.Time, role IssuerRole) (*VeriFactu, error) {
 
 	doc := &VeriFactu{
 		SUMNamespace:  SUM,
@@ -61,13 +61,13 @@ func NewVeriFactu(inv *bill.Invoice, ts time.Time) (*VeriFactu, error) {
 	}
 
 	if inv.Type == bill.InvoiceTypeCreditNote {
-		reg, err := NewRegistroAnulacion(inv, ts)
+		reg, err := NewRegistroAnulacion(inv, ts, role)
 		if err != nil {
 			return nil, err
 		}
 		doc.RegistroFactura.RegistroAnulacion = reg
 	} else {
-		reg, err := NewRegistroAlta(inv, ts)
+		reg, err := NewRegistroAlta(inv, ts, role)
 		if err != nil {
 			return nil, err
 		}

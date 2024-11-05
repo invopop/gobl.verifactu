@@ -97,9 +97,9 @@ type ImporteRectificacion struct {
 }
 
 type Tercero struct {
-	Nif         string `xml:"sum1:Nif,omitempty"`
+	NIF         string `xml:"sum1:Nif,omitempty"`
 	NombreRazon string `xml:"sum1:NombreRazon"`
-	IDOtro      string `xml:"sum1:IDOtro,omitempty"`
+	IDOtro      IDOtro `xml:"sum1:IDOtro,omitempty"`
 }
 
 type Destinatario struct {

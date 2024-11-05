@@ -1,8 +1,10 @@
 package doc
 
 import (
+	"github.com/invopop/gobl/addon/es/verifactu"
 	"github.com/invopop/gobl/bill"
 	"github.com/invopop/gobl/cbc"
+	"github.com/invopop/gobl/regimes/es"
 	"github.com/invopop/gobl/tax"
 )
 
@@ -42,19 +44,34 @@ func buildDetalleDesglose(c *tax.CategoryTotal, r *tax.RateTotal) (*DetalleDesgl
 		CuotaRepercutida:              r.Amount.String(),
 	}
 
-	// MAL - mapear a codigo
 	if c.Code != cbc.CodeEmpty {
-		detalle.Impuesto = c.Code.String()
+		detalle.Impuesto = taxCategoryCode(c.Code)
 	}
 
 	if r.Key == tax.RateExempt {
-		detalle.OperacionExenta = "1"
+		detalle.OperacionExenta = r.Ext[verifactu.ExtKeyExemption].String()
 	} else {
-		detalle.CalificacionOperacion = "1"
+		// TODO: fix
+		if inv.HasTag(tax.TagReverseCharge) {
+			detalle.OperacionCorregida = r.Ext[verifactu.ExtKeyCorrection].String()
+		}
 	}
 
 	if r.Percent != nil {
 		detalle.TipoImpositivo = r.Percent.String()
 	}
 	return detalle, nil
+}
+
+func taxCategoryCode(code cbc.Code) string {
+	switch code {
+	case tax.CategoryVAT:
+		return "01"
+	case es.TaxCategoryIGIC:
+		return "02"
+	case es.TaxCategoryIPSI:
+		return "03"
+	default:
+		return "05"
+	}
 }
