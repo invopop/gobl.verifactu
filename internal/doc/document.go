@@ -31,7 +31,7 @@ type RemisionRequerimiento struct {
 
 type RegistroAlta struct {
 	IDVersion                           string                `xml:"sum1:IDVersion"`
-	IDFactura                           IDFactura             `xml:"sum1:IDFactura"`
+	IDFactura                           *IDFactura            `xml:"sum1:IDFactura"`
 	RefExterna                          string                `xml:"sum1:RefExterna,omitempty"`
 	NombreRazonEmisor                   string                `xml:"sum1:NombreRazonEmisor"`
 	Subsanacion                         string                `xml:"sum1:Subsanacion,omitempty"`
@@ -40,21 +40,21 @@ type RegistroAlta struct {
 	TipoRectificativa                   string                `xml:"sum1:TipoRectificativa,omitempty"`
 	FacturasRectificadas                []*FacturaRectificada `xml:"sum1:FacturasRectificadas>sum1:FacturaRectificada,omitempty"`
 	FacturasSustituidas                 []*FacturaSustituida  `xml:"sum1:FacturasSustituidas>sum1:FacturaSustituida,omitempty"`
-	ImporteRectificacion                ImporteRectificacion  `xml:"sum1:ImporteRectificacion,omitempty"`
+	ImporteRectificacion                *ImporteRectificacion `xml:"sum1:ImporteRectificacion,omitempty"`
 	FechaOperacion                      string                `xml:"sum1:FechaOperacion"`
 	DescripcionOperacion                string                `xml:"sum1:DescripcionOperacion"`
 	FacturaSimplificadaArt7273          string                `xml:"sum1:FacturaSimplificadaArt7273,omitempty"`
 	FacturaSinIdentifDestinatarioArt61d string                `xml:"sum1:FacturaSinIdentifDestinatarioArt61d,omitempty"`
 	Macrodato                           string                `xml:"sum1:Macrodato,omitempty"`
 	EmitidaPorTerceroODestinatario      string                `xml:"sum1:EmitidaPorTerceroODestinatario,omitempty"`
-	Tercero                             Tercero               `xml:"sum1:Tercero,omitempty"`
+	Tercero                             *Tercero              `xml:"sum1:Tercero,omitempty"`
 	Destinatarios                       []*Destinatario       `xml:"sum1:Destinatarios>sum1:Destinatario,omitempty"`
 	Cupon                               string                `xml:"sum1:Cupon,omitempty"`
-	Desglose                            Desglose              `xml:"sum1:Desglose"`
-	CuotaTotal                          float64               `xml:"sum1:CuotaTotal"`
-	ImporteTotal                        float64               `xml:"sum1:ImporteTotal"`
-	Encadenamiento                      Encadenamiento        `xml:"sum1:Encadenamiento"`
-	SistemaInformatico                  Software              `xml:"sum1:SistemaInformatico"`
+	Desglose                            *Desglose             `xml:"sum1:Desglose"`
+	CuotaTotal                          string                `xml:"sum1:CuotaTotal"`
+	ImporteTotal                        string                `xml:"sum1:ImporteTotal"`
+	Encadenamiento                      *Encadenamiento       `xml:"sum1:Encadenamiento"`
+	SistemaInformatico                  *Software             `xml:"sum1:SistemaInformatico"`
 	FechaHoraHusoGenRegistro            string                `xml:"sum1:FechaHoraHusoGenRegistro"`
 	NumRegistroAcuerdoFacturacion       string                `xml:"sum1:NumRegistroAcuerdoFacturacion,omitempty"`
 	IdAcuerdoSistemaInformatico         string                `xml:"sum1:IdAcuerdoSistemaInformatico,omitempty"`
@@ -78,9 +78,9 @@ type FacturaSustituida struct {
 }
 
 type ImporteRectificacion struct {
-	BaseRectificada         float64 `xml:"sum1:BaseRectificada"`
-	CuotaRectificada        float64 `xml:"sum1:CuotaRectificada"`
-	CuotaRecargoRectificado float64 `xml:"sum1:CuotaRecargoRectificado"`
+	BaseRectificada         string `xml:"sum1:BaseRectificada"`
+	CuotaRectificada        string `xml:"sum1:CuotaRectificada"`
+	CuotaRecargoRectificado string `xml:"sum1:CuotaRecargoRectificado"`
 }
 
 type Tercero struct {

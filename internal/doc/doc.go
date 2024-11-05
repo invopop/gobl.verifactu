@@ -9,6 +9,9 @@ import (
 	"github.com/invopop/gobl/bill"
 )
 
+// for needed for timezones
+var location *time.Location
+
 type VeriFactu struct {
 	Cabecera        *Cabecera
 	RegistroFactura *RegistroFactura
@@ -19,16 +22,12 @@ type RegistroFactura struct {
 	RegistroAnulacion *RegistroAnulacion
 }
 
-type Software struct {
-	NombreRazon                 string
-	NIF                         string
-	IdSistemaInformatico        string
-	NombreSistemaInformatico    string
-	NumeroInstalacion           string
-	TipoUsoPosibleSoloVerifactu string
-	TipoUsoPosibleMultiOT       string
-	IndicadorMultiplesOT        string
-	Version                     string
+func init() {
+	var err error
+	location, err = time.LoadLocation("Europe/Madrid")
+	if err != nil {
+		panic(err)
+	}
 }
 
 func NewVeriFactu(inv *bill.Invoice, ts time.Time) (*VeriFactu, error) {
@@ -39,10 +38,10 @@ func NewVeriFactu(inv *bill.Invoice, ts time.Time) (*VeriFactu, error) {
 		}
 	}
 
-	goblWithoutIncludedTaxes, err := inv.RemoveIncludedTaxes()
-	if err != nil {
-		return nil, err
-	}
+	// goblWithoutIncludedTaxes, err := inv.RemoveIncludedTaxes()
+	// if err != nil {
+	// 	return nil, err
+	// }
 
 	doc := &VeriFactu{
 		Cabecera: &Cabecera{
@@ -54,47 +53,25 @@ func NewVeriFactu(inv *bill.Invoice, ts time.Time) (*VeriFactu, error) {
 		RegistroFactura: &RegistroFactura{},
 	}
 
-	doc.SetIssueTimestamp(ts)
-
-	// Add customers
-	if inv.Customer != nil {
-		dest, err := newDestinatario(inv.Customer)
-		if err != nil {
-			return nil, err
-		}
-		doc.Sujetos.Destinatarios = &Destinatarios{
-			IDDestinatario: []*IDDestinatario{dest},
-		}
-	}
-
-	if inv.Type == bill.InvoiceTypeCreditNote {
-		doc.RegistroFactura.RegistroAnulacion, err = newDatosFactura(goblWithoutIncludedTaxes)
-	} else {
-		doc.RegistroFactura.RegistroAlta, err = newDatosFactura(goblWithoutIncludedTaxes)
-	}
-	if err != nil {
-		return nil, err
-	}
+	doc.RegistroFactura.RegistroAlta.FechaHoraHusoGenRegistro = formatDateTimeZone(ts)
 
 	return doc, nil
 }
 
-// QRCodes generates the QR codes for this invoice, but requires the Fingerprint to have been
-// generated first.
-func (doc *TicketBAI) QRCodes() *Codes {
-	if doc.HuellaTBAI == nil {
+func (doc *VeriFactu) QRCodes() *Codes {
+	if doc.RegistroFactura.RegistroAlta.Encadenamiento == nil {
 		return nil
 	}
-	return doc.generateCodes(doc.zone)
+	return doc.generateCodes()
 }
 
 // Bytes returns the XML document bytes
-func (doc *TicketBAI) Bytes() ([]byte, error) {
+func (doc *VeriFactu) Bytes() ([]byte, error) {
 	return toBytes(doc)
 }
 
 // BytesIndent returns the indented XML document bytes
-func (doc *TicketBAI) BytesIndent() ([]byte, error) {
+func (doc *VeriFactu) BytesIndent() ([]byte, error) {
 	return toBytesIndent(doc)
 }
 
@@ -144,11 +121,6 @@ type timeLocationable interface {
 	In(*time.Location) time.Time
 }
 
-// TODO
-// func formatDate(ts timeLocationable) string {
-// 	return ts.In(location).Format("02-01-2006")
-// }
-
-// func formatTime(ts timeLocationable) string {
-// 	return ts.In(location).Format("15:04:05")
-// }
+func formatDateTimeZone(ts timeLocationable) string {
+	return ts.In(location).Format("2006-01-02T15:04:05-07:00")
+}
