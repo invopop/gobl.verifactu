@@ -1,15 +1,12 @@
 package verifactu
 
 import (
+	"context"
 	"errors"
-	"fmt"
 	"time"
 
-	"github.com/invopop/gobl"
 	"github.com/invopop/gobl.verifactu/internal/doc"
 	"github.com/invopop/gobl.verifactu/internal/gateways"
-	"github.com/invopop/gobl/bill"
-	// "github.com/invopop/gobl/l10n"
 )
 
 // Standard error responses.
@@ -54,6 +51,7 @@ type Client struct {
 	issuerRole doc.IssuerRole
 	curTime    time.Time
 	// zone    l10n.Code
+	gw *gateways.Conection
 }
 
 // Option is used to configure the client.
@@ -103,17 +101,53 @@ func New(software *Software, opts ...Option) (*Client, error) {
 	return c, nil
 }
 
-func (c *Client) NewVerifactu(env *gobl.Envelope) (*doc.VeriFactu, error) {
-	inv, ok := env.Extract().(*bill.Invoice)
-	if !ok {
-		return nil, fmt.Errorf("invalid type %T", env.Document)
+// WithSupplierIssuer set the issuer type to supplier.
+func WithSupplierIssuer() Option {
+	return func(c *Client) {
+		c.issuerRole = doc.IssuerRoleSupplier
 	}
-	doc, err := doc.NewVeriFactu(inv, c.CurrentTime())
-	if err != nil {
-		return nil, err
-	}
-	return doc, nil
 }
+
+// WithCustomerIssuer set the issuer type to customer.
+func WithCustomerIssuer() Option {
+	return func(c *Client) {
+		c.issuerRole = doc.IssuerRoleCustomer
+	}
+}
+
+// WithThirdPartyIssuer set the issuer type to third party.
+func WithThirdPartyIssuer() Option {
+	return func(c *Client) {
+		c.issuerRole = doc.IssuerRoleThirdParty
+	}
+}
+
+// InProduction defines the connection to use the production environment.
+func InProduction() Option {
+	return func(c *Client) {
+		c.env = gateways.EnvironmentProduction
+	}
+}
+
+// InTesting defines the connection to use the testing environment.
+func InTesting() Option {
+	return func(c *Client) {
+		c.env = gateways.EnvironmentTesting
+	}
+}
+
+// Post will send the document to the VeriFactu gateway.
+func (c *Client) Post(ctx context.Context, d *doc.VeriFactu) error {
+	if err := c.gw.Post(ctx, *d); err != nil {
+		return err
+	}
+	return nil
+}
+
+// Cancel will send the cancel document in the VeriFactu gateway.
+// func (c *Client) Cancel(ctx context.Context, d *doc.AnulaTicketBAI) error {
+// 	return c.gw.Cancel(ctx, d)
+// }
 
 // CurrentTime returns the current time to use when generating
 // the VeriFactu document.

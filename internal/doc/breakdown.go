@@ -1,7 +1,7 @@
 package doc
 
 import (
-	"github.com/invopop/gobl/addon/es/verifactu"
+	"github.com/invopop/gobl/addons/es/verifactu"
 	"github.com/invopop/gobl/bill"
 	"github.com/invopop/gobl/cbc"
 	"github.com/invopop/gobl/regimes/es"

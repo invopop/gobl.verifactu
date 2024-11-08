@@ -1,15 +1,16 @@
 package doc
 
 type Software struct {
-	NombreRazon                 string
-	NIF                         string
-	IdSistemaInformatico        string
-	NombreSistemaInformatico    string
-	NumeroInstalacion           string
-	TipoUsoPosibleSoloVerifactu string
-	TipoUsoPosibleMultiOT       string
-	IndicadorMultiplesOT        string
-	Version                     string
+	NombreRazon string
+	NIF         string
+	// IDOtro                      string
+	// NombreSistemaInformatico    string
+	IdSistemaInformatico string
+	Version              string
+	NumeroInstalacion    string
+	// TipoUsoPosibleSoloVerifactu string
+	// TipoUsoPosibleMultiOT       string
+	// IndicadorMultiplesOT        string
 }
 
 func newSoftware() *Software {
@@ -18,7 +19,7 @@ func newSoftware() *Software {
 		NIF:         "0123456789",
 		// IDOtro:               "04",
 		// IDSistemaInformatico: "F1",
-		Version:           "1.0",
+		Version:           CurrentVersion,
 		NumeroInstalacion: "1",
 	}
 	return software

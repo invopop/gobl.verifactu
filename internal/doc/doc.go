@@ -22,6 +22,10 @@ const (
 	IssuerRoleThirdParty IssuerRole = "T"
 )
 
+const (
+	CurrentVersion = "1.0"
+)
+
 // ValidationError is a simple wrapper around validation errors
 type ValidationError struct {
 	text string
@@ -46,7 +50,7 @@ func init() {
 	}
 }
 
-func NewVeriFactu(inv *bill.Invoice, ts time.Time, role IssuerRole) (*VeriFactu, error) {
+func NewDocument(inv *bill.Invoice, ts time.Time, role IssuerRole) (*VeriFactu, error) {
 
 	doc := &VeriFactu{
 		SUMNamespace:  SUM,
@@ -77,21 +81,25 @@ func NewVeriFactu(inv *bill.Invoice, ts time.Time, role IssuerRole) (*VeriFactu,
 	return doc, nil
 }
 
-func (doc *VeriFactu) QRCodes() *Codes {
-	if doc.RegistroFactura.RegistroAlta.Encadenamiento == nil {
+func (d *VeriFactu) QRCodes() *Codes {
+	if d.RegistroFactura.RegistroAlta.Encadenamiento == nil {
 		return nil
 	}
-	return doc.generateCodes()
+	return d.generateCodes()
+}
+
+func (d *VeriFactu) Fingerprint() error {
+	return d.GenerateHash()
 }
 
 // Bytes returns the XML document bytes
-func (doc *VeriFactu) Bytes() ([]byte, error) {
-	return toBytes(doc)
+func (d *VeriFactu) Bytes() ([]byte, error) {
+	return toBytes(d)
 }
 
 // BytesIndent returns the indented XML document bytes
-func (doc *VeriFactu) BytesIndent() ([]byte, error) {
-	return toBytesIndent(doc)
+func (d *VeriFactu) BytesIndent() ([]byte, error) {
+	return toBytesIndent(d)
 }
 
 func toBytes(doc any) ([]byte, error) {
@@ -103,8 +111,8 @@ func toBytes(doc any) ([]byte, error) {
 	return buf.Bytes(), nil
 }
 
-func toBytesIndent(doc any) ([]byte, error) {
-	buf, err := buffer(doc, xml.Header, true)
+func toBytesIndent(d any) ([]byte, error) {
+	buf, err := buffer(d, xml.Header, true)
 	if err != nil {
 		return nil, err
 	}

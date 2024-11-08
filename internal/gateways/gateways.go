@@ -30,13 +30,13 @@ var (
 )
 
 // Connection defines what is expected from a connection to a gateway.
-type VerifactuConn struct {
+type Conection struct {
 	client *resty.Client
 }
 
 // New instantiates a new connection using the provided config.
-func NewVerifactu(env Environment) *VerifactuConn {
-	c := new(VerifactuConn)
+func NewVerifactu(env Environment) *Conection {
+	c := new(Conection)
 	c.client = resty.New()
 
 	switch env {
@@ -49,7 +49,7 @@ func NewVerifactu(env Environment) *VerifactuConn {
 	return c
 }
 
-func (v *VerifactuConn) Post(ctx context.Context, doc doc.VeriFactu) error {
+func (v *Conection) Post(ctx context.Context, doc doc.VeriFactu) error {
 	payload, err := doc.Bytes()
 	if err != nil {
 		return fmt.Errorf("generating payload: %w", err)

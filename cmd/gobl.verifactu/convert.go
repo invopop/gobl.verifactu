@@ -57,15 +57,14 @@ func (c *convertOpts) runE(cmd *cobra.Command, args []string) error {
 		return fmt.Errorf("creating verifactu client: %w", err)
 	}
 
-	// rework
-	doc, err := vf.NewVerifactu(env)
+	doc, err := vf.Convert(env)
 	if err != nil {
-		return fmt.Errorf("creating verifactu document: %w", err)
+		panic(err)
 	}
 
 	data, err := doc.BytesIndent()
 	if err != nil {
-		return fmt.Errorf("generating verifactu xml: %w", err)
+		return fmt.Errorf("generating ticketbai xml: %w", err)
 	}
 
 	if _, err = out.Write(append(data, '\n')); err != nil {

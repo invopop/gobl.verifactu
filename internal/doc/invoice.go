@@ -22,7 +22,7 @@ func NewRegistroAlta(inv *bill.Invoice, ts time.Time, role IssuerRole) (*Registr
 	}
 
 	reg := &RegistroAlta{
-		IDVersion: "1.0",
+		IDVersion: CurrentVersion,
 		IDFactura: &IDFactura{
 			IDEmisorFactura:        inv.Supplier.TaxID.Code.String(),
 			NumSerieFactura:        invoiceNumber(inv.Series, inv.Code),

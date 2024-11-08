@@ -25,7 +25,7 @@ type RegistroAnulacion struct {
 // NewRegistroAnulacion provides support for credit notes
 func NewRegistroAnulacion(inv *bill.Invoice, ts time.Time, role IssuerRole) (*RegistroAnulacion, error) {
 	reg := &RegistroAnulacion{
-		IDVersion: "1.0",
+		IDVersion: CurrentVersion,
 		IDFactura: &IDFactura{
 			IDEmisorFactura:        inv.Supplier.TaxID.Code.String(),
 			NumSerieFactura:        invoiceNumber(inv.Series, inv.Code),
@@ -41,6 +41,17 @@ func NewRegistroAnulacion(inv *bill.Invoice, ts time.Time, role IssuerRole) (*Re
 		TipoHuella:               "01",
 	}
 
+	if err := reg.getEncadenamiento(); err != nil {
+		return nil, err
+	}
+
 	return reg, nil
 
+}
+
+func (r *RegistroAnulacion) getEncadenamiento() error {
+	r.Encadenamiento = &Encadenamiento{
+		PrimerRegistro: "1",
+	}
+	return nil
 }

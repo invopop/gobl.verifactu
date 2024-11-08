@@ -16,9 +16,9 @@ func FormatField(key, value string) string {
 	return fmt.Sprintf("%s=%s", key, value)
 }
 
-// ConcatenateFields builds the concatenated string based on Verifactu requirements.
-func makeRegistroAltaFields(inv *RegistroAlta) string {
-	fields := []string{
+// Concatenatef builds the concatenated string based on Verifactu requirements.
+func (d *VeriFactu) fingerprintAlta(inv *RegistroAlta) error {
+	f := []string{
 		FormatField("IDEmisorFactura", inv.IDFactura.IDEmisorFactura),
 		FormatField("NumSerieFactura", inv.IDFactura.NumSerieFactura),
 		FormatField("FechaExpedicionFactura", inv.IDFactura.FechaExpedicionFactura),
@@ -28,34 +28,42 @@ func makeRegistroAltaFields(inv *RegistroAlta) string {
 		FormatField("Huella", inv.Encadenamiento.RegistroAnterior.Huella),
 		FormatField("FechaHoraHusoGenRegistro", inv.FechaHoraHusoGenRegistro),
 	}
-	return strings.Join(fields, "&")
+	st := strings.Join(f, "&")
+	hash := sha256.New()
+	hash.Write([]byte(st))
+
+	d.RegistroFactura.RegistroAlta.Huella = strings.ToUpper(hex.EncodeToString(hash.Sum(nil)))
+	return nil
 }
 
-func makeRegistroAnulacionFields(inv *RegistroAnulacion) string {
-	fields := []string{
+func (d *VeriFactu) fingerprintAnulacion(inv *RegistroAnulacion) error {
+	f := []string{
 		FormatField("IDEmisorFactura", inv.IDFactura.IDEmisorFactura),
 		FormatField("NumSerieFactura", inv.IDFactura.NumSerieFactura),
 		FormatField("FechaExpedicionFactura", inv.IDFactura.FechaExpedicionFactura),
 		FormatField("Huella", inv.Encadenamiento.RegistroAnterior.Huella),
 		FormatField("FechaHoraHusoGenRegistro", inv.FechaHoraHusoGenRegistro),
 	}
-	return strings.Join(fields, "&")
+	st := strings.Join(f, "&")
+	hash := sha256.New()
+	hash.Write([]byte(st))
+
+	d.RegistroFactura.RegistroAnulacion.Huella = strings.ToUpper(hex.EncodeToString(hash.Sum(nil)))
+	return nil
 }
 
 // GenerateHash generates the SHA-256 hash for the invoice data.
-func GenerateHash(inv *RegistroFactura) string {
-	// Concatenate fields according to Verifactu specifications
-	var concatenatedString string
-	if inv.RegistroAlta != nil {
-		concatenatedString = makeRegistroAltaFields(inv.RegistroAlta)
-	} else if inv.RegistroAnulacion != nil {
-		concatenatedString = makeRegistroAnulacionFields(inv.RegistroAnulacion)
+func (d *VeriFactu) GenerateHash() error {
+	// Concatenate f according to Verifactu specifications
+	if d.RegistroFactura.RegistroAlta != nil {
+		if err := d.fingerprintAlta(d.RegistroFactura.RegistroAlta); err != nil {
+			return err
+		}
+	} else if d.RegistroFactura.RegistroAnulacion != nil {
+		if err := d.fingerprintAnulacion(d.RegistroFactura.RegistroAnulacion); err != nil {
+			return err
+		}
 	}
 
-	// Convert to UTF-8 byte array and hash it with SHA-256
-	hash := sha256.New()
-	hash.Write([]byte(concatenatedString))
-
-	// Convert the hash to hexadecimal and make it uppercase
-	return strings.ToUpper(hex.EncodeToString(hash.Sum(nil)))
+	return nil
 }

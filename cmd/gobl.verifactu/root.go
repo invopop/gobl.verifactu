@@ -4,10 +4,16 @@ import (
 	"io"
 	"os"
 
+	verifactu "github.com/invopop/gobl.verifactu"
 	"github.com/spf13/cobra"
 )
 
 type rootOpts struct {
+	swNIF         string
+	swCompanyName string
+	swVersion     string
+	swLicense     string
+	production    bool
 }
 
 func root() *rootOpts {
@@ -47,6 +53,14 @@ func (o *rootOpts) openOutput(cmd *cobra.Command, args []string) (io.WriteCloser
 		return os.OpenFile(outFile, flags, os.ModePerm)
 	}
 	return writeCloser{cmd.OutOrStdout()}, nil
+}
+
+func (o *rootOpts) software() *verifactu.Software {
+	return &verifactu.Software{
+		NombreRazon: o.swCompanyName,
+		NIF:         o.swNIF,
+		Version:     o.swVersion,
+	}
 }
 
 type writeCloser struct {
