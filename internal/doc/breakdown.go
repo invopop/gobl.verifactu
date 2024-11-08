@@ -50,11 +50,6 @@ func buildDetalleDesglose(c *tax.CategoryTotal, r *tax.RateTotal) (*DetalleDesgl
 
 	if r.Key == tax.RateExempt {
 		detalle.OperacionExenta = r.Ext[verifactu.ExtKeyExemption].String()
-	} else {
-		// TODO: fix
-		if inv.HasTag(tax.TagReverseCharge) {
-			detalle.OperacionCorregida = r.Ext[verifactu.ExtKeyCorrection].String()
-		}
 	}
 
 	if r.Percent != nil {

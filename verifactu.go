@@ -17,7 +17,6 @@ var (
 	ErrNotSpanish       = newValidationError("only spanish invoices are supported")
 	ErrAlreadyProcessed = newValidationError("already processed")
 	ErrOnlyInvoices     = newValidationError("only invoices are supported")
-	ErrInvalidZone      = newValidationError("invalid zone")
 )
 
 // ValidationError is a simple wrapper around validation errors (that should not be retried) as opposed
