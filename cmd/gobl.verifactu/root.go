@@ -4,18 +4,19 @@ import (
 	"io"
 	"os"
 
-	verifactu "github.com/invopop/gobl.verifactu"
+	"github.com/invopop/gobl.verifactu/doc"
 	_ "github.com/joho/godotenv/autoload"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 )
 
 type rootOpts struct {
-	swNIF         string
-	swCompanyName string
-	swVersion     string
-	swLicense     string
-	production    bool
+	swNIF                  string
+	swNombreRazon          string
+	swVersion              string
+	swIdSistemaInformatico string
+	swNumeroInstalacion    string
+	production             bool
 }
 
 func root() *rootOpts {
@@ -37,17 +38,20 @@ func (o *rootOpts) cmd() *cobra.Command {
 
 func (o *rootOpts) prepareFlags(f *pflag.FlagSet) {
 	f.StringVar(&o.swNIF, "sw-nif", os.Getenv("SOFTWARE_COMPANY_NIF"), "NIF of the software company")
-	f.StringVar(&o.swCompanyName, "sw-company-name", os.Getenv("SOFTWARE_COMPANY_NAME"), "Name of the software company")
+	f.StringVar(&o.swNombreRazon, "sw-name", os.Getenv("SOFTWARE_COMPANY_NAME"), "Name of the software company")
 	f.StringVar(&o.swVersion, "sw-version", os.Getenv("SOFTWARE_VERSION"), "Version of the software")
-	f.StringVar(&o.swLicense, "sw-license", os.Getenv("SOFTWARE_LICENSE"), "License of the software")
+	f.StringVar(&o.swIdSistemaInformatico, "sw-id", os.Getenv("SOFTWARE_ID_SISTEMA_INFORMATICO"), "ID of the software system")
+	f.StringVar(&o.swNumeroInstalacion, "sw-inst", os.Getenv("SOFTWARE_NUMERO_INSTALACION"), "Number of the software installation")
 	f.BoolVarP(&o.production, "production", "p", false, "Production environment")
 }
 
-func (o *rootOpts) software() *verifactu.Software {
-	return &verifactu.Software{
-		NombreRazon: o.swCompanyName,
-		NIF:         o.swNIF,
-		Version:     o.swVersion,
+func (o *rootOpts) software() *doc.Software {
+	return &doc.Software{
+		NIF:                  o.swNIF,
+		NombreRazon:          o.swNombreRazon,
+		Version:              o.swVersion,
+		IdSistemaInformatico: o.swIdSistemaInformatico,
+		NumeroInstalacion:    o.swNumeroInstalacion,
 	}
 }
 

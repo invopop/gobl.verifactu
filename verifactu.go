@@ -22,18 +22,6 @@ type ValidationError struct {
 	err error
 }
 
-type Software struct {
-	NombreRazon                 string
-	NIF                         string
-	IdSistemaInformatico        string
-	NombreSistemaInformatico    string
-	NumeroInstalacion           string
-	TipoUsoPosibleSoloVerifactu string
-	TipoUsoPosibleMultiOT       string
-	IndicadorMultiplesOT        string
-	Version                     string
-}
-
 // Error implements the error interface for ClientError.
 func (e *ValidationError) Error() string {
 	return e.err.Error()
@@ -45,13 +33,11 @@ func newValidationError(text string) error {
 
 // Client provides the main interface to the VeriFactu package.
 type Client struct {
-	software *Software
-	// list       *gateways.List
+	software   *doc.Software
 	env        gateways.Environment
 	issuerRole doc.IssuerRole
 	curTime    time.Time
-	// zone    l10n.Code
-	gw *gateways.Connection
+	gw         *gateways.Connection
 }
 
 // Option is used to configure the client.
@@ -65,18 +51,9 @@ func WithCurrentTime(curTime time.Time) Option {
 	}
 }
 
-// PreviousInvoice stores the fields from the previously generated invoice
-// document that are linked to in the new document.
-type PreviousInvoice struct {
-	Series    string
-	Code      string
-	IssueDate string
-	Signature string
-}
-
 // New creates a new VeriFactu client with shared software and configuration
 // options for creating and sending new documents.
-func New(software *Software, opts ...Option) (*Client, error) {
+func New(software *doc.Software, opts ...Option) (*Client, error) {
 	c := new(Client)
 	c.software = software
 
@@ -88,15 +65,11 @@ func New(software *Software, opts ...Option) (*Client, error) {
 		opt(c)
 	}
 
-	// // Create a new gateway list if none was created by the options
-	// if c.list == nil && c.cert != nil {
-	// 	list, err := gateways.New(c.env, c.cert)
-	// 	if err != nil {
-	// 		return nil, fmt.Errorf("creating gateway list: %w", err)
-	// 	}
-
-	// 	c.list = list
-	// }
+	var err error
+	c.gw, err = gateways.New(c.env)
+	if err != nil {
+		return nil, err
+	}
 
 	return c, nil
 }

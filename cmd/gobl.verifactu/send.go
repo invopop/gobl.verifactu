@@ -77,9 +77,9 @@ func (c *sendOpts) runE(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	// if err := tc.Sign(td, env); err != nil {
-	// 	return err
-	// }
+	if err := tc.AddQR(td, env); err != nil {
+		return err
+	}
 
 	err = tc.Post(cmd.Context(), td)
 	if err != nil {

@@ -23,7 +23,7 @@ type RegistroAnulacion struct {
 }
 
 // NewRegistroAnulacion provides support for credit notes
-func NewRegistroAnulacion(inv *bill.Invoice, ts time.Time, role IssuerRole) (*RegistroAnulacion, error) {
+func NewRegistroAnulacion(inv *bill.Invoice, ts time.Time, r IssuerRole, s *Software) (*RegistroAnulacion, error) {
 	reg := &RegistroAnulacion{
 		IDVersion: CurrentVersion,
 		IDFactura: &IDFactura{
@@ -37,6 +37,7 @@ func NewRegistroAnulacion(inv *bill.Invoice, ts time.Time, role IssuerRole) (*Re
 			NIF:         inv.Supplier.TaxID.Code.String(),
 			NombreRazon: inv.Supplier.Name,
 		},
+		SistemaInformatico:       newSoftware(s),
 		FechaHoraHusoGenRegistro: formatDateTimeZone(ts),
 		TipoHuella:               "01",
 	}

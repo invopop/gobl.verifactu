@@ -10,7 +10,7 @@ import (
 	"github.com/invopop/gobl/tax"
 )
 
-func NewRegistroAlta(inv *bill.Invoice, ts time.Time, role IssuerRole) (*RegistroAlta, error) {
+func NewRegistroAlta(inv *bill.Invoice, ts time.Time, r IssuerRole, s *Software) (*RegistroAlta, error) {
 	description, err := newDescription(inv.Notes)
 	if err != nil {
 		return nil, err
@@ -33,7 +33,7 @@ func NewRegistroAlta(inv *bill.Invoice, ts time.Time, role IssuerRole) (*Registr
 		DescripcionOperacion:     description,
 		ImporteTotal:             newImporteTotal(inv),
 		CuotaTotal:               newTotalTaxes(inv),
-		SistemaInformatico:       newSoftware(),
+		SistemaInformatico:       newSoftware(s),
 		Desglose:                 desglose,
 		FechaHoraHusoGenRegistro: formatDateTimeZone(ts),
 	}
@@ -42,7 +42,7 @@ func NewRegistroAlta(inv *bill.Invoice, ts time.Time, role IssuerRole) (*Registr
 		reg.Destinatarios = newDestinatario(inv.Customer)
 	}
 
-	if role == IssuerRoleThirdParty {
+	if r == IssuerRoleThirdParty {
 		reg.EmitidaPorTerceroODestinatario = "T"
 		reg.Tercero = newTercero(inv.Supplier)
 	}
@@ -106,4 +106,14 @@ func newTotalTaxes(inv *bill.Invoice) string {
 	}
 
 	return totalTaxes.String()
+}
+
+func newSoftware(s *Software) *Software {
+	return &Software{
+		NombreRazon:          s.NombreRazon,
+		NIF:                  s.NIF,
+		IdSistemaInformatico: s.IdSistemaInformatico,
+		Version:              s.Version,
+		NumeroInstalacion:    s.NumeroInstalacion,
+	}
 }

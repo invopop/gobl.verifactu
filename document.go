@@ -7,6 +7,7 @@ import (
 	"github.com/invopop/gobl.verifactu/doc"
 	"github.com/invopop/gobl/addons/es/verifactu"
 	"github.com/invopop/gobl/bill"
+	"github.com/invopop/gobl/head"
 	"github.com/invopop/gobl/l10n"
 )
 
@@ -26,7 +27,7 @@ func (c *Client) Convert(env *gobl.Envelope) (*doc.VeriFactu, error) {
 		return nil, errors.New("only spanish invoices are supported")
 	}
 
-	out, err := doc.NewDocument(inv, c.CurrentTime(), c.issuerRole)
+	out, err := doc.NewDocument(inv, c.CurrentTime(), c.issuerRole, c.software)
 	if err != nil {
 		return nil, err
 	}
@@ -40,6 +41,19 @@ func (c *Client) Convert(env *gobl.Envelope) (*doc.VeriFactu, error) {
 // in place.
 func (c *Client) Fingerprint(d *doc.VeriFactu) error {
 	return d.Fingerprint()
+}
+
+// AddQR adds the QR code stamp to the envelope.
+func (c *Client) AddQR(d *doc.VeriFactu, env *gobl.Envelope) error {
+	// now generate the QR codes and add them to the envelope
+	codes := d.QRCodes()
+	env.Head.AddStamp(
+		&head.Stamp{
+			Provider: verifactu.StampQR,
+			Value:    codes.QRCode,
+		},
+	)
+	return nil
 }
 
 func hasExistingStamps(env *gobl.Envelope) bool {

@@ -146,3 +146,14 @@ type RegistroAnterior struct {
 	FechaExpedicionFactura string `xml:"sum1:FechaExpedicionFactura"`
 	Huella                 string `xml:"sum1:Huella"`
 }
+
+// Software contains the details about the software that is using this library to
+// generate VeriFactu documents. These details are included in the final
+// document.
+type Software struct {
+	NombreRazon          string
+	NIF                  string
+	IdSistemaInformatico string
+	Version              string
+	NumeroInstalacion    string
+}

@@ -50,7 +50,7 @@ func init() {
 	}
 }
 
-func NewDocument(inv *bill.Invoice, ts time.Time, role IssuerRole) (*VeriFactu, error) {
+func NewDocument(inv *bill.Invoice, ts time.Time, r IssuerRole, s *Software) (*VeriFactu, error) {
 
 	doc := &VeriFactu{
 		SUMNamespace:  SUM,
@@ -65,13 +65,13 @@ func NewDocument(inv *bill.Invoice, ts time.Time, role IssuerRole) (*VeriFactu, 
 	}
 
 	if inv.Type == bill.InvoiceTypeCreditNote {
-		reg, err := NewRegistroAnulacion(inv, ts, role)
+		reg, err := NewRegistroAnulacion(inv, ts, r, s)
 		if err != nil {
 			return nil, err
 		}
 		doc.RegistroFactura.RegistroAnulacion = reg
 	} else {
-		reg, err := NewRegistroAlta(inv, ts, role)
+		reg, err := NewRegistroAlta(inv, ts, r, s)
 		if err != nil {
 			return nil, err
 		}
@@ -90,11 +90,27 @@ func (d *VeriFactu) QRCodes() *Codes {
 
 // ChainData generates the data to be used to link to this one
 // in the next entry.
-func (d *VeriFactu) ChainData() string {
+func (d *VeriFactu) ChainData() Encadenamiento {
 	if d.RegistroFactura.RegistroAlta != nil {
-		return d.RegistroFactura.RegistroAlta.Huella
+		return Encadenamiento{
+			PrimerRegistro: d.RegistroFactura.RegistroAlta.Huella,
+			RegistroAnterior: RegistroAnterior{
+				IDEmisorFactura:        d.Cabecera.Obligado.NIF,
+				NumSerieFactura:        d.RegistroFactura.RegistroAlta.Encadenamiento.RegistroAnterior.NumSerieFactura,
+				FechaExpedicionFactura: d.RegistroFactura.RegistroAlta.Encadenamiento.RegistroAnterior.FechaExpedicionFactura,
+				Huella:                 d.RegistroFactura.RegistroAlta.Encadenamiento.RegistroAnterior.Huella,
+			},
+		}
 	}
-	return d.RegistroFactura.RegistroAnulacion.Huella
+	return Encadenamiento{
+		PrimerRegistro: d.RegistroFactura.RegistroAnulacion.Huella,
+		RegistroAnterior: RegistroAnterior{
+			IDEmisorFactura:        d.Cabecera.Obligado.NIF,
+			NumSerieFactura:        d.RegistroFactura.RegistroAnulacion.Encadenamiento.RegistroAnterior.NumSerieFactura,
+			FechaExpedicionFactura: d.RegistroFactura.RegistroAnulacion.Encadenamiento.RegistroAnterior.FechaExpedicionFactura,
+			Huella:                 d.RegistroFactura.RegistroAnulacion.Encadenamiento.RegistroAnterior.Huella,
+		},
+	}
 }
 
 func (d *VeriFactu) Fingerprint() error {

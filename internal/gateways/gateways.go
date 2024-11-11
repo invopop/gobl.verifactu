@@ -44,7 +44,7 @@ type Connection struct {
 }
 
 // New instantiates a new connection using the provided config.
-func NewVerifactu(env Environment) *Connection {
+func New(env Environment) (*Connection, error) {
 	c := new(Connection)
 	c.client = resty.New()
 
@@ -55,7 +55,7 @@ func NewVerifactu(env Environment) *Connection {
 		c.client.SetBaseURL(TestingBaseURL)
 	}
 	c.client.SetDebug(os.Getenv("DEBUG") == "true")
-	return c
+	return c, nil
 }
 
 func (c *Connection) Post(ctx context.Context, doc doc.VeriFactu) error {

@@ -8,6 +8,7 @@ import (
 
 	"github.com/invopop/gobl"
 	verifactu "github.com/invopop/gobl.verifactu"
+	"github.com/invopop/gobl.verifactu/doc"
 	"github.com/spf13/cobra"
 )
 
@@ -52,7 +53,7 @@ func (c *convertOpts) runE(cmd *cobra.Command, args []string) error {
 		return fmt.Errorf("unmarshaling gobl envelope: %w", err)
 	}
 
-	vf, err := verifactu.New(&verifactu.Software{})
+	vf, err := verifactu.New(&doc.Software{})
 	if err != nil {
 		return fmt.Errorf("creating verifactu client: %w", err)
 	}
@@ -64,7 +65,7 @@ func (c *convertOpts) runE(cmd *cobra.Command, args []string) error {
 
 	data, err := doc.BytesIndent()
 	if err != nil {
-		return fmt.Errorf("generating ticketbai xml: %w", err)
+		return fmt.Errorf("generating verifactu xml: %w", err)
 	}
 
 	if _, err = out.Write(append(data, '\n')); err != nil {
