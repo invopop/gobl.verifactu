@@ -5,7 +5,9 @@ import (
 	"os"
 
 	verifactu "github.com/invopop/gobl.verifactu"
+	_ "github.com/joho/godotenv/autoload"
 	"github.com/spf13/cobra"
+	"github.com/spf13/pflag"
 )
 
 type rootOpts struct {
@@ -33,6 +35,22 @@ func (o *rootOpts) cmd() *cobra.Command {
 	return cmd
 }
 
+func (o *rootOpts) prepareFlags(f *pflag.FlagSet) {
+	f.StringVar(&o.swNIF, "sw-nif", os.Getenv("SOFTWARE_COMPANY_NIF"), "NIF of the software company")
+	f.StringVar(&o.swCompanyName, "sw-company-name", os.Getenv("SOFTWARE_COMPANY_NAME"), "Name of the software company")
+	f.StringVar(&o.swVersion, "sw-version", os.Getenv("SOFTWARE_VERSION"), "Version of the software")
+	f.StringVar(&o.swLicense, "sw-license", os.Getenv("SOFTWARE_LICENSE"), "License of the software")
+	f.BoolVarP(&o.production, "production", "p", false, "Production environment")
+}
+
+func (o *rootOpts) software() *verifactu.Software {
+	return &verifactu.Software{
+		NombreRazon: o.swCompanyName,
+		NIF:         o.swNIF,
+		Version:     o.swVersion,
+	}
+}
+
 func (o *rootOpts) outputFilename(args []string) string {
 	if len(args) >= 2 && args[1] != "-" {
 		return args[1]
@@ -53,14 +71,6 @@ func (o *rootOpts) openOutput(cmd *cobra.Command, args []string) (io.WriteCloser
 		return os.OpenFile(outFile, flags, os.ModePerm)
 	}
 	return writeCloser{cmd.OutOrStdout()}, nil
-}
-
-func (o *rootOpts) software() *verifactu.Software {
-	return &verifactu.Software{
-		NombreRazon: o.swCompanyName,
-		NIF:         o.swNIF,
-		Version:     o.swVersion,
-	}
 }
 
 type writeCloser struct {

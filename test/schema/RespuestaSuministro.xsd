@@ -51,7 +51,7 @@
 					</element>
 				</sequence>
 			</extension>
-		</complexContent>
+		</complexContent>     
 	</complexType>
 	<complexType name="RespuestaExpedidaType">
 		<annotation>

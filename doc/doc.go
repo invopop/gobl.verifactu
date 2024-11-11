@@ -88,6 +88,15 @@ func (d *VeriFactu) QRCodes() *Codes {
 	return d.generateCodes()
 }
 
+// ChainData generates the data to be used to link to this one
+// in the next entry.
+func (d *VeriFactu) ChainData() string {
+	if d.RegistroFactura.RegistroAlta != nil {
+		return d.RegistroFactura.RegistroAlta.Huella
+	}
+	return d.RegistroFactura.RegistroAnulacion.Huella
+}
+
 func (d *VeriFactu) Fingerprint() error {
 	return d.GenerateHash()
 }
@@ -95,11 +104,6 @@ func (d *VeriFactu) Fingerprint() error {
 // Bytes returns the XML document bytes
 func (d *VeriFactu) Bytes() ([]byte, error) {
 	return toBytes(d)
-}
-
-// BytesIndent returns the indented XML document bytes
-func (d *VeriFactu) BytesIndent() ([]byte, error) {
-	return toBytesIndent(d)
 }
 
 func toBytes(doc any) ([]byte, error) {
@@ -111,7 +115,7 @@ func toBytes(doc any) ([]byte, error) {
 	return buf.Bytes(), nil
 }
 
-func toBytesIndent(d any) ([]byte, error) {
+func (d *VeriFactu) BytesIndent() ([]byte, error) {
 	buf, err := buffer(d, xml.Header, true)
 	if err != nil {
 		return nil, err

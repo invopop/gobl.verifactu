@@ -5,7 +5,7 @@ import (
 	"errors"
 	"time"
 
-	"github.com/invopop/gobl.verifactu/internal/doc"
+	"github.com/invopop/gobl.verifactu/doc"
 	"github.com/invopop/gobl.verifactu/internal/gateways"
 )
 
@@ -51,7 +51,7 @@ type Client struct {
 	issuerRole doc.IssuerRole
 	curTime    time.Time
 	// zone    l10n.Code
-	gw *gateways.Conection
+	gw *gateways.Connection
 }
 
 // Option is used to configure the client.

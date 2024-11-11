@@ -29,8 +29,8 @@ func (c *sendOpts) cmd() *cobra.Command {
 
 	f := cmd.Flags()
 
-	f.StringVar(&c.previous, "prev", "", "Previous document fingerprint to chain with")
-	f.BoolVarP(&c.production, "production", "p", false, "Production environment")
+	f.StringVar(&c.previous, "prev", "p", "Previous document fingerprint to chain with")
+	f.BoolVarP(&c.production, "production", "prod", false, "Production environment")
 
 	return cmd
 }
@@ -62,7 +62,7 @@ func (c *sendOpts) runE(cmd *cobra.Command, args []string) error {
 		opts = append(opts, verifactu.InTesting())
 	}
 
-	tc, err := verifactu.New(c.software())
+	tc, err := verifactu.New(c.software(), opts...)
 	if err != nil {
 		return err
 	}
@@ -72,7 +72,7 @@ func (c *sendOpts) runE(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	err = tc.Fingerprint(td, c.previous)
+	err = tc.Fingerprint(td)
 	if err != nil {
 		return err
 	}
