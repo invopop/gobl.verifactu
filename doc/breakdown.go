@@ -6,20 +6,6 @@ import (
 	"github.com/invopop/gobl/tax"
 )
 
-// DesgloseIVA contains the breakdown of VAT amounts
-type DesgloseIVA struct {
-	DetalleIVA []*DetalleIVA
-}
-
-// DetalleIVA details about taxed amounts
-type DetalleIVA struct {
-	TipoImpositivo    string
-	BaseImponible     string
-	CuotaImpuesto     string
-	TipoRecargoEquiv  string
-	CuotaRecargoEquiv string
-}
-
 func newDesglose(inv *bill.Invoice) (*Desglose, error) {
 	desglose := &Desglose{}
 

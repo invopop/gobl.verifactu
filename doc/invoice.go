@@ -10,6 +10,7 @@ import (
 	"github.com/invopop/gobl/tax"
 )
 
+// NewRegistroAlta creates a new VeriFactu registration for an invoice.
 func NewRegistroAlta(inv *bill.Invoice, ts time.Time, r IssuerRole, s *Software) (*RegistroAlta, error) {
 	description, err := newDescription(inv.Notes)
 	if err != nil {
