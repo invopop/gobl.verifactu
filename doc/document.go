@@ -2,11 +2,13 @@ package doc
 
 import "encoding/xml"
 
+// SUM is the namespace for the main VeriFactu schema
 const (
 	SUM  = "https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/tike/cont/ws/SuministroLR.xsd"
 	SUM1 = "https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/tike/cont/ws/SuministroInformacion.xsd"
 )
 
+// VeriFactu represents the root element of a VeriFactu document
 type VeriFactu struct {
 	XMLName         xml.Name         `xml:"sum:Verifactu"`
 	Cabecera        *Cabecera        `xml:"sum:Cabecera"`
@@ -15,11 +17,13 @@ type VeriFactu struct {
 	SUM1Namespace   string           `xml:"xmlns:sum1,attr"`
 }
 
+// RegistroFactura contains either an invoice registration or cancellation
 type RegistroFactura struct {
 	RegistroAlta      *RegistroAlta      `xml:"sum1:RegistroAlta,omitempty"`
 	RegistroAnulacion *RegistroAnulacion `xml:"sum1:RegistroAnulacion,omitempty"`
 }
 
+// Cabecera contains the header information for a VeriFactu document
 type Cabecera struct {
 	Obligado              Obligado               `xml:"sum1:Obligado"`
 	Representante         *Obligado              `xml:"sum1:Representante,omitempty"`
@@ -27,21 +31,25 @@ type Cabecera struct {
 	RemisionRequerimiento *RemisionRequerimiento `xml:"sum1:RemisionRequerimiento,omitempty"`
 }
 
+// Obligado represents an obligated party in the document
 type Obligado struct {
 	NombreRazon string `xml:"sum1:NombreRazon"`
 	NIF         string `xml:"sum1:NIF"`
 }
 
+// RemisionVoluntaria contains voluntary submission details
 type RemisionVoluntaria struct {
 	FechaFinVerifactu string `xml:"sum1:FechaFinVerifactu"`
 	Incidencia        string `xml:"sum1:Incidencia"`
 }
 
+// RemisionRequerimiento contains requirement submission details
 type RemisionRequerimiento struct {
 	RefRequerimiento string `xml:"sum1:RefRequerimiento"`
 	FinRequerimiento string `xml:"sum1:FinRequerimiento"`
 }
 
+// RegistroAlta contains the details of an invoice registration
 type RegistroAlta struct {
 	IDVersion                           string                `xml:"sum1:IDVersion"`
 	IDFactura                           *IDFactura            `xml:"sum1:IDFactura"`
@@ -60,7 +68,7 @@ type RegistroAlta struct {
 	FacturaSinIdentifDestinatarioArt61d string                `xml:"sum1:FacturaSinIdentifDestinatarioArt61d,omitempty"`
 	Macrodato                           string                `xml:"sum1:Macrodato,omitempty"`
 	EmitidaPorTerceroODestinatario      string                `xml:"sum1:EmitidaPorTerceroODestinatario,omitempty"`
-	Tercero                             *Tercero              `xml:"sum1:Tercero,omitempty"`
+	Tercero                             *Party                `xml:"sum1:Tercero,omitempty"`
 	Destinatarios                       []*Destinatario       `xml:"sum1:Destinatarios>sum1:Destinatario,omitempty"`
 	Cupon                               string                `xml:"sum1:Cupon,omitempty"`
 	Desglose                            *Desglose             `xml:"sum1:Desglose"`
@@ -76,52 +84,55 @@ type RegistroAlta struct {
 	// Signature                           *xmldsig.Signature   `xml:"sum1:Signature,omitempty"`
 }
 
+// IDFactura contains the identifying information for an invoice
 type IDFactura struct {
 	IDEmisorFactura        string `xml:"sum1:IDEmisorFactura"`
 	NumSerieFactura        string `xml:"sum1:NumSerieFactura"`
 	FechaExpedicionFactura string `xml:"sum1:FechaExpedicionFactura"`
 }
 
+// FacturaRectificada represents a rectified invoice
 type FacturaRectificada struct {
 	IDFactura IDFactura `xml:"sum1:IDFactura"`
 }
 
+// FacturaSustituida represents a substituted invoice
 type FacturaSustituida struct {
 	IDFactura IDFactura `xml:"sum1:IDFactura"`
 }
 
+// ImporteRectificacion contains rectification amounts
 type ImporteRectificacion struct {
 	BaseRectificada         string `xml:"sum1:BaseRectificada"`
 	CuotaRectificada        string `xml:"sum1:CuotaRectificada"`
 	CuotaRecargoRectificado string `xml:"sum1:CuotaRecargoRectificado"`
 }
 
-type Tercero struct {
-	NIF         string `xml:"sum1:Nif,omitempty"`
-	NombreRazon string `xml:"sum1:NombreRazon"`
-	IDOtro      IDOtro `xml:"sum1:IDOtro,omitempty"`
+// Party represents a in the document, covering fields Generador, Tercero and IDDestinatario
+type Party struct {
+	NIF         string  `xml:"sum1:NIF,omitempty"`
+	NombreRazon string  `xml:"sum1:NombreRazon"`
+	IDOtro      *IDOtro `xml:"sum1:IDOtro,omitempty"`
 }
 
+// Destinatario represents a recipient in the document
 type Destinatario struct {
-	IDDestinatario IDDestinatario `xml:"sum1:IDDestinatario"`
+	IDDestinatario *Party `xml:"sum1:IDDestinatario"`
 }
 
-type IDDestinatario struct {
-	NIF         string `xml:"sum1:NIF,omitempty"`
-	NombreRazon string `xml:"sum1:NombreRazon"`
-	IDOtro      IDOtro `xml:"sum1:IDOtro,omitempty"`
-}
-
+// IDOtro contains alternative identifying information
 type IDOtro struct {
 	CodigoPais string `xml:"sum1:CodigoPais"`
 	IDType     string `xml:"sum1:IDType"`
 	ID         string `xml:"sum1:ID"`
 }
 
+// Desglose contains the breakdown details
 type Desglose struct {
 	DetalleDesglose []*DetalleDesglose `xml:"sum1:DetalleDesglose"`
 }
 
+// DetalleDesglose contains detailed breakdown information
 type DetalleDesglose struct {
 	Impuesto                      string `xml:"sum1:Impuesto"`
 	ClaveRegimen                  string `xml:"sum1:ClaveRegimen"`
@@ -135,11 +146,13 @@ type DetalleDesglose struct {
 	CuotaRecargoEquivalencia      string `xml:"sum1:CuotaRecargoEquivalencia,omitempty"`
 }
 
+// Encadenamiento contains chaining information between documents
 type Encadenamiento struct {
-	PrimerRegistro   string           `xml:"sum1:PrimerRegistro"`
+	PrimerRegistro   *string          `xml:"sum1:PrimerRegistro,omitempty"`
 	RegistroAnterior RegistroAnterior `xml:"sum1:RegistroAnterior,omitempty"`
 }
 
+// RegistroAnterior contains information about the previous registration
 type RegistroAnterior struct {
 	IDEmisorFactura        string `xml:"sum1:IDEmisorFactura"`
 	NumSerieFactura        string `xml:"sum1:NumSerieFactura"`

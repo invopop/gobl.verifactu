@@ -39,8 +39,8 @@ func (c *Client) Convert(env *gobl.Envelope) (*doc.VeriFactu, error) {
 // data provided from the previous chain data. If there was no previous
 // document in the chain, the parameter should be nil. The document is updated
 // in place.
-func (c *Client) Fingerprint(d *doc.VeriFactu) error {
-	return d.Fingerprint()
+func (c *Client) Fingerprint(d *doc.VeriFactu, prev *doc.Encadenamiento) error {
+	return d.Fingerprint(prev)
 }
 
 // AddQR adds the QR code stamp to the envelope.

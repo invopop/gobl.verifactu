@@ -7,7 +7,7 @@ toolchain go1.22.1
 // replace github.com/invopop/gobl => ../gobl
 
 require (
-	github.com/invopop/gobl v0.204.2-0.20241111171701-580b5e4d959c
+	github.com/invopop/gobl v0.204.2-0.20241112151514-033c0ce0cd34
 	github.com/invopop/xmldsig v0.10.0
 	github.com/spf13/cobra v1.8.1
 )

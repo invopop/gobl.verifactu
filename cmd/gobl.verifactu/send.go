@@ -8,6 +8,7 @@ import (
 
 	"github.com/invopop/gobl"
 	verifactu "github.com/invopop/gobl.verifactu"
+	"github.com/invopop/gobl.verifactu/doc"
 	"github.com/spf13/cobra"
 )
 
@@ -28,9 +29,9 @@ func (c *sendOpts) cmd() *cobra.Command {
 	}
 
 	f := cmd.Flags()
+	c.prepareFlags(f)
 
-	f.StringVar(&c.previous, "prev", "p", "Previous document fingerprint to chain with")
-	f.BoolVarP(&c.production, "production", "prod", false, "Production environment")
+	f.StringVar(&c.previous, "prev", "", "Previous document fingerprint to chain with")
 
 	return cmd
 }
@@ -72,7 +73,15 @@ func (c *sendOpts) runE(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	err = tc.Fingerprint(td)
+	var prev *doc.Encadenamiento
+	if c.previous != "" {
+		prev = new(doc.Encadenamiento)
+		if err := json.Unmarshal([]byte(c.previous), prev); err != nil {
+			return err
+		}
+	}
+
+	err = tc.Fingerprint(td, prev)
 	if err != nil {
 		return err
 	}

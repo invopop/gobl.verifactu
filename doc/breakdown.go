@@ -34,6 +34,8 @@ func buildDetalleDesglose(r *tax.RateTotal) (*DetalleDesglose, error) {
 
 	if r.Key == tax.RateExempt {
 		detalle.OperacionExenta = r.Ext[verifactu.ExtKeyExemption].String()
+	} else {
+		detalle.CalificacionOperacion = r.Ext[verifactu.ExtKeyTaxClassification].String()
 	}
 
 	if r.Percent != nil {

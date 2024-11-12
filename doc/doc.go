@@ -93,28 +93,26 @@ func (d *VeriFactu) QRCodes() *Codes {
 func (d *VeriFactu) ChainData() Encadenamiento {
 	if d.RegistroFactura.RegistroAlta != nil {
 		return Encadenamiento{
-			PrimerRegistro: d.RegistroFactura.RegistroAlta.Huella,
 			RegistroAnterior: RegistroAnterior{
 				IDEmisorFactura:        d.Cabecera.Obligado.NIF,
-				NumSerieFactura:        d.RegistroFactura.RegistroAlta.Encadenamiento.RegistroAnterior.NumSerieFactura,
-				FechaExpedicionFactura: d.RegistroFactura.RegistroAlta.Encadenamiento.RegistroAnterior.FechaExpedicionFactura,
-				Huella:                 d.RegistroFactura.RegistroAlta.Encadenamiento.RegistroAnterior.Huella,
+				NumSerieFactura:        d.RegistroFactura.RegistroAlta.IDFactura.NumSerieFactura,
+				FechaExpedicionFactura: d.RegistroFactura.RegistroAlta.IDFactura.FechaExpedicionFactura,
+				Huella:                 d.RegistroFactura.RegistroAlta.Huella,
 			},
 		}
 	}
 	return Encadenamiento{
-		PrimerRegistro: d.RegistroFactura.RegistroAnulacion.Huella,
 		RegistroAnterior: RegistroAnterior{
 			IDEmisorFactura:        d.Cabecera.Obligado.NIF,
-			NumSerieFactura:        d.RegistroFactura.RegistroAnulacion.Encadenamiento.RegistroAnterior.NumSerieFactura,
-			FechaExpedicionFactura: d.RegistroFactura.RegistroAnulacion.Encadenamiento.RegistroAnterior.FechaExpedicionFactura,
-			Huella:                 d.RegistroFactura.RegistroAnulacion.Encadenamiento.RegistroAnterior.Huella,
+			NumSerieFactura:        d.RegistroFactura.RegistroAnulacion.IDFactura.NumSerieFactura,
+			FechaExpedicionFactura: d.RegistroFactura.RegistroAnulacion.IDFactura.FechaExpedicionFactura,
+			Huella:                 d.RegistroFactura.RegistroAnulacion.Huella,
 		},
 	}
 }
 
-func (d *VeriFactu) Fingerprint() error {
-	return d.GenerateHash()
+func (d *VeriFactu) Fingerprint(prev *Encadenamiento) error {
+	return d.GenerateHash(prev)
 }
 
 // Bytes returns the XML document bytes
@@ -124,15 +122,6 @@ func (d *VeriFactu) Bytes() ([]byte, error) {
 
 func toBytes(doc any) ([]byte, error) {
 	buf, err := buffer(doc, xml.Header, false)
-	if err != nil {
-		return nil, err
-	}
-
-	return buf.Bytes(), nil
-}
-
-func (d *VeriFactu) BytesIndent() ([]byte, error) {
-	buf, err := buffer(d, xml.Header, true)
 	if err != nil {
 		return nil, err
 	}

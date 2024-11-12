@@ -45,15 +45,26 @@ func NewRegistroAlta(inv *bill.Invoice, ts time.Time, r IssuerRole, s *Software)
 
 	if r == IssuerRoleThirdParty {
 		reg.EmitidaPorTerceroODestinatario = "T"
-		reg.Tercero = newTercero(inv.Supplier)
+		reg.Tercero = newParty(inv.Supplier)
 	}
 
+	// Check
+	if inv.Type == bill.InvoiceTypeCorrective {
+		reg.Subsanacion = "S"
+	}
+
+	// Check
 	if inv.HasTags(tax.TagSimplified) {
 		if inv.Type == bill.InvoiceTypeStandard {
 			reg.FacturaSimplificadaArt7273 = "S"
 		} else {
 			reg.FacturaSinIdentifDestinatarioArt61d = "S"
 		}
+	}
+
+	// Flag for operations with totals over 100,000,000€. Added with optimism.
+	if inv.Totals.TotalWithTax.Compare(num.MakeAmount(100000000, 0)) == 1 {
+		reg.Macrodato = "S"
 	}
 
 	return reg, nil

@@ -53,13 +53,15 @@ func (d *VeriFactu) fingerprintAnulacion(inv *RegistroAnulacion) error {
 }
 
 // GenerateHash generates the SHA-256 hash for the invoice data.
-func (d *VeriFactu) GenerateHash() error {
+func (d *VeriFactu) GenerateHash(prev *Encadenamiento) error {
 	// Concatenate f according to Verifactu specifications
 	if d.RegistroFactura.RegistroAlta != nil {
+		d.RegistroFactura.RegistroAlta.Encadenamiento = prev
 		if err := d.fingerprintAlta(d.RegistroFactura.RegistroAlta); err != nil {
 			return err
 		}
 	} else if d.RegistroFactura.RegistroAnulacion != nil {
+		d.RegistroFactura.RegistroAnulacion.Encadenamiento = prev
 		if err := d.fingerprintAnulacion(d.RegistroFactura.RegistroAnulacion); err != nil {
 			return err
 		}
