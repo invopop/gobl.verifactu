@@ -6,23 +6,20 @@ import (
 	"github.com/invopop/gobl/tax"
 )
 
-func newDesglose(inv *bill.Invoice) (*Desglose, error) {
+func newDesglose(inv *bill.Invoice) *Desglose {
 	desglose := &Desglose{}
 
 	for _, c := range inv.Totals.Taxes.Categories {
 		for _, r := range c.Rates {
-			detalleDesglose, err := buildDetalleDesglose(r)
-			if err != nil {
-				return nil, err
-			}
+			detalleDesglose := buildDetalleDesglose(r)
 			desglose.DetalleDesglose = append(desglose.DetalleDesglose, detalleDesglose)
 		}
 	}
 
-	return desglose, nil
+	return desglose
 }
 
-func buildDetalleDesglose(r *tax.RateTotal) (*DetalleDesglose, error) {
+func buildDetalleDesglose(r *tax.RateTotal) *DetalleDesglose {
 	detalle := &DetalleDesglose{
 		BaseImponibleOImporteNoSujeto: r.Base.String(),
 		CuotaRepercutida:              r.Amount.String(),
@@ -41,5 +38,5 @@ func buildDetalleDesglose(r *tax.RateTotal) (*DetalleDesglose, error) {
 	if r.Percent != nil {
 		detalle.TipoImpositivo = r.Percent.String()
 	}
-	return detalle, nil
+	return detalle
 }

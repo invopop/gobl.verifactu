@@ -1,3 +1,4 @@
+// Package doc provides the VeriFactu document mappings from GOBL
 package doc
 
 import (
@@ -23,6 +24,7 @@ const (
 )
 
 const (
+	// CurrentVersion is the current version of the VeriFactu document
 	CurrentVersion = "1.0"
 )
 
@@ -50,6 +52,7 @@ func init() {
 	}
 }
 
+// NewDocument creates a new VeriFactu document
 func NewDocument(inv *bill.Invoice, ts time.Time, r IssuerRole, s *Software) (*VeriFactu, error) {
 
 	doc := &VeriFactu{
@@ -81,6 +84,7 @@ func NewDocument(inv *bill.Invoice, ts time.Time, r IssuerRole, s *Software) (*V
 	return doc, nil
 }
 
+// QRCodes generates the QR code for the document
 func (d *VeriFactu) QRCodes() *Codes {
 	if d.RegistroFactura.RegistroAlta.Encadenamiento == nil {
 		return nil
@@ -111,6 +115,7 @@ func (d *VeriFactu) ChainData() Encadenamiento {
 	}
 }
 
+// Fingerprint generates the SHA-256 fingerprint for the document
 func (d *VeriFactu) Fingerprint(prev *Encadenamiento) error {
 	return d.GenerateHash(prev)
 }

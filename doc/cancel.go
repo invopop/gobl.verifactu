@@ -6,22 +6,6 @@ import (
 	"github.com/invopop/gobl/bill"
 )
 
-type RegistroAnulacion struct {
-	IDVersion                string          `xml:"IDVersion"`
-	IDFactura                *IDFactura      `xml:"IDFactura"`
-	RefExterna               string          `xml:"RefExterna,omitempty"`
-	SinRegistroPrevio        string          `xml:"SinRegistroPrevio"`
-	RechazoPrevio            string          `xml:"RechazoPrevio,omitempty"`
-	GeneradoPor              string          `xml:"GeneradoPor"`
-	Generador                *Party          `xml:"Generador"`
-	Encadenamiento           *Encadenamiento `xml:"Encadenamiento"`
-	SistemaInformatico       *Software       `xml:"SistemaInformatico"`
-	FechaHoraHusoGenRegistro string          `xml:"FechaHoraHusoGenRegistro"`
-	TipoHuella               string          `xml:"TipoHuella"`
-	Huella                   string          `xml:"Huella"`
-	Signature                string          `xml:"Signature"`
-}
-
 // NewRegistroAnulacion provides support for credit notes
 func NewRegistroAnulacion(inv *bill.Invoice, ts time.Time, r IssuerRole, s *Software) (*RegistroAnulacion, error) {
 	reg := &RegistroAnulacion{
@@ -31,12 +15,13 @@ func NewRegistroAnulacion(inv *bill.Invoice, ts time.Time, r IssuerRole, s *Soft
 			NumSerieFactura:        invoiceNumber(inv.Series, inv.Code),
 			FechaExpedicionFactura: inv.IssueDate.Time().Format("02-01-2006"),
 		},
-		// SinRegistroPrevio: "N",
+		// SinRegistroPrevio: "N", // TODO: Think what to do with this field
+		// RechazoPrevio:            "N", // TODO: Think what to do with this field
 		GeneradoPor:              string(r),
 		Generador:                makeGenerador(inv, r),
 		SistemaInformatico:       newSoftware(s),
 		FechaHoraHusoGenRegistro: formatDateTimeZone(ts),
-		TipoHuella:               "01",
+		TipoHuella:               TipoHuella,
 	}
 
 	return reg, nil

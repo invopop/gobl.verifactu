@@ -17,10 +17,7 @@ func NewRegistroAlta(inv *bill.Invoice, ts time.Time, r IssuerRole, s *Software)
 		return nil, err
 	}
 
-	desglose, err := newDesglose(inv)
-	if err != nil {
-		return nil, err
-	}
+	desglose := newDesglose(inv)
 
 	reg := &RegistroAlta{
 		IDVersion: CurrentVersion,
@@ -37,6 +34,7 @@ func NewRegistroAlta(inv *bill.Invoice, ts time.Time, r IssuerRole, s *Software)
 		SistemaInformatico:       newSoftware(s),
 		Desglose:                 desglose,
 		FechaHoraHusoGenRegistro: formatDateTimeZone(ts),
+		TipoHuella:               TipoHuella,
 	}
 
 	if inv.Customer != nil {

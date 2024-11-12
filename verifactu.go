@@ -1,3 +1,4 @@
+// Package verifactu provides the VeriFactu client
 package verifactu
 
 import (

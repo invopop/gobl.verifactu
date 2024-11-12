@@ -7,6 +7,9 @@ import (
 	"strings"
 )
 
+// TipoHuella is the SHA-256 fingerprint type for Verifactu - L12
+const TipoHuella = "01"
+
 // FormatField returns a formatted field as key=value or key= if the value is empty.
 func FormatField(key, value string) string {
 	value = strings.TrimSpace(value) // Remove whitespace

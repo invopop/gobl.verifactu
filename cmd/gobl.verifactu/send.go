@@ -101,5 +101,22 @@ func (c *sendOpts) runE(cmd *cobra.Command, args []string) error {
 	}
 	fmt.Printf("Generated document with fingerprint: \n%s\n", string(data))
 
+	// TEMP
+
+	out, err := c.openOutput(cmd, args)
+	if err != nil {
+		return err
+	}
+	defer out.Close() // nolint:errcheck
+
+	convOut, err := td.Bytes()
+	if err != nil {
+		return fmt.Errorf("generating verifactu xml: %w", err)
+	}
+
+	if _, err = out.Write(append(convOut, '\n')); err != nil {
+		return fmt.Errorf("writing verifactu xml: %w", err)
+	}
+
 	return nil
 }

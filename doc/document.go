@@ -78,10 +78,27 @@ type RegistroAlta struct {
 	SistemaInformatico                  *Software             `xml:"sum1:SistemaInformatico"`
 	FechaHoraHusoGenRegistro            string                `xml:"sum1:FechaHoraHusoGenRegistro"`
 	NumRegistroAcuerdoFacturacion       string                `xml:"sum1:NumRegistroAcuerdoFacturacion,omitempty"`
-	IdAcuerdoSistemaInformatico         string                `xml:"sum1:IdAcuerdoSistemaInformatico,omitempty"`
+	IdAcuerdoSistemaInformatico         string                `xml:"sum1:IdAcuerdoSistemaInformatico,omitempty"` //nolint:revive
 	TipoHuella                          string                `xml:"sum1:TipoHuella"`
 	Huella                              string                `xml:"sum1:Huella"`
 	// Signature                           *xmldsig.Signature   `xml:"sum1:Signature,omitempty"`
+}
+
+// RegistroAnulacion contains the details of an invoice cancellation
+type RegistroAnulacion struct {
+	IDVersion                string          `xml:"IDVersion"`
+	IDFactura                *IDFactura      `xml:"IDFactura"`
+	RefExterna               string          `xml:"RefExterna,omitempty"`
+	SinRegistroPrevio        string          `xml:"SinRegistroPrevio"`
+	RechazoPrevio            string          `xml:"RechazoPrevio,omitempty"`
+	GeneradoPor              string          `xml:"GeneradoPor"`
+	Generador                *Party          `xml:"Generador"`
+	Encadenamiento           *Encadenamiento `xml:"Encadenamiento"`
+	SistemaInformatico       *Software       `xml:"SistemaInformatico"`
+	FechaHoraHusoGenRegistro string          `xml:"FechaHoraHusoGenRegistro"`
+	TipoHuella               string          `xml:"TipoHuella"`
+	Huella                   string          `xml:"Huella"`
+	Signature                string          `xml:"Signature"`
 }
 
 // IDFactura contains the identifying information for an invoice
@@ -164,9 +181,9 @@ type RegistroAnterior struct {
 // generate VeriFactu documents. These details are included in the final
 // document.
 type Software struct {
-	NombreRazon          string
-	NIF                  string
-	IdSistemaInformatico string
-	Version              string
-	NumeroInstalacion    string
+	NombreRazon          string `xml:"sum1:NombreRazon"`
+	NIF                  string `xml:"sum1:NIF"`
+	IdSistemaInformatico string `xml:"sum1:IdSistemaInformatico"` //nolint:revive
+	Version              string `xml:"sum1:Version"`
+	NumeroInstalacion    string `xml:"sum1:NumeroInstalacion"`
 }

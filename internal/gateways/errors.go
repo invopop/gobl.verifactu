@@ -5,7 +5,7 @@ import (
 	"strings"
 )
 
-// Error codes and their descriptions from VeriFactu
+// ErrorCodes and their descriptions from VeriFactu
 var ErrorCodes = map[string]string{
 	// Errors that cause rejection of the entire submission
 	"4102": "El XML no cumple el esquema. Falta informar campo obligatorio.",
@@ -120,12 +120,12 @@ func (e *Error) withMessage(msg string) *Error {
 	return e
 }
 
-func (e *Error) withCause(err error) *Error {
-	e = e.clone()
-	e.cause = err
-	e.message = err.Error()
-	return e
-}
+// func (e *Error) withCause(err error) *Error {
+// 	e = e.clone()
+// 	e.cause = err
+// 	e.message = err.Error()
+// 	return e
+// }
 
 func (e *Error) clone() *Error {
 	ne := new(Error)

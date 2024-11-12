@@ -11,7 +11,7 @@ import (
 	"github.com/invopop/gobl/l10n"
 )
 
-// NewDocument creates a new  document from the provided GOBL Envelope.
+// Convert creates a new  document from the provided GOBL Envelope.
 // The envelope must contain a valid Invoice.
 func (c *Client) Convert(env *gobl.Envelope) (*doc.VeriFactu, error) {
 	// Extract the Invoice

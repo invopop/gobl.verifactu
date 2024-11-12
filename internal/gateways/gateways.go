@@ -1,3 +1,4 @@
+// Package gateways provides the VeriFactu gateway
 package gateways
 
 import (
@@ -27,7 +28,7 @@ const (
 	correctStatus = "Correcto"
 )
 
-// VeriFactuResponse defines the response fields from the VeriFactu gateway.
+// Response defines the response fields from the VeriFactu gateway.
 type Response struct {
 	XMLName        xml.Name `xml:"RespuestaSuministro"`
 	CSV            string   `xml:"CSV"`
@@ -58,6 +59,7 @@ func New(env Environment) (*Connection, error) {
 	return c, nil
 }
 
+// Post sends the VeriFactu document to the gateway
 func (c *Connection) Post(ctx context.Context, doc doc.VeriFactu) error {
 	payload, err := doc.Bytes()
 	if err != nil {

@@ -14,7 +14,7 @@ type rootOpts struct {
 	swNIF                  string
 	swNombreRazon          string
 	swVersion              string
-	swIdSistemaInformatico string
+	swIDSistemaInformatico string
 	swNumeroInstalacion    string
 	production             bool
 }
@@ -31,6 +31,7 @@ func (o *rootOpts) cmd() *cobra.Command {
 	}
 
 	cmd.AddCommand(versionCmd())
+	cmd.AddCommand(send(o).cmd())
 	cmd.AddCommand(convert(o).cmd())
 
 	return cmd
@@ -40,7 +41,7 @@ func (o *rootOpts) prepareFlags(f *pflag.FlagSet) {
 	f.StringVar(&o.swNIF, "sw-nif", os.Getenv("SOFTWARE_COMPANY_NIF"), "NIF of the software company")
 	f.StringVar(&o.swNombreRazon, "sw-name", os.Getenv("SOFTWARE_COMPANY_NAME"), "Name of the software company")
 	f.StringVar(&o.swVersion, "sw-version", os.Getenv("SOFTWARE_VERSION"), "Version of the software")
-	f.StringVar(&o.swIdSistemaInformatico, "sw-id", os.Getenv("SOFTWARE_ID_SISTEMA_INFORMATICO"), "ID of the software system")
+	f.StringVar(&o.swIDSistemaInformatico, "sw-id", os.Getenv("SOFTWARE_ID_SISTEMA_INFORMATICO"), "ID of the software system")
 	f.StringVar(&o.swNumeroInstalacion, "sw-inst", os.Getenv("SOFTWARE_NUMERO_INSTALACION"), "Number of the software installation")
 	f.BoolVarP(&o.production, "production", "p", false, "Production environment")
 }
@@ -50,7 +51,7 @@ func (o *rootOpts) software() *doc.Software {
 		NIF:                  o.swNIF,
 		NombreRazon:          o.swNombreRazon,
 		Version:              o.swVersion,
-		IdSistemaInformatico: o.swIdSistemaInformatico,
+		IdSistemaInformatico: o.swIDSistemaInformatico,
 		NumeroInstalacion:    o.swNumeroInstalacion,
 	}
 }
