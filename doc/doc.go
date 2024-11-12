@@ -125,8 +125,22 @@ func (d *VeriFactu) Bytes() ([]byte, error) {
 	return toBytes(d)
 }
 
+// BytesIndent returns the indented XML document bytes
+func (d *VeriFactu) BytesIndent() ([]byte, error) {
+	return toBytesIndent(d)
+}
+
 func toBytes(doc any) ([]byte, error) {
 	buf, err := buffer(doc, xml.Header, false)
+	if err != nil {
+		return nil, err
+	}
+
+	return buf.Bytes(), nil
+}
+
+func toBytesIndent(doc any) ([]byte, error) {
+	buf, err := buffer(doc, xml.Header, true)
 	if err != nil {
 		return nil, err
 	}

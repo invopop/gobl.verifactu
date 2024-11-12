@@ -57,6 +57,9 @@ func (d *VeriFactu) fingerprintAnulacion(inv *RegistroAnulacion) error {
 
 // GenerateHash generates the SHA-256 hash for the invoice data.
 func (d *VeriFactu) GenerateHash(prev *Encadenamiento) error {
+	if prev == nil {
+		return fmt.Errorf("previous document is required")
+	}
 	// Concatenate f according to Verifactu specifications
 	if d.RegistroFactura.RegistroAlta != nil {
 		d.RegistroFactura.RegistroAlta.Encadenamiento = prev

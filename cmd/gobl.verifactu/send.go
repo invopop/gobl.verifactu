@@ -109,7 +109,7 @@ func (c *sendOpts) runE(cmd *cobra.Command, args []string) error {
 	}
 	defer out.Close() // nolint:errcheck
 
-	convOut, err := td.Bytes()
+	convOut, err := td.BytesIndent()
 	if err != nil {
 		return fmt.Errorf("generating verifactu xml: %w", err)
 	}

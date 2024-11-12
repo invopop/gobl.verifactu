@@ -8,7 +8,6 @@ import (
 
 	"github.com/invopop/gobl"
 	verifactu "github.com/invopop/gobl.verifactu"
-	"github.com/invopop/gobl.verifactu/doc"
 	"github.com/spf13/cobra"
 )
 
@@ -53,7 +52,7 @@ func (c *convertOpts) runE(cmd *cobra.Command, args []string) error {
 		return fmt.Errorf("unmarshaling gobl envelope: %w", err)
 	}
 
-	vf, err := verifactu.New(&doc.Software{})
+	vf, err := verifactu.New(c.software())
 	if err != nil {
 		return fmt.Errorf("creating verifactu client: %w", err)
 	}
@@ -63,7 +62,7 @@ func (c *convertOpts) runE(cmd *cobra.Command, args []string) error {
 		panic(err)
 	}
 
-	data, err := doc.Bytes()
+	data, err := doc.BytesIndent()
 	if err != nil {
 		return fmt.Errorf("generating verifactu xml: %w", err)
 	}
