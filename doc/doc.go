@@ -116,7 +116,7 @@ func (d *VeriFactu) ChainData() Encadenamiento {
 }
 
 // Fingerprint generates the SHA-256 fingerprint for the document
-func (d *VeriFactu) Fingerprint(prev *Encadenamiento) error {
+func (d *VeriFactu) Fingerprint(prev *ChainData) error {
 	return d.GenerateHash(prev)
 }
 

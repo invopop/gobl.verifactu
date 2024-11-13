@@ -12,19 +12,19 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type sendOpts struct {
+type sendTestOpts struct {
 	*rootOpts
 	previous string
 }
 
-func send(o *rootOpts) *sendOpts {
-	return &sendOpts{rootOpts: o}
+func sendTest(o *rootOpts) *sendTestOpts {
+	return &sendTestOpts{rootOpts: o}
 }
 
-func (c *sendOpts) cmd() *cobra.Command {
+func (c *sendTestOpts) cmd() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "send [infile]",
-		Short: "Sends the GOBL invoice to the VeriFactu service",
+		Use:   "sendTest [infile]",
+		Short: "Sends the GOBL invoiceFactu service",
 		RunE:  c.runE,
 	}
 
@@ -36,7 +36,7 @@ func (c *sendOpts) cmd() *cobra.Command {
 	return cmd
 }
 
-func (c *sendOpts) runE(cmd *cobra.Command, args []string) error {
+func (c *sendTestOpts) runE(cmd *cobra.Command, args []string) error {
 	input, err := openInput(cmd, args)
 	if err != nil {
 		return err
@@ -55,12 +55,7 @@ func (c *sendOpts) runE(cmd *cobra.Command, args []string) error {
 
 	opts := []verifactu.Option{
 		verifactu.WithThirdPartyIssuer(),
-	}
-
-	if c.production {
-		opts = append(opts, verifactu.InProduction())
-	} else {
-		opts = append(opts, verifactu.InTesting())
+		verifactu.InTesting(),
 	}
 
 	tc, err := verifactu.New(c.software(), opts...)
@@ -73,12 +68,15 @@ func (c *sendOpts) runE(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	var prev *doc.ChainData
-	if c.previous != "" {
-		prev = new(doc.ChainData)
-		if err := json.Unmarshal([]byte(c.previous), prev); err != nil {
-			return err
-		}
+	c.previous = `{
+		"emisor": "B123456789",
+		"serie": "FACT-001", 
+		"fecha": "2024-11-11",
+		"huella": "abc123def456"
+	}`
+	prev := new(doc.ChainData)
+	if err := json.Unmarshal([]byte(c.previous), prev); err != nil {
+		return err
 	}
 
 	err = tc.Fingerprint(td, prev)
@@ -89,19 +87,6 @@ func (c *sendOpts) runE(cmd *cobra.Command, args []string) error {
 	if err := tc.AddQR(td, env); err != nil {
 		return err
 	}
-
-	err = tc.Post(cmd.Context(), td)
-	if err != nil {
-		return err
-	}
-
-	data, err := json.Marshal(td.ChainData())
-	if err != nil {
-		return err
-	}
-	fmt.Printf("Generated document with fingerprint: \n%s\n", string(data))
-
-	// TEMP
 
 	out, err := c.openOutput(cmd, args)
 	if err != nil {
@@ -117,6 +102,20 @@ func (c *sendOpts) runE(cmd *cobra.Command, args []string) error {
 	if _, err = out.Write(append(convOut, '\n')); err != nil {
 		return fmt.Errorf("writing verifactu xml: %w", err)
 	}
+
+	err = tc.Post(cmd.Context(), td)
+	if err != nil {
+		return err
+	}
+	fmt.Println("made it!")
+
+	data, err := json.Marshal(td.ChainData())
+	if err != nil {
+		return err
+	}
+	fmt.Printf("Generated document with fingerprint: \n%s\n", string(data))
+
+	// TEMP
 
 	return nil
 }

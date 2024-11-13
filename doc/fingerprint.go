@@ -10,6 +10,16 @@ import (
 // TipoHuella is the SHA-256 fingerprint type for Verifactu - L12
 const TipoHuella = "01"
 
+// ChainData contains the fields of this invoice that will be
+// required for fingerprinting the next invoice. JSON tags are
+// provided to help with serialization.
+type ChainData struct {
+	IDEmisorFactura        string `json:"emisor"`
+	NumSerieFactura        string `json:"serie"`
+	FechaExpedicionFactura string `json:"fecha"`
+	Huella                 string `json:"huella"`
+}
+
 // FormatField returns a formatted field as key=value or key= if the value is empty.
 func FormatField(key, value string) string {
 	value = strings.TrimSpace(value) // Remove whitespace
@@ -56,18 +66,32 @@ func (d *VeriFactu) fingerprintAnulacion(inv *RegistroAnulacion) error {
 }
 
 // GenerateHash generates the SHA-256 hash for the invoice data.
-func (d *VeriFactu) GenerateHash(prev *Encadenamiento) error {
+func (d *VeriFactu) GenerateHash(prev *ChainData) error {
 	if prev == nil {
 		return fmt.Errorf("previous document is required")
 	}
 	// Concatenate f according to Verifactu specifications
 	if d.RegistroFactura.RegistroAlta != nil {
-		d.RegistroFactura.RegistroAlta.Encadenamiento = prev
+		d.RegistroFactura.RegistroAlta.Encadenamiento = &Encadenamiento{
+			RegistroAnterior: RegistroAnterior{
+				IDEmisorFactura:        prev.IDEmisorFactura,
+				NumSerieFactura:        prev.NumSerieFactura,
+				FechaExpedicionFactura: prev.FechaExpedicionFactura,
+				Huella:                 prev.Huella,
+			},
+		}
 		if err := d.fingerprintAlta(d.RegistroFactura.RegistroAlta); err != nil {
 			return err
 		}
 	} else if d.RegistroFactura.RegistroAnulacion != nil {
-		d.RegistroFactura.RegistroAnulacion.Encadenamiento = prev
+		d.RegistroFactura.RegistroAnulacion.Encadenamiento = &Encadenamiento{
+			RegistroAnterior: RegistroAnterior{
+				IDEmisorFactura:        prev.IDEmisorFactura,
+				NumSerieFactura:        prev.NumSerieFactura,
+				FechaExpedicionFactura: prev.FechaExpedicionFactura,
+				Huella:                 prev.Huella,
+			},
+		}
 		if err := d.fingerprintAnulacion(d.RegistroFactura.RegistroAnulacion); err != nil {
 			return err
 		}
