@@ -181,9 +181,13 @@ type RegistroAnterior struct {
 // generate VeriFactu documents. These details are included in the final
 // document.
 type Software struct {
-	NombreRazon          string `xml:"sum1:NombreRazon"`
-	NIF                  string `xml:"sum1:NIF"`
-	IdSistemaInformatico string `xml:"sum1:IdSistemaInformatico"` //nolint:revive
-	Version              string `xml:"sum1:Version"`
-	NumeroInstalacion    string `xml:"sum1:NumeroInstalacion"`
+	NombreRazon                 string `xml:"sum1:NombreRazon"`
+	NIF                         string `xml:"sum1:NIF"`
+	NombreSistemaInformatico    string `xml:"sum1:NombreSistemaInformatico,omitempty"`
+	IdSistemaInformatico        string `xml:"sum1:IdSistemaInformatico"` //nolint:revive
+	Version                     string `xml:"sum1:Version"`
+	NumeroInstalacion           string `xml:"sum1:NumeroInstalacion"`
+	TipoUsoPosibleSoloVerifactu string `xml:"sum1:TipoUsoPosibleSoloVerifactu,omitempty"`
+	TipoUsoPosibleMultiOT       string `xml:"sum1:TipoUsoPosibleMultiOT,omitempty"`
+	IndicadorMultiplesOT        string `xml:"sum1:IndicadorMultiplesOT,omitempty"`
 }

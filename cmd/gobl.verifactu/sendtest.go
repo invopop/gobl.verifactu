@@ -9,6 +9,7 @@ import (
 	"github.com/invopop/gobl"
 	verifactu "github.com/invopop/gobl.verifactu"
 	"github.com/invopop/gobl.verifactu/doc"
+	"github.com/invopop/xmldsig"
 	"github.com/spf13/cobra"
 )
 
@@ -53,7 +54,13 @@ func (c *sendTestOpts) runE(cmd *cobra.Command, args []string) error {
 		return fmt.Errorf("unmarshaling gobl envelope: %w", err)
 	}
 
+	cert, err := xmldsig.LoadCertificate(c.cert, c.password)
+	if err != nil {
+		return err
+	}
+
 	opts := []verifactu.Option{
+		verifactu.WithCertificate(cert),
 		verifactu.WithThirdPartyIssuer(),
 		verifactu.InTesting(),
 	}
@@ -72,7 +79,7 @@ func (c *sendTestOpts) runE(cmd *cobra.Command, args []string) error {
 		"emisor": "B123456789",
 		"serie": "FACT-001", 
 		"fecha": "2024-11-11",
-		"huella": "abc123def456"
+		"huella": "3C464DAF61ACB827C65FDA19F352A4E3BDC2C640E9E9FC4CC058073F38F12F60"
 	}`
 	prev := new(doc.ChainData)
 	if err := json.Unmarshal([]byte(c.previous), prev); err != nil {

@@ -11,10 +11,13 @@ import (
 )
 
 type rootOpts struct {
-	swNIF                  string
+	cert                   string
+	password               string
 	swNombreRazon          string
-	swVersion              string
+	swNIF                  string
+	swName                 string
 	swIDSistemaInformatico string
+	swVersion              string
 	swNumeroInstalacion    string
 	production             bool
 }
@@ -39,8 +42,11 @@ func (o *rootOpts) cmd() *cobra.Command {
 }
 
 func (o *rootOpts) prepareFlags(f *pflag.FlagSet) {
+	f.StringVar(&o.cert, "cert", os.Getenv("CERTIFICATE_PATH"), "Certificate for authentication")
+	f.StringVar(&o.password, "password", os.Getenv("CERTIFICATE_PASSWORD"), "Password of the certificate")
 	f.StringVar(&o.swNIF, "sw-nif", os.Getenv("SOFTWARE_COMPANY_NIF"), "NIF of the software company")
-	f.StringVar(&o.swNombreRazon, "sw-name", os.Getenv("SOFTWARE_COMPANY_NAME"), "Name of the software company")
+	f.StringVar(&o.swName, "sw-name", os.Getenv("SOFTWARE_NAME"), "Name of the software")
+	f.StringVar(&o.swNombreRazon, "sw-company", os.Getenv("SOFTWARE_COMPANY_NAME"), "Name of the software company")
 	f.StringVar(&o.swVersion, "sw-version", os.Getenv("SOFTWARE_VERSION"), "Version of the software")
 	f.StringVar(&o.swIDSistemaInformatico, "sw-id", os.Getenv("SOFTWARE_ID_SISTEMA_INFORMATICO"), "ID of the software system")
 	f.StringVar(&o.swNumeroInstalacion, "sw-inst", os.Getenv("SOFTWARE_NUMERO_INSTALACION"), "Number of the software installation")
@@ -49,11 +55,15 @@ func (o *rootOpts) prepareFlags(f *pflag.FlagSet) {
 
 func (o *rootOpts) software() *doc.Software {
 	return &doc.Software{
-		NIF:                  o.swNIF,
-		NombreRazon:          o.swNombreRazon,
-		Version:              o.swVersion,
-		IdSistemaInformatico: o.swIDSistemaInformatico,
-		NumeroInstalacion:    o.swNumeroInstalacion,
+		NIF:                         o.swNIF,
+		NombreRazon:                 o.swNombreRazon,
+		Version:                     o.swVersion,
+		IdSistemaInformatico:        o.swIDSistemaInformatico,
+		NumeroInstalacion:           o.swNumeroInstalacion,
+		NombreSistemaInformatico:    o.swName,
+		TipoUsoPosibleSoloVerifactu: "S",
+		TipoUsoPosibleMultiOT:       "S",
+		IndicadorMultiplesOT:        "S",
 	}
 }
 

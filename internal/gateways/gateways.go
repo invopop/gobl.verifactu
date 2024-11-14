@@ -11,6 +11,7 @@ import (
 
 	"github.com/go-resty/resty/v2"
 	"github.com/invopop/gobl.verifactu/doc"
+	"github.com/invopop/xmldsig"
 )
 
 // Environment defines the environment to use for connections
@@ -45,7 +46,11 @@ type Connection struct {
 }
 
 // New instantiates a new connection using the provided config.
-func New(env Environment) (*Connection, error) {
+func New(env Environment, cert *xmldsig.Certificate) (*Connection, error) {
+	tlsConf, err := cert.TLSAuthConfig()
+	if err != nil {
+		return nil, fmt.Errorf("preparing TLS config: %w", err)
+	}
 	c := new(Connection)
 	c.client = resty.New()
 
@@ -55,6 +60,8 @@ func New(env Environment) (*Connection, error) {
 	default:
 		c.client.SetBaseURL(TestingBaseURL)
 	}
+	tlsConf.InsecureSkipVerify = true
+	c.client.SetTLSClientConfig(tlsConf)
 	c.client.SetDebug(os.Getenv("DEBUG") == "true")
 	return c, nil
 }

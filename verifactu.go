@@ -8,6 +8,7 @@ import (
 
 	"github.com/invopop/gobl.verifactu/doc"
 	"github.com/invopop/gobl.verifactu/internal/gateways"
+	"github.com/invopop/xmldsig"
 )
 
 // Standard error responses.
@@ -38,11 +39,20 @@ type Client struct {
 	env        gateways.Environment
 	issuerRole doc.IssuerRole
 	curTime    time.Time
+	cert       *xmldsig.Certificate
 	gw         *gateways.Connection
 }
 
 // Option is used to configure the client.
 type Option func(*Client)
+
+// WithCertificate defines the signing certificate to use when producing the
+// VeriFactu document.
+func WithCertificate(cert *xmldsig.Certificate) Option {
+	return func(c *Client) {
+		c.cert = cert
+	}
+}
 
 // WithCurrentTime defines the current time to use when generating the VeriFactu
 // document. Useful for testing.
@@ -67,7 +77,7 @@ func New(software *doc.Software, opts ...Option) (*Client, error) {
 	}
 
 	var err error
-	c.gw, err = gateways.New(c.env)
+	c.gw, err = gateways.New(c.env, c.cert)
 	if err != nil {
 		return nil, err
 	}
