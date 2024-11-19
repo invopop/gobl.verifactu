@@ -46,11 +46,11 @@ func (c *Client) Fingerprint(d *doc.VeriFactu, prev *doc.ChainData) error {
 // AddQR adds the QR code stamp to the envelope.
 func (c *Client) AddQR(d *doc.VeriFactu, env *gobl.Envelope) error {
 	// now generate the QR codes and add them to the envelope
-	codes := d.QRCodes()
+	code := d.QRCodes()
 	env.Head.AddStamp(
 		&head.Stamp{
 			Provider: verifactu.StampQR,
-			Value:    codes.QRCode,
+			Value:    code,
 		},
 	)
 	return nil

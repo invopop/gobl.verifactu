@@ -4,17 +4,32 @@ import "encoding/xml"
 
 // SUM is the namespace for the main VeriFactu schema
 const (
-	SUM  = "https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/tike/cont/ws/SuministroLR.xsd"
-	SUM1 = "https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/tike/cont/ws/SuministroInformacion.xsd"
+	SUM          = "https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/tike/cont/ws/SuministroLR.xsd"
+	SUM1         = "https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/tike/cont/ws/SuministroInformacion.xsd"
+	EnvNamespace = "http://schemas.xmlsoap.org/soap/envelope/"
 )
+
+//	xmlns:sf="https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/tike/cont/ws/SuministroInformacion.xsd"
+//	xmlns:sfLR="https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/tike/cont/ws/SuministroLR.xsd"
+//	xmlns:sfR="https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/tike/cont/ws/RespuestaSuministro.xsd"
+//
+// Envelope is the SOAP envelope wrapper
+type Envelope struct {
+	XMLName xml.Name `xml:"soapenv:Envelope"`
+	XMLNs   string   `xml:"xmlns:soapenv,attr"`
+	SUM     string   `xml:"xmlns:sum,attr"`
+	SUM1    string   `xml:"xmlns:sum1,attr"`
+	Body    struct {
+		XMLName   xml.Name   `xml:"soapenv:Body"`
+		VeriFactu *VeriFactu `xml:"sum:RegFactuSistemaFacturacion"`
+	}
+}
 
 // VeriFactu represents the root element of a VeriFactu document
 type VeriFactu struct {
-	XMLName         xml.Name         `xml:"sum:Verifactu"`
+	XMLName         xml.Name         `xml:"sum:RegFactuSistemaFacturacion"`
 	Cabecera        *Cabecera        `xml:"sum:Cabecera"`
 	RegistroFactura *RegistroFactura `xml:"sum:RegistroFactura"`
-	SUMNamespace    string           `xml:"xmlns:sum,attr"`
-	SUM1Namespace   string           `xml:"xmlns:sum1,attr"`
 }
 
 // RegistroFactura contains either an invoice registration or cancellation
@@ -25,7 +40,7 @@ type RegistroFactura struct {
 
 // Cabecera contains the header information for a VeriFactu document
 type Cabecera struct {
-	Obligado              Obligado               `xml:"sum1:Obligado"`
+	Obligado              Obligado               `xml:"sum1:ObligadoEmision"`
 	Representante         *Obligado              `xml:"sum1:Representante,omitempty"`
 	RemisionVoluntaria    *RemisionVoluntaria    `xml:"sum1:RemisionVoluntaria,omitempty"`
 	RemisionRequerimiento *RemisionRequerimiento `xml:"sum1:RemisionRequerimiento,omitempty"`
@@ -59,8 +74,8 @@ type RegistroAlta struct {
 	RechazoPrevio                       string                `xml:"sum1:RechazoPrevio,omitempty"`
 	TipoFactura                         string                `xml:"sum1:TipoFactura"`
 	TipoRectificativa                   string                `xml:"sum1:TipoRectificativa,omitempty"`
-	FacturasRectificadas                []*FacturaRectificada `xml:"sum1:FacturasRectificadas>sum1:FacturaRectificada,omitempty"`
-	FacturasSustituidas                 []*FacturaSustituida  `xml:"sum1:FacturasSustituidas>sum1:FacturaSustituida,omitempty"`
+	FacturasRectificadas                []*FacturaRectificada `xml:"sum1:FacturasRectificadas,omitempty"`
+	FacturasSustituidas                 []*FacturaSustituida  `xml:"sum1:FacturasSustituidas,omitempty"`
 	ImporteRectificacion                *ImporteRectificacion `xml:"sum1:ImporteRectificacion,omitempty"`
 	FechaOperacion                      string                `xml:"sum1:FechaOperacion"`
 	DescripcionOperacion                string                `xml:"sum1:DescripcionOperacion"`
@@ -69,11 +84,11 @@ type RegistroAlta struct {
 	Macrodato                           string                `xml:"sum1:Macrodato,omitempty"`
 	EmitidaPorTerceroODestinatario      string                `xml:"sum1:EmitidaPorTerceroODestinatario,omitempty"`
 	Tercero                             *Party                `xml:"sum1:Tercero,omitempty"`
-	Destinatarios                       []*Destinatario       `xml:"sum1:Destinatarios>sum1:Destinatario,omitempty"`
+	Destinatarios                       []*Destinatario       `xml:"sum1:Destinatarios,omitempty"`
 	Cupon                               string                `xml:"sum1:Cupon,omitempty"`
 	Desglose                            *Desglose             `xml:"sum1:Desglose"`
-	CuotaTotal                          string                `xml:"sum1:CuotaTotal"`
-	ImporteTotal                        string                `xml:"sum1:ImporteTotal"`
+	CuotaTotal                          float64               `xml:"sum1:CuotaTotal"`
+	ImporteTotal                        float64               `xml:"sum1:ImporteTotal"`
 	Encadenamiento                      *Encadenamiento       `xml:"sum1:Encadenamiento"`
 	SistemaInformatico                  *Software             `xml:"sum1:SistemaInformatico"`
 	FechaHoraHusoGenRegistro            string                `xml:"sum1:FechaHoraHusoGenRegistro"`
@@ -127,8 +142,8 @@ type ImporteRectificacion struct {
 
 // Party represents a in the document, covering fields Generador, Tercero and IDDestinatario
 type Party struct {
-	NIF         string  `xml:"sum1:NIF,omitempty"`
 	NombreRazon string  `xml:"sum1:NombreRazon"`
+	NIF         string  `xml:"sum1:NIF,omitempty"`
 	IDOtro      *IDOtro `xml:"sum1:IDOtro,omitempty"`
 }
 
@@ -151,16 +166,16 @@ type Desglose struct {
 
 // DetalleDesglose contains detailed breakdown information
 type DetalleDesglose struct {
-	Impuesto                      string `xml:"sum1:Impuesto"`
-	ClaveRegimen                  string `xml:"sum1:ClaveRegimen"`
-	CalificacionOperacion         string `xml:"sum1:CalificacionOperacion,omitempty"`
-	OperacionExenta               string `xml:"sum1:OperacionExenta,omitempty"`
-	TipoImpositivo                string `xml:"sum1:TipoImpositivo,omitempty"`
-	BaseImponibleOImporteNoSujeto string `xml:"sum1:BaseImponibleOImporteNoSujeto"`
-	BaseImponibleACoste           string `xml:"sum1:BaseImponibleACoste,omitempty"`
-	CuotaRepercutida              string `xml:"sum1:CuotaRepercutida,omitempty"`
-	TipoRecargoEquivalencia       string `xml:"sum1:TipoRecargoEquivalencia,omitempty"`
-	CuotaRecargoEquivalencia      string `xml:"sum1:CuotaRecargoEquivalencia,omitempty"`
+	Impuesto                      string  `xml:"sum1:Impuesto,omitempty"`
+	ClaveRegimen                  string  `xml:"sum1:ClaveRegimen,omitempty"`
+	CalificacionOperacion         string  `xml:"sum1:CalificacionOperacion,omitempty"`
+	OperacionExenta               string  `xml:"sum1:OperacionExenta,omitempty"`
+	TipoImpositivo                float64 `xml:"sum1:TipoImpositivo,omitempty"`
+	BaseImponibleOImporteNoSujeto float64 `xml:"sum1:BaseImponibleOimporteNoSujeto"`
+	BaseImponibleACoste           float64 `xml:"sum1:BaseImponibleACoste,omitempty"`
+	CuotaRepercutida              float64 `xml:"sum1:CuotaRepercutida,omitempty"`
+	TipoRecargoEquivalencia       float64 `xml:"sum1:TipoRecargoEquivalencia,omitempty"`
+	CuotaRecargoEquivalencia      float64 `xml:"sum1:CuotaRecargoEquivalencia,omitempty"`
 }
 
 // Encadenamiento contains chaining information between documents
@@ -183,7 +198,7 @@ type RegistroAnterior struct {
 type Software struct {
 	NombreRazon                 string `xml:"sum1:NombreRazon"`
 	NIF                         string `xml:"sum1:NIF"`
-	NombreSistemaInformatico    string `xml:"sum1:NombreSistemaInformatico,omitempty"`
+	NombreSistemaInformatico    string `xml:"sum1:NombreSistemaInformatico"`
 	IdSistemaInformatico        string `xml:"sum1:IdSistemaInformatico"` //nolint:revive
 	Version                     string `xml:"sum1:Version"`
 	NumeroInstalacion           string `xml:"sum1:NumeroInstalacion"`

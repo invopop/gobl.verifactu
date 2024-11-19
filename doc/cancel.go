@@ -19,7 +19,7 @@ func NewRegistroAnulacion(inv *bill.Invoice, ts time.Time, r IssuerRole, s *Soft
 		// RechazoPrevio:            "N", // TODO: Think what to do with this field
 		GeneradoPor:              string(r),
 		Generador:                makeGenerador(inv, r),
-		SistemaInformatico:       newSoftware(s),
+		SistemaInformatico:       s,
 		FechaHoraHusoGenRegistro: formatDateTimeZone(ts),
 		TipoHuella:               TipoHuella,
 	}
@@ -31,9 +31,17 @@ func NewRegistroAnulacion(inv *bill.Invoice, ts time.Time, r IssuerRole, s *Soft
 func makeGenerador(inv *bill.Invoice, r IssuerRole) *Party {
 	switch r {
 	case IssuerRoleSupplier, IssuerRoleThirdParty:
-		return newParty(inv.Supplier)
+		p, err := newParty(inv.Supplier)
+		if err != nil {
+			return nil
+		}
+		return p
 	case IssuerRoleCustomer:
-		return newParty(inv.Customer)
+		p, err := newParty(inv.Customer)
+		if err != nil {
+			return nil
+		}
+		return p
 	}
 	return nil
 }

@@ -56,8 +56,6 @@ func init() {
 func NewDocument(inv *bill.Invoice, ts time.Time, r IssuerRole, s *Software) (*VeriFactu, error) {
 
 	doc := &VeriFactu{
-		SUMNamespace:  SUM,
-		SUM1Namespace: SUM1,
 		Cabecera: &Cabecera{
 			Obligado: Obligado{
 				NombreRazon: inv.Supplier.Name,
@@ -85,11 +83,11 @@ func NewDocument(inv *bill.Invoice, ts time.Time, r IssuerRole, s *Software) (*V
 }
 
 // QRCodes generates the QR code for the document
-func (d *VeriFactu) QRCodes() *Codes {
+func (d *VeriFactu) QRCodes() string {
 	if d.RegistroFactura.RegistroAlta.Encadenamiento == nil {
-		return nil
+		return ""
 	}
-	return d.generateCodes()
+	return d.generateURL()
 }
 
 // ChainData generates the data to be used to link to this one
@@ -128,6 +126,29 @@ func (d *VeriFactu) Bytes() ([]byte, error) {
 // BytesIndent returns the indented XML document bytes
 func (d *VeriFactu) BytesIndent() ([]byte, error) {
 	return toBytesIndent(d)
+}
+
+// Envelope wraps the VeriFactu document in a SOAP envelope and includes the expected namespaces
+func (v *VeriFactu) Envelop() ([]byte, error) {
+	// Create and set the envelope with namespaces
+	env := Envelope{
+		XMLNs: EnvNamespace,
+		SUM:   SUM,
+		SUM1:  SUM1,
+	}
+	env.Body.VeriFactu = v
+
+	// Marshal the SOAP envelope into an XML byte slice
+	var result bytes.Buffer
+	enc := xml.NewEncoder(&result)
+	enc.Indent("", "  ")
+	err := enc.Encode(env)
+	if err != nil {
+		return nil, err
+	}
+
+	// Return the enveloped XML document
+	return result.Bytes(), nil
 }
 
 func toBytes(doc any) ([]byte, error) {

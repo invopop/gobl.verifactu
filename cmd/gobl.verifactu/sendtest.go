@@ -25,7 +25,7 @@ func sendTest(o *rootOpts) *sendTestOpts {
 func (c *sendTestOpts) cmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "sendTest [infile]",
-		Short: "Sends the GOBL invoiceFactu service",
+		Short: "Sends the GOBL to the VeriFactu service",
 		RunE:  c.runE,
 	}
 
@@ -61,7 +61,7 @@ func (c *sendTestOpts) runE(cmd *cobra.Command, args []string) error {
 
 	opts := []verifactu.Option{
 		verifactu.WithCertificate(cert),
-		verifactu.WithThirdPartyIssuer(),
+		verifactu.WithSupplierIssuer(),
 		verifactu.InTesting(),
 	}
 
@@ -76,11 +76,12 @@ func (c *sendTestOpts) runE(cmd *cobra.Command, args []string) error {
 	}
 
 	c.previous = `{
-		"emisor": "B123456789",
-		"serie": "FACT-001", 
-		"fecha": "2024-11-11",
-		"huella": "3C464DAF61ACB827C65FDA19F352A4E3BDC2C640E9E9FC4CC058073F38F12F60"
-	}`
+		"emisor": "B85905495",
+		"serie": "SAMPLE-001", 
+		"fecha": "11-11-2024",
+		"huella": "13EC0696104D1E529667184C6CDFC67D08036BCA4CD1B7887DE9C6F8F7EEC69C"
+		}`
+
 	prev := new(doc.ChainData)
 	if err := json.Unmarshal([]byte(c.previous), prev); err != nil {
 		return err
@@ -105,7 +106,6 @@ func (c *sendTestOpts) runE(cmd *cobra.Command, args []string) error {
 	if err != nil {
 		return fmt.Errorf("generating verifactu xml: %w", err)
 	}
-
 	if _, err = out.Write(append(convOut, '\n')); err != nil {
 		return fmt.Errorf("writing verifactu xml: %w", err)
 	}
@@ -121,8 +121,6 @@ func (c *sendTestOpts) runE(cmd *cobra.Command, args []string) error {
 		return err
 	}
 	fmt.Printf("Generated document with fingerprint: \n%s\n", string(data))
-
-	// TEMP
 
 	return nil
 }

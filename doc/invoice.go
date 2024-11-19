@@ -17,7 +17,10 @@ func NewRegistroAlta(inv *bill.Invoice, ts time.Time, r IssuerRole, s *Software)
 		return nil, err
 	}
 
-	desglose := newDesglose(inv)
+	desglose, err := newDesglose(inv)
+	if err != nil {
+		return nil, err
+	}
 
 	reg := &RegistroAlta{
 		IDVersion: CurrentVersion,
@@ -29,21 +32,32 @@ func NewRegistroAlta(inv *bill.Invoice, ts time.Time, r IssuerRole, s *Software)
 		NombreRazonEmisor:        inv.Supplier.Name,
 		TipoFactura:              mapInvoiceType(inv),
 		DescripcionOperacion:     description,
-		ImporteTotal:             newImporteTotal(inv),
-		CuotaTotal:               newTotalTaxes(inv),
-		SistemaInformatico:       newSoftware(s),
 		Desglose:                 desglose,
+		CuotaTotal:               newTotalTaxes(inv),
+		ImporteTotal:             newImporteTotal(inv),
+		SistemaInformatico:       s,
 		FechaHoraHusoGenRegistro: formatDateTimeZone(ts),
 		TipoHuella:               TipoHuella,
 	}
 
 	if inv.Customer != nil {
-		reg.Destinatarios = newDestinatario(inv.Customer)
+		d, err := newParty(inv.Customer)
+		if err != nil {
+			return nil, err
+		}
+		ds := &Destinatario{
+			IDDestinatario: d,
+		}
+		reg.Destinatarios = []*Destinatario{ds}
 	}
 
 	if r == IssuerRoleThirdParty {
 		reg.EmitidaPorTerceroODestinatario = "T"
-		reg.Tercero = newParty(inv.Supplier)
+		t, err := newParty(inv.Supplier)
+		if err != nil {
+			return nil, err
+		}
+		reg.Tercero = t
 	}
 
 	// Check
@@ -94,7 +108,7 @@ func newDescription(notes []*cbc.Note) (string, error) {
 	return "", validationErr(`notes: missing note with key '%s'`, cbc.NoteKeyGeneral)
 }
 
-func newImporteTotal(inv *bill.Invoice) string {
+func newImporteTotal(inv *bill.Invoice) float64 {
 	totalWithDiscounts := inv.Totals.Total
 
 	totalTaxes := num.MakeAmount(0, 2)
@@ -104,10 +118,10 @@ func newImporteTotal(inv *bill.Invoice) string {
 		}
 	}
 
-	return totalWithDiscounts.Add(totalTaxes).String()
+	return totalWithDiscounts.Add(totalTaxes).Float64()
 }
 
-func newTotalTaxes(inv *bill.Invoice) string {
+func newTotalTaxes(inv *bill.Invoice) float64 {
 	totalTaxes := num.MakeAmount(0, 2)
 	for _, category := range inv.Totals.Taxes.Categories {
 		if !category.Retained {
@@ -115,15 +129,5 @@ func newTotalTaxes(inv *bill.Invoice) string {
 		}
 	}
 
-	return totalTaxes.String()
-}
-
-func newSoftware(s *Software) *Software {
-	return &Software{
-		NombreRazon:          s.NombreRazon,
-		NIF:                  s.NIF,
-		IdSistemaInformatico: s.IdSistemaInformatico,
-		Version:              s.Version,
-		NumeroInstalacion:    s.NumeroInstalacion,
-	}
+	return totalTaxes.Float64()
 }

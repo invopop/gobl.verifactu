@@ -1,49 +1,58 @@
 package doc
 
 import (
-	"github.com/invopop/gobl/addons/es/verifactu"
-	"github.com/invopop/gobl/l10n"
+	"fmt"
+
+	"github.com/invopop/gobl/cbc"
 	"github.com/invopop/gobl/org"
 )
 
-func newDestinatario(party *org.Party) []*Destinatario {
-	dest := &Destinatario{
-		IDDestinatario: &Party{
-			NombreRazon: party.Name,
-		},
-	}
+const (
+	idTypeCodeTaxID = "02"
+)
 
-	if party.TaxID != nil {
-		if party.TaxID.Country == l10n.ES.Tax() {
-			dest.IDDestinatario.NIF = party.TaxID.Code.String()
-		} else {
-			dest.IDDestinatario.IDOtro = &IDOtro{
-				CodigoPais: party.TaxID.Country.String(),
-				IDType:     "04", // Code for foreign tax IDs L7
-				ID:         party.TaxID.Code.String(),
-			}
-		}
-	}
-	return []*Destinatario{dest}
+var idTypeCodeMap = map[cbc.Key]string{
+	org.IdentityKeyPassport: "03",
+	org.IdentityKeyForeign:  "04",
+	org.IdentityKeyResident: "05",
+	org.IdentityKeyOther:    "06",
 }
 
-func newParty(p *org.Party) *Party {
+func newParty(p *org.Party) (*Party, error) {
 	pty := &Party{
 		NombreRazon: p.Name,
 	}
-	if p.TaxID != nil && p.TaxID.Code.String() != "" {
+	if p.TaxID != nil && p.TaxID.Code.String() != "" && p.TaxID.Country.String() == "ES" {
 		pty.NIF = p.TaxID.Code.String()
 	} else {
-		if len(p.Identities) > 0 {
-			for _, id := range p.Identities {
-				if id.Ext != nil && id.Ext[verifactu.ExtKeyIdentity] != "" {
-					pty.IDOtro = &IDOtro{
-						IDType: string(id.Ext[verifactu.ExtKeyIdentity]),
-						ID:     id.Code.String(),
-					}
-				}
-			}
-		}
+		pty.IDOtro = otherIdentity(p)
 	}
-	return pty
+	if pty.NIF == "" && pty.IDOtro == nil {
+		return nil, fmt.Errorf("customer with tax ID or other identity is required")
+	}
+	return pty, nil
+}
+
+func otherIdentity(p *org.Party) *IDOtro {
+	oid := new(IDOtro)
+	if p.TaxID != nil && p.TaxID.Code != "" {
+		oid.IDType = idTypeCodeTaxID
+		oid.ID = p.TaxID.Code.String()
+		if p.TaxID.Country != "" {
+			oid.CodigoPais = p.TaxID.Country.String()
+		}
+		return oid
+	}
+
+	for _, id := range p.Identities {
+		it, ok := idTypeCodeMap[id.Key]
+		if !ok {
+			continue
+		}
+
+		oid.IDType = it
+		oid.ID = id.Code.String()
+		return oid
+	}
+	return nil
 }

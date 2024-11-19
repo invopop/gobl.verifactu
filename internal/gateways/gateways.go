@@ -3,7 +3,6 @@ package gateways
 
 import (
 	"context"
-	"encoding/xml"
 	"fmt"
 	"net/http"
 	"os"
@@ -28,17 +27,6 @@ const (
 
 	correctStatus = "Correcto"
 )
-
-// Response defines the response fields from the VeriFactu gateway.
-type Response struct {
-	XMLName        xml.Name `xml:"RespuestaSuministro"`
-	CSV            string   `xml:"CSV"`
-	EstadoEnvio    string   `xml:"EstadoEnvio"`
-	RespuestaLinea []struct {
-		EstadoRegistro           string `xml:"EstadoRegistro"`
-		DescripcionErrorRegistro string `xml:"DescripcionErrorRegistro,omitempty"`
-	} `xml:"RespuestaLinea"`
-}
 
 // Connection defines what is expected from a connection to a gateway.
 type Connection struct {
@@ -68,15 +56,15 @@ func New(env Environment, cert *xmldsig.Certificate) (*Connection, error) {
 
 // Post sends the VeriFactu document to the gateway
 func (c *Connection) Post(ctx context.Context, doc doc.VeriFactu) error {
-	payload, err := doc.Bytes()
+	pyl, err := doc.Envelop()
 	if err != nil {
 		return fmt.Errorf("generating payload: %w", err)
 	}
-	return c.post(ctx, TestingBaseURL, payload)
+	return c.post(ctx, TestingBaseURL, pyl)
 }
 
 func (c *Connection) post(ctx context.Context, path string, payload []byte) error {
-	out := new(Response)
+	out := new(Envelope)
 	req := c.client.R().
 		SetContext(ctx).
 		SetDebug(true).
@@ -92,13 +80,13 @@ func (c *Connection) post(ctx context.Context, path string, payload []byte) erro
 	if res.StatusCode() != http.StatusOK {
 		return ErrInvalid.withCode(strconv.Itoa(res.StatusCode()))
 	}
-
-	if out.EstadoEnvio != correctStatus {
+	if out.Body.Respuesta.EstadoEnvio != correctStatus {
 		err := ErrInvalid
-		if len(out.RespuestaLinea) > 0 {
-			e1 := out.RespuestaLinea[0]
-			err = err.withMessage(e1.DescripcionErrorRegistro).withCode(e1.EstadoRegistro)
+		if len(out.Body.Respuesta.RespuestaLinea) > 0 {
+			e1 := out.Body.Respuesta.RespuestaLinea[0]
+			err = err.withMessage(e1.DescripcionErrorRegistro).withCode(e1.CodigoErrorRegistro)
 		}
+		fmt.Println(out.Body.Respuesta)
 		return err
 	}
 
