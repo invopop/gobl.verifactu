@@ -2,6 +2,7 @@ package doc
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/invopop/gobl/addons/es/verifactu"
 	"github.com/invopop/gobl/bill"
@@ -65,11 +66,17 @@ func buildDetalleDesglose(c *tax.CategoryTotal, r *tax.RateTotal) (*DetalleDesgl
 	// VeriFactu is called "No sujeta".
 	if r.Key == tax.RateZero {
 		detalle.OperacionExenta = r.Ext[verifactu.ExtKeyTaxClassification].String()
+		if detalle.OperacionExenta != "" && !strings.HasPrefix(detalle.OperacionExenta, "E") {
+			return nil, fmt.Errorf("invalid exemption code %s - must be E1-E6", detalle.OperacionExenta)
+		}
 	} else {
 		detalle.CalificacionOperacion = r.Ext[verifactu.ExtKeyTaxClassification].String()
+		if detalle.CalificacionOperacion == "" {
+			return nil, fmt.Errorf("missing operation classification for rate %s", r.Key)
+		}
 	}
 
-	if isSpecialRegime(r) {
+	if isSpecialRegime(c, r) {
 		detalle.BaseImponibleACoste = r.Base.Float64()
 	}
 
@@ -81,7 +88,7 @@ func buildDetalleDesglose(c *tax.CategoryTotal, r *tax.RateTotal) (*DetalleDesgl
 		return nil, fmt.Errorf("missing operation classification for rate %s", r.Key)
 	}
 
-	if hasEquivalenceSurcharge(r) {
+	if hasEquivalenceSurcharge(c, r) {
 		if r.Surcharge == nil {
 			return nil, fmt.Errorf("missing surcharge for rate %s", r.Key)
 		}
@@ -92,10 +99,10 @@ func buildDetalleDesglose(c *tax.CategoryTotal, r *tax.RateTotal) (*DetalleDesgl
 	return detalle, nil
 }
 
-func isSpecialRegime(r *tax.RateTotal) bool {
-	return r.Ext != nil && (r.Ext[verifactu.ExtKeyTaxCategory] == "02" || r.Ext[verifactu.ExtKeyTaxCategory] == "05" || r.Ext[verifactu.ExtKeyTaxRegime] == "06")
+func isSpecialRegime(c *tax.CategoryTotal, r *tax.RateTotal) bool {
+	return r.Ext != nil && (c.Code == es.TaxCategoryIGIC || c.Code == es.TaxCategoryIPSI || r.Ext[verifactu.ExtKeyTaxRegime] == "18")
 }
 
-func hasEquivalenceSurcharge(r *tax.RateTotal) bool {
-	return r.Ext != nil && r.Ext[verifactu.ExtKeyTaxCategory] == "01" && r.Ext[verifactu.ExtKeyTaxRegime] == "18"
+func hasEquivalenceSurcharge(c *tax.CategoryTotal, r *tax.RateTotal) bool {
+	return r.Ext != nil && c.Code == tax.CategoryVAT && r.Ext[verifactu.ExtKeyTaxRegime] == "18"
 }
