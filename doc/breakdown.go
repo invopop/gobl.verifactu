@@ -7,6 +7,8 @@ import (
 	"github.com/invopop/gobl/addons/es/verifactu"
 	"github.com/invopop/gobl/bill"
 	"github.com/invopop/gobl/cbc"
+	"github.com/invopop/gobl/l10n"
+	"github.com/invopop/gobl/org"
 	"github.com/invopop/gobl/regimes/es"
 	"github.com/invopop/gobl/tax"
 )
@@ -22,7 +24,7 @@ func newDesglose(inv *bill.Invoice) (*Desglose, error) {
 
 	for _, c := range inv.Totals.Taxes.Categories {
 		for _, r := range c.Rates {
-			detalleDesglose, err := buildDetalleDesglose(c, r)
+			detalleDesglose, err := buildDetalleDesglose(inv, c, r)
 			if err != nil {
 				return nil, err
 			}
@@ -35,31 +37,21 @@ func newDesglose(inv *bill.Invoice) (*Desglose, error) {
 
 // Rules applied to build the breakdown come from:
 // https://www.agenciatributaria.es/static_files/AEAT_Desarrolladores/EEDD/IVA/VERI-FACTU/Validaciones_Errores_Veri-Factu.pdf
-func buildDetalleDesglose(c *tax.CategoryTotal, r *tax.RateTotal) (*DetalleDesglose, error) {
+func buildDetalleDesglose(inv *bill.Invoice, c *tax.CategoryTotal, r *tax.RateTotal) (*DetalleDesglose, error) {
 	detalle := &DetalleDesglose{
 		BaseImponibleOImporteNoSujeto: r.Base.Float64(),
 		CuotaRepercutida:              r.Amount.Float64(),
 	}
 
-	// L1: IVA, IGIC, IPSI or Other. Default is IVA.
-	if r.Ext != nil && r.Ext[verifactu.ExtKeyTaxCategory] != "" {
-		cat, ok := taxCategoryCodeMap[c.Code]
-		if !ok {
-			detalle.Impuesto = "05"
-		} else {
-			detalle.Impuesto = cat
-		}
-		if detalle.Impuesto == "01" {
-			// L8A: IVA
-			detalle.ClaveRegimen = r.Ext[verifactu.ExtKeyTaxRegime].String()
-		}
-		if detalle.Impuesto == "02" {
-			// L8B: IGIC
-			detalle.ClaveRegimen = r.Ext[verifactu.ExtKeyTaxRegime].String()
-		}
+	cat, ok := taxCategoryCodeMap[c.Code]
+	if !ok {
+		detalle.Impuesto = "05"
 	} else {
-		// L8A: IVA
-		detalle.ClaveRegimen = r.Ext[verifactu.ExtKeyTaxRegime].String()
+		detalle.Impuesto = cat
+	}
+
+	if c.Code == tax.CategoryVAT || c.Code == es.TaxCategoryIGIC {
+		detalle.ClaveRegimen = parseClave(inv, c, r)
 	}
 
 	// Rate zero is what VeriFactu calls "Exempt operation", in difference to GOBL's exempt operation, which in
@@ -76,7 +68,7 @@ func buildDetalleDesglose(c *tax.CategoryTotal, r *tax.RateTotal) (*DetalleDesgl
 		}
 	}
 
-	if isSpecialRegime(c, r) {
+	if detalle.Impuesto == "02" || detalle.Impuesto == "05" || detalle.ClaveRegimen == "06" {
 		detalle.BaseImponibleACoste = r.Base.Float64()
 	}
 
@@ -88,10 +80,7 @@ func buildDetalleDesglose(c *tax.CategoryTotal, r *tax.RateTotal) (*DetalleDesgl
 		return nil, fmt.Errorf("missing operation classification for rate %s", r.Key)
 	}
 
-	if hasEquivalenceSurcharge(c, r) {
-		if r.Surcharge == nil {
-			return nil, fmt.Errorf("missing surcharge for rate %s", r.Key)
-		}
+	if r.Key.Has(es.TaxRateEquivalence) {
 		detalle.TipoRecargoEquivalencia = r.Surcharge.Percent.Amount().Float64()
 		detalle.CuotaRecargoEquivalencia = r.Surcharge.Amount.Float64()
 	}
@@ -99,10 +88,43 @@ func buildDetalleDesglose(c *tax.CategoryTotal, r *tax.RateTotal) (*DetalleDesgl
 	return detalle, nil
 }
 
-func isSpecialRegime(c *tax.CategoryTotal, r *tax.RateTotal) bool {
-	return r.Ext != nil && (c.Code == es.TaxCategoryIGIC || c.Code == es.TaxCategoryIPSI || r.Ext[verifactu.ExtKeyTaxRegime] == "18")
+func parseClave(inv *bill.Invoice, c *tax.CategoryTotal, r *tax.RateTotal) string {
+	switch c.Code {
+	case tax.CategoryVAT:
+		if inv.Customer != nil && partyTaxCountry(inv.Customer) != "ES" {
+			return "02"
+		}
+		if inv.HasTags(es.TagSecondHandGoods) || inv.HasTags(es.TagAntiques) || inv.HasTags(es.TagArt) {
+			return "03"
+		}
+		if inv.HasTags(es.TagTravelAgency) {
+			return "05"
+		}
+		if r.Key == es.TaxRateEquivalence {
+			return "18"
+		}
+		if inv.HasTags(es.TagSimplifiedScheme) {
+			return "20"
+		}
+		return "01"
+	case es.TaxCategoryIGIC:
+		if inv.Customer != nil && partyTaxCountry(inv.Customer) != "ES" {
+			return "02"
+		}
+		if inv.HasTags(es.TagSecondHandGoods) || inv.HasTags(es.TagAntiques) || inv.HasTags(es.TagArt) {
+			return "03"
+		}
+		if inv.HasTags(es.TagTravelAgency) {
+			return "05"
+		}
+		return "01"
+	}
+	return ""
 }
 
-func hasEquivalenceSurcharge(c *tax.CategoryTotal, r *tax.RateTotal) bool {
-	return r.Ext != nil && c.Code == tax.CategoryVAT && r.Ext[verifactu.ExtKeyTaxRegime] == "18"
+func partyTaxCountry(party *org.Party) l10n.TaxCountryCode {
+	if party != nil && party.TaxID != nil {
+		return party.TaxID.Country
+	}
+	return "ES"
 }

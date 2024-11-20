@@ -59,7 +59,7 @@ func (c *convertOpts) runE(cmd *cobra.Command, args []string) error {
 
 	doc, err := vf.Convert(env)
 	if err != nil {
-		panic(err)
+		return fmt.Errorf("converting to verifactu xml: %w", err)
 	}
 
 	data, err := doc.BytesIndent()

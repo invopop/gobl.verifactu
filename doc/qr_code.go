@@ -16,7 +16,7 @@ func (doc *VeriFactu) generateURL() string {
 	nif := url.QueryEscape(doc.RegistroFactura.RegistroAlta.IDFactura.IDEmisorFactura)
 	numSerie := url.QueryEscape(doc.RegistroFactura.RegistroAlta.IDFactura.NumSerieFactura)
 	fecha := url.QueryEscape(doc.RegistroFactura.RegistroAlta.IDFactura.FechaExpedicionFactura)
-	importe := url.QueryEscape(fmt.Sprintf("%f", doc.RegistroFactura.RegistroAlta.ImporteTotal))
+	importe := url.QueryEscape(fmt.Sprintf("%g", doc.RegistroFactura.RegistroAlta.ImporteTotal))
 
 	urlCode := fmt.Sprintf("%snif=%s&numserie=%s&fecha=%s&importe=%s",
 		testURL, nif, numSerie, fecha, importe)

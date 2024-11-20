@@ -7,10 +7,6 @@ import (
 	"github.com/invopop/gobl/org"
 )
 
-const (
-	idTypeCodeTaxID = "02"
-)
-
 var idTypeCodeMap = map[cbc.Key]string{
 	org.IdentityKeyPassport: "03",
 	org.IdentityKeyForeign:  "04",
@@ -36,7 +32,7 @@ func newParty(p *org.Party) (*Party, error) {
 func otherIdentity(p *org.Party) *IDOtro {
 	oid := new(IDOtro)
 	if p.TaxID != nil && p.TaxID.Code != "" {
-		oid.IDType = idTypeCodeTaxID
+		oid.IDType = idTypeCodeMap[org.IdentityKeyForeign]
 		oid.ID = p.TaxID.Code.String()
 		if p.TaxID.Country != "" {
 			oid.CodigoPais = p.TaxID.Country.String()

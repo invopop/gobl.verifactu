@@ -76,10 +76,16 @@ func New(software *doc.Software, opts ...Option) (*Client, error) {
 		opt(c)
 	}
 
-	var err error
-	c.gw, err = gateways.New(c.env, c.cert)
-	if err != nil {
-		return nil, err
+	if c.cert == nil {
+		return c, nil
+	}
+
+	if c.gw == nil {
+		var err error
+		c.gw, err = gateways.New(c.env, c.cert)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	return c, nil
@@ -127,11 +133,6 @@ func (c *Client) Post(ctx context.Context, d *doc.VeriFactu) error {
 	}
 	return nil
 }
-
-// Cancel will send the cancel document in the VeriFactu gateway.
-// func (c *Client) Cancel(ctx context.Context, d *doc.AnulaTicketBAI) error {
-// 	return c.gw.Cancel(ctx, d)
-// }
 
 // CurrentTime returns the current time to use when generating
 // the VeriFactu document.

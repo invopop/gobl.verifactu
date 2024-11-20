@@ -120,13 +120,6 @@ func (e *Error) withMessage(msg string) *Error {
 	return e
 }
 
-// func (e *Error) withCause(err error) *Error {
-// 	e = e.clone()
-// 	e.cause = err
-// 	e.message = err.Error()
-// 	return e
-// }
-
 func (e *Error) clone() *Error {
 	ne := new(Error)
 	*ne = *e

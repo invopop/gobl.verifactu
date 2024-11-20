@@ -40,7 +40,7 @@ func TestGenerateCodes(t *testing.T) {
 					},
 				},
 			},
-			expected: "https://prewww2.aeat.es/wlpl/TIKE-CONT/ValidarQR?nif=&numserie=&fecha=&importe=",
+			expected: "https://prewww2.aeat.es/wlpl/TIKE-CONT/ValidarQR?nif=&numserie=&fecha=&importe=0",
 		},
 	}
 
@@ -90,7 +90,7 @@ func TestGenerateURLCodeAlta(t *testing.T) {
 					},
 				},
 			},
-			expected: "https://prewww2.aeat.es/wlpl/TIKE-CONT/ValidarQR?nif=A12+345%2667&numserie=SERIE%2F2023&fecha=01-09-2024&importe=1%2C234.56",
+			expected: "https://prewww2.aeat.es/wlpl/TIKE-CONT/ValidarQR?nif=A12+345%2667&numserie=SERIE%2F2023&fecha=01-09-2024&importe=1234.56",
 		},
 	}
 
