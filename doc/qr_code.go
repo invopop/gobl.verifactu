@@ -3,7 +3,6 @@ package doc
 import (
 	"fmt"
 	"net/url"
-	// "github.com/sigurn/crc8"
 )
 
 const (

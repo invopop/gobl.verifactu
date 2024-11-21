@@ -62,7 +62,7 @@ func (c *convertOpts) runE(cmd *cobra.Command, args []string) error {
 		return fmt.Errorf("converting to verifactu xml: %w", err)
 	}
 
-	data, err := doc.BytesIndent()
+	data, err := doc.Envelop()
 	if err != nil {
 		return fmt.Errorf("generating verifactu xml: %w", err)
 	}

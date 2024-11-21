@@ -36,8 +36,8 @@ func (d *VeriFactu) fingerprintAlta(inv *RegistroAlta) error {
 		FormatField("NumSerieFactura", inv.IDFactura.NumSerieFactura),
 		FormatField("FechaExpedicionFactura", inv.IDFactura.FechaExpedicionFactura),
 		FormatField("TipoFactura", inv.TipoFactura),
-		FormatField("CuotaTotal", fmt.Sprintf("%f", inv.CuotaTotal)),
-		FormatField("ImporteTotal", fmt.Sprintf("%f", inv.ImporteTotal)),
+		FormatField("CuotaTotal", fmt.Sprintf("%g", inv.CuotaTotal)),
+		FormatField("ImporteTotal", fmt.Sprintf("%g", inv.ImporteTotal)),
 		FormatField("Huella", inv.Encadenamiento.RegistroAnterior.Huella),
 		FormatField("FechaHoraHusoGenRegistro", inv.FechaHoraHusoGenRegistro),
 	}

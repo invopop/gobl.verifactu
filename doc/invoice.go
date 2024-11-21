@@ -2,13 +2,15 @@ package doc
 
 import (
 	"fmt"
+	"slices"
 	"time"
 
 	"github.com/invopop/gobl/bill"
 	"github.com/invopop/gobl/cbc"
 	"github.com/invopop/gobl/num"
-	"github.com/invopop/gobl/tax"
 )
+
+var simplifiedTypes = []string{"F2", "R5"}
 
 // NewRegistroAlta creates a new VeriFactu registration for an invoice.
 func NewRegistroAlta(inv *bill.Invoice, ts time.Time, r IssuerRole, s *Software) (*RegistroAlta, error) {
@@ -60,18 +62,9 @@ func NewRegistroAlta(inv *bill.Invoice, ts time.Time, r IssuerRole, s *Software)
 		reg.Tercero = t
 	}
 
-	// Check
-	if inv.Type == bill.InvoiceTypeCorrective {
-		reg.Subsanacion = "S"
-	}
-
-	// Check
-	if inv.HasTags(tax.TagSimplified) {
-		if inv.Type == bill.InvoiceTypeStandard {
-			reg.FacturaSimplificadaArt7273 = "S"
-		} else {
-			reg.FacturaSinIdentifDestinatarioArt61d = "S"
-		}
+	// Flag for simplified invoices.
+	if slices.Contains(simplifiedTypes, reg.TipoFactura) {
+		reg.FacturaSinIdentifDestinatarioArt61d = "S"
 	}
 
 	// Flag for operations with totals over 100,000,000€. Added with optimism.

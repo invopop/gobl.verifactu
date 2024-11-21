@@ -128,15 +128,15 @@ func (d *VeriFactu) BytesIndent() ([]byte, error) {
 	return toBytesIndent(d)
 }
 
-// Envelope wraps the VeriFactu document in a SOAP envelope and includes the expected namespaces
-func (v *VeriFactu) Envelop() ([]byte, error) {
+// Envelop wraps the VeriFactu document in a SOAP envelope and includes the expected namespaces
+func (d *VeriFactu) Envelop() ([]byte, error) {
 	// Create and set the envelope with namespaces
 	env := Envelope{
 		XMLNs: EnvNamespace,
 		SUM:   SUM,
 		SUM1:  SUM1,
 	}
-	env.Body.VeriFactu = v
+	env.Body.VeriFactu = d
 
 	// Marshal the SOAP envelope into an XML byte slice
 	var result bytes.Buffer

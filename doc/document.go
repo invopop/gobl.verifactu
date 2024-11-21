@@ -9,10 +9,6 @@ const (
 	EnvNamespace = "http://schemas.xmlsoap.org/soap/envelope/"
 )
 
-//	xmlns:sf="https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/tike/cont/ws/SuministroInformacion.xsd"
-//	xmlns:sfLR="https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/tike/cont/ws/SuministroLR.xsd"
-//	xmlns:sfR="https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/tike/cont/ws/RespuestaSuministro.xsd"
-//
 // Envelope is the SOAP envelope wrapper
 type Envelope struct {
 	XMLName xml.Name `xml:"soapenv:Envelope"`
