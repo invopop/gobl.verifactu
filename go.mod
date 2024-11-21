@@ -11,6 +11,7 @@ require (
 	github.com/invopop/gobl v0.205.2-0.20241119180855-1b04b703647d
 	github.com/invopop/xmldsig v0.10.0
 	github.com/joho/godotenv v1.5.1
+	github.com/magefile/mage v1.15.0
 	github.com/nbio/xml v0.0.0-20241028124227-eac89c735a80
 	github.com/spf13/cobra v1.8.1
 	github.com/spf13/pflag v1.0.5
@@ -31,7 +32,6 @@ require (
 	github.com/invopop/validation v0.8.0 // indirect
 	github.com/invopop/yaml v0.3.1 // indirect
 	github.com/kr/text v0.2.0 // indirect
-	github.com/magefile/mage v1.15.0 // indirect
 	github.com/mailru/easyjson v0.7.7 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/square/go-jose/v3 v3.0.0-20200630053402-0a67ce9b0693 // indirect

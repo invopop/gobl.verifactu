@@ -29,6 +29,8 @@ import (
 
 	"github.com/invopop/gobl"
 	verifactu "github.com/invopop/gobl.verifactu"
+	"github.com/invopop/gobl.verifactu/doc"
+	"github.com/invopop/xmldsig"
 )
 
 func main() {
@@ -44,60 +46,84 @@ func main() {
 
 	// Prepare software configuration:
 	soft := &verifactu.Software{
-		License: "XYZ",        // provided by tax agency
-		NIF:     "B123456789", // Software company's tax code
-		Name:    "Invopop",    // Name of application
-		Version: "v0.1.0",     // Software version
+		NombreRazon:              "Company LTD",    // Company Name
+		NIF:                      "B123456789",     // Software company's tax code
+		NombreSistemaInformatico: "Software Name",  // Name of application
+		IdSistemaInformatico:     "A1",             // Software ID
+		Version:                  "1.0",            // Software version
+		NumeroInstalacion:        "00001",          // Software installation number
+	}
+
+	// Load the certificate
+	cert, err := xmldsig.LoadCertificate(c.cert, c.password)
+	if err != nil {
+		return err
+	}
+
+	// Create the client with the software and certificate
+	opts := []verifactu.Option{
+		verifactu.WithCertificate(cert),
+		verifactu.WithSupplierIssuer(), // The issuer can be either the supplier, the
+		verifactu.InTesting(),
 	}
 
 
-	// Instantiate the TicketBAI client with sofrward config
-	// and specific zone.
-	c, err := verifactu.New(soft,
-		verifactu.WithSupplierIssuer(),  // The issuer is the invoice's supplier
-		verifactu.InTesting(),           // Use the tax agency testing environment
-	)
+	tc, err := verifactu.New(c.software(), opts...)
 	if err != nil {
-		panic(err)
+		return err
 	}
 
-	// Create a new Veri*Factu document:
-	doc, err := c.Convert(env)
+	td, err := tc.Convert(env)
 	if err != nil {
-		panic(err)
+		return err
+	}
+
+	c.previous = `{
+		"emisor": "B85905495",
+		"serie": "SAMPLE-001", 
+		"fecha": "11-11-2024",
+		"huella": "13EC0696104D1E529667184C6CDFC67D08036BCA4CD1B7887DE9C6F8F7EEC69C"
+		}`
+
+	prev := new(doc.ChainData)
+	if err := json.Unmarshal([]byte(c.previous), prev); err != nil {
+		return err
 	}
 
 	// Create the document fingerprint
-	// Assume here that we don't have a previous chain data object.
-	if err = c.Fingerprint(doc, nil); err != nil {
-		panic(err)
-	}
-
-	// Sign the document:
-	if err := c.AddQR(doc, env); err != nil {
-		panic(err)
-	}
-
-	// Create the XML output
-	bytes, err := doc.BytesIndent()
+	err = tc.Fingerprint(td, prev)
 	if err != nil {
-		panic(err)
+		return err
 	}
 
-	// Do something with the output, you probably want to store
-	// it somewhere.
-	fmt.Println("Document created:\n", string(bytes))
-
-	// Grab and persist the Chain Data somewhere so you can use this
-	// for the next call to the Fingerprint method.
-	cd := doc.ChainData()
-
-	// Send to Veri*Factu, if rejected, you'll want to fix any
-	// issues and send in a new XML document. The original
-	// version should not be modified.
-	if err := c.Post(ctx, doc); err != nil {
-		panic(err)
+	if err := tc.AddQR(td, env); err != nil {
+		return err
 	}
+
+	out, err := c.openOutput(cmd, args)
+	if err != nil {
+		return err
+	}
+	defer out.Close() // nolint:errcheck
+
+	convOut, err := td.BytesIndent()
+	if err != nil {
+		return fmt.Errorf("generating verifactu xml: %w", err)
+	}
+
+
+	err = tc.Post(cmd.Context(), td)
+	if err != nil {
+		return err
+	}
+
+	data, err := json.Marshal(td.ChainData())
+	if err != nil {
+		return err
+	}
+	fmt.Printf("Generated document with fingerprint: \n%s\n", string(data))
+
+	return nil
 
 }
 ```
@@ -114,11 +140,15 @@ We recommend using a `.env` file to prepare configuration settings, although all
 
 ```
 SOFTWARE_COMPANY_NIF=B85905495
-SOFTWARE_COMPANY_NAME="Invopop S.L."
-SOFTWARE_NAME="Invopop"
-SOFTWARE_ID_SISTEMA_INFORMATICO="IP"
-SOFTWARE_NUMERO_INSTALACION="12345678"
-SOFTWARE_VERSION="1.0"
+SOFTWARE_COMPANY_NAME=Invopop S.L.
+SOFTWARE_NAME=gobl.verifactu
+SOFTWARE_VERSION=1.0
+SOFTWARE_ID_SISTEMA_INFORMATICO=A1
+SOFTWARE_NUMERO_INSTALACION=00001
+
+CERTIFICATE_PATH=./xxxxxxxxx.p12
+CERTIFICATE_PASSWORD=xxxxxxxx
+
 ```
 
 To convert a document to XML, run:
@@ -145,35 +175,41 @@ gobl.verifactu send ./test/data/sample-invoice.json
 
 In order to provide the supplier specific data required by Veri*Factu, invoices need to include a bit of extra data. We've managed to simplify these into specific cases.
 
-<!-- ### Tax Tags
+### Tax Tags
 
 Invoice tax tags can be added to invoice documents in order to reflect a special situation. The following schemes are supported:
 
-- `simplified-scheme` - a retailer operating under a simplified tax regime (regimen simplificado) that must indicate that all of their sales are under this scheme. This implies that all operations in the invoice will have the `OperacionEnRecargoDeEquivalenciaORegimenSimplificado` tag set to `S`.
+- `simplified-scheme` - a retailer operating under a simplified tax regime (regimen simplificado) that must indicate that all of their sales are under this scheme. This implies that all operations in the invoice will have the `FacturaSinIdentifDestinatarioArt61d` tag set to `S`.
 - `reverse-charge` - B2B services or goods sold to a tax registered EU member who will pay VAT on the suppliers behalf. Implies that all items will be classified under the `TipoNoExenta` value of `S2`.
-- `customer-rates` - B2C services, specifically for the EU digital goods act (2015) which imply local taxes will be applied. All items will specify the `DetalleNoSujeta` cause of `RL`.
 
 ## Tax Extensions
 
 The following extension can be applied to each line tax:
 
-- `es-tbai-product` – allows to correctly group the invoice's lines taxes in the TicketBAI breakdowns (a.k.a. desgloses). These are the valid values:
+- `es-verifactu-doc-type` – defines the type of invoice being sent. In most cases this will be set automatically by the GOBL add-on. These are the valid values:
 
-  - `services` - indicates that the product being sold is a service (as opposed to a physical good). Services are accounted in the `DesgloseTipoOperacion > PrestacionServicios` breakdown of invoices to foreign customers. By default, all items are considered services.
-  - `goods` - indicates that the product being sold is a physical good. Products are accounted in the `DesgloseTipoOperacion > Entrega` breakdown of invoices to foreign customers.
-  - `resale` - indicates that a line item is sold without modification from a provider under the Equalisation Charge scheme. (This implies that the `OperacionEnRecargoDeEquivalenciaORegimenSimplificado` tag will be set to `S`).
+  - `F1` - Standard invoice.
+  - `F2` - Simplified invoice.
+  - `F3` - Invoice in substitution of simplified invoices.
+  - `R1` - Rectified invoice based on law and Article 80.1, 80.2 and 80.6 in the Spanish VAT Law ([LIVA](https://www.boe.es/buscar/act.php?id=BOE-A-1992-28740)).
+  - `R2` - Rectified invoice based on law and Article 80.3.
+  - `R3` - Rectified invoice based on law and Article 80.4.
+  - `R4` - Rectified invoice based on law and other reasons.
+  - `R5` - Rectified invoice based on simplified invoices.
 
-- `es-tbai-exemption` - identifies the specific TicketBAI reason code as to why taxes should not be applied to the line according to the whole set of exemptions or not-subject scenarios defined in the law. It has to be set along with the tax rate value of `exempt`. These are the valid values:
-  - `E1` – Exenta por el artículo 20 de la Norma Foral del IVA
-  - `E2` – Exenta por el artículo 21 de la Norma Foral del IVA
-  - `E3` – Exenta por el artículo 22 de la Norma Foral del IVA
-  - `E4` – Exenta por el artículo 23 y 24 de la Norma Foral del IVA
-  - `E5` – Exenta por el artículo 25 de la Norma Foral del IVA
-  - `E6` – Exenta por otra causa
-  - `OT` – No sujeto por el artículo 7 de la Norma Foral de IVA / Otros supuestos
-  - `RL` – No sujeto por reglas de localización (\*)
+- `es-verifactu-tax-classification` - combines the tax classification and exemption codes used in Veri*Factu. These are the valid values:
 
-_(\*) As noted elsewhere, `RL` will be set automatically set in invoices using the `customer-rates` tax tag. It can also be set explicitly using the `es-tbai-exemption` extension in invoices not using that tag._
+  - `S1` - Subject and not exempt - Without reverse charge
+  - `S2` - Subject and not exempt - With reverse charge
+  - `N1` - Not subject - Articles 7, 14, others
+  - `N2` - Not subject - Due to location rules
+  - `E1` - Exempt pursuant to Article 20 of the VAT Law
+  - `E2` - Exempt pursuant to Article 21 of the VAT Law
+  - `E3` - Exempt pursuant to Article 22 of the VAT Law
+  - `E4` - Exempt pursuant to Articles 23 and 24 of the VAT Law
+  - `E5` - Exempt pursuant to Article 25 of the VAT Law
+  - `E6` - Exempt for other reasons
+
 
 ### Use-Cases
 
@@ -194,4 +230,4 @@ Some sample test data is available in the `./test` directory. To update the JSON
 go test ./examples_test.go --update
 ```
 
-All generate XML documents will be validated against the TicketBAI XSD documents. -->
+All generate XML documents will be validated against the Veri*Factu XSD documents.

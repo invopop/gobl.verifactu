@@ -2,15 +2,12 @@ package doc
 
 import (
 	"fmt"
-	"slices"
 	"time"
 
 	"github.com/invopop/gobl/bill"
 	"github.com/invopop/gobl/cbc"
 	"github.com/invopop/gobl/num"
 )
-
-var simplifiedTypes = []string{"F2", "R5"}
 
 // NewRegistroAlta creates a new VeriFactu registration for an invoice.
 func NewRegistroAlta(inv *bill.Invoice, ts time.Time, r IssuerRole, s *Software) (*RegistroAlta, error) {
@@ -51,6 +48,8 @@ func NewRegistroAlta(inv *bill.Invoice, ts time.Time, r IssuerRole, s *Software)
 			IDDestinatario: d,
 		}
 		reg.Destinatarios = []*Destinatario{ds}
+	} else {
+		reg.FacturaSinIdentifDestinatarioArt61d = "S"
 	}
 
 	if r == IssuerRoleThirdParty {
@@ -60,11 +59,6 @@ func NewRegistroAlta(inv *bill.Invoice, ts time.Time, r IssuerRole, s *Software)
 			return nil, err
 		}
 		reg.Tercero = t
-	}
-
-	// Flag for simplified invoices.
-	if slices.Contains(simplifiedTypes, reg.TipoFactura) {
-		reg.FacturaSinIdentifDestinatarioArt61d = "S"
 	}
 
 	// Flag for operations with totals over 100,000,000€. Added with optimism.

@@ -69,7 +69,7 @@ func New(software *doc.Software, opts ...Option) (*Client, error) {
 	c.software = software
 
 	// Set default values that can be overwritten by the options
-	c.env = gateways.EnvironmentTesting
+	c.env = gateways.EnvironmentSandbox
 	c.issuerRole = doc.IssuerRoleSupplier
 
 	for _, opt := range opts {
@@ -122,7 +122,7 @@ func InProduction() Option {
 // InTesting defines the connection to use the testing environment.
 func InTesting() Option {
 	return func(c *Client) {
-		c.env = gateways.EnvironmentTesting
+		c.env = gateways.EnvironmentSandbox
 	}
 }
 

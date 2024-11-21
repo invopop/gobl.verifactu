@@ -19,7 +19,7 @@ type Environment string
 // Environment to use for connections
 const (
 	EnvironmentProduction Environment = "production"
-	EnvironmentTesting    Environment = "testing"
+	EnvironmentSandbox    Environment = "sandbox"
 
 	// Production environment not published yet
 	ProductionBaseURL = "xxxxxxxx"
