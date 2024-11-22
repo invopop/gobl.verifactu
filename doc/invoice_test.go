@@ -18,7 +18,7 @@ func TestNewRegistroAlta(t *testing.T) {
 
 	t.Run("should contain basic document info", func(t *testing.T) {
 		inv := test.LoadInvoice("inv-base.json")
-		doc, err := NewDocument(inv, ts, role, sw)
+		doc, err := NewDocument(inv, ts, role, sw, false)
 		require.NoError(t, err)
 
 		reg := doc.RegistroFactura.RegistroAlta
@@ -51,7 +51,7 @@ func TestNewRegistroAlta(t *testing.T) {
 		inv.SetTags(tax.TagSimplified)
 		inv.Customer = nil
 
-		doc, err := NewDocument(inv, ts, role, sw)
+		doc, err := NewDocument(inv, ts, role, sw, false)
 		require.NoError(t, err)
 
 		assert.Equal(t, "S", doc.RegistroFactura.RegistroAlta.FacturaSinIdentifDestinatarioArt61d)

@@ -37,6 +37,7 @@ func (o *rootOpts) cmd() *cobra.Command {
 	cmd.AddCommand(send(o).cmd())
 	cmd.AddCommand(sendTest(o).cmd())
 	cmd.AddCommand(convert(o).cmd())
+	cmd.AddCommand(cancel(o).cmd())
 
 	return cmd
 }

@@ -17,7 +17,7 @@ func TestInvoiceConversion(t *testing.T) {
 
 	t.Run("should contain basic document info", func(t *testing.T) {
 		inv := test.LoadInvoice("inv-base.json")
-		doc, err := NewDocument(inv, ts, role, sw)
+		doc, err := NewDocument(inv, ts, role, sw, false)
 
 		require.NoError(t, err)
 		assert.Equal(t, "Invopop S.L.", doc.Cabecera.Obligado.NombreRazon)

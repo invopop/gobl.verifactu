@@ -97,19 +97,19 @@ type RegistroAlta struct {
 
 // RegistroAnulacion contains the details of an invoice cancellation
 type RegistroAnulacion struct {
-	IDVersion                string          `xml:"IDVersion"`
-	IDFactura                *IDFactura      `xml:"IDFactura"`
-	RefExterna               string          `xml:"RefExterna,omitempty"`
-	SinRegistroPrevio        string          `xml:"SinRegistroPrevio"`
-	RechazoPrevio            string          `xml:"RechazoPrevio,omitempty"`
-	GeneradoPor              string          `xml:"GeneradoPor"`
-	Generador                *Party          `xml:"Generador"`
-	Encadenamiento           *Encadenamiento `xml:"Encadenamiento"`
-	SistemaInformatico       *Software       `xml:"SistemaInformatico"`
-	FechaHoraHusoGenRegistro string          `xml:"FechaHoraHusoGenRegistro"`
-	TipoHuella               string          `xml:"TipoHuella"`
-	Huella                   string          `xml:"Huella"`
-	Signature                string          `xml:"Signature"`
+	IDVersion                string            `xml:"sum1:IDVersion"`
+	IDFactura                *IDFacturaAnulada `xml:"sum1:IDFactura"`
+	RefExterna               string            `xml:"sum1:RefExterna,omitempty"`
+	SinRegistroPrevio        string            `xml:"sum1:SinRegistroPrevio"`
+	RechazoPrevio            string            `xml:"sum1:RechazoPrevio,omitempty"`
+	GeneradoPor              string            `xml:"sum1:GeneradoPor"`
+	Generador                *Party            `xml:"sum1:Generador"`
+	Encadenamiento           *Encadenamiento   `xml:"sum1:Encadenamiento"`
+	SistemaInformatico       *Software         `xml:"sum1:SistemaInformatico"`
+	FechaHoraHusoGenRegistro string            `xml:"sum1:FechaHoraHusoGenRegistro"`
+	TipoHuella               string            `xml:"sum1:TipoHuella"`
+	Huella                   string            `xml:"sum1:Huella"`
+	Signature                string            `xml:"sum1:Signature"`
 }
 
 // IDFactura contains the identifying information for an invoice
@@ -117,6 +117,13 @@ type IDFactura struct {
 	IDEmisorFactura        string `xml:"sum1:IDEmisorFactura"`
 	NumSerieFactura        string `xml:"sum1:NumSerieFactura"`
 	FechaExpedicionFactura string `xml:"sum1:FechaExpedicionFactura"`
+}
+
+// IDFactura contains the identifying information for an invoice
+type IDFacturaAnulada struct {
+	IDEmisorFactura        string `xml:"sum1:IDEmisorFacturaAnulada"`
+	NumSerieFactura        string `xml:"sum1:NumSerieFacturaAnulada"`
+	FechaExpedicionFactura string `xml:"sum1:FechaExpedicionFacturaAnulada"`
 }
 
 // FacturaRectificada represents a rectified invoice
@@ -176,8 +183,8 @@ type DetalleDesglose struct {
 
 // Encadenamiento contains chaining information between documents
 type Encadenamiento struct {
-	PrimerRegistro   *string          `xml:"sum1:PrimerRegistro,omitempty"`
-	RegistroAnterior RegistroAnterior `xml:"sum1:RegistroAnterior,omitempty"`
+	PrimerRegistro   *string           `xml:"sum1:PrimerRegistro,omitempty"`
+	RegistroAnterior *RegistroAnterior `xml:"sum1:RegistroAnterior,omitempty"`
 }
 
 // RegistroAnterior contains information about the previous registration

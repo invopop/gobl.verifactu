@@ -14,11 +14,10 @@ func TestNewRegistroAnulacion(t *testing.T) {
 	t.Run("basic", func(t *testing.T) {
 		inv := test.LoadInvoice("cred-note-base.json")
 
-		doc, err := NewDocument(inv, time.Now(), IssuerRoleSupplier, nil)
+		doc, err := NewDocument(inv, time.Now(), IssuerRoleSupplier, nil, true)
 		require.NoError(t, err)
 
-		reg, err := NewRegistroAnulacion(inv, time.Now(), IssuerRoleSupplier, nil)
-		require.NoError(t, err)
+		reg := doc.RegistroFactura.RegistroAnulacion
 
 		assert.Equal(t, "E", reg.GeneradoPor)
 		assert.NotNil(t, reg.Generador)
@@ -33,11 +32,10 @@ func TestNewRegistroAnulacion(t *testing.T) {
 	t.Run("customer issuer", func(t *testing.T) {
 		inv := test.LoadInvoice("cred-note-base.json")
 
-		doc, err := NewDocument(inv, time.Now(), IssuerRoleCustomer, nil)
+		doc, err := NewDocument(inv, time.Now(), IssuerRoleCustomer, nil, true)
 		require.NoError(t, err)
 
-		reg, err := NewRegistroAnulacion(inv, time.Now(), IssuerRoleCustomer, nil)
-		require.NoError(t, err)
+		reg := doc.RegistroFactura.RegistroAnulacion
 
 		assert.Equal(t, "D", reg.GeneradoPor)
 		assert.NotNil(t, reg.Generador)
@@ -52,11 +50,10 @@ func TestNewRegistroAnulacion(t *testing.T) {
 	t.Run("third party issuer", func(t *testing.T) {
 		inv := test.LoadInvoice("cred-note-base.json")
 
-		doc, err := NewDocument(inv, time.Now(), IssuerRoleThirdParty, nil)
+		doc, err := NewDocument(inv, time.Now(), IssuerRoleThirdParty, nil, true)
 		require.NoError(t, err)
 
-		reg, err := NewRegistroAnulacion(inv, time.Now(), IssuerRoleThirdParty, nil)
-		require.NoError(t, err)
+		reg := doc.RegistroFactura.RegistroAnulacion
 
 		assert.Equal(t, "T", reg.GeneradoPor)
 		assert.NotNil(t, reg.Generador)

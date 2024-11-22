@@ -73,29 +73,31 @@ func main() {
 		return err
 	}
 
+	// Convert the GOBL envelope to a Veri*Factu document
 	td, err := tc.Convert(env)
 	if err != nil {
 		return err
 	}
 
+	// Prepare the previous document chain data
 	c.previous = `{
 		"emisor": "B85905495",
 		"serie": "SAMPLE-001", 
 		"fecha": "11-11-2024",
 		"huella": "13EC0696104D1E529667184C6CDFC67D08036BCA4CD1B7887DE9C6F8F7EEC69C"
 		}`
-
 	prev := new(doc.ChainData)
 	if err := json.Unmarshal([]byte(c.previous), prev); err != nil {
 		return err
 	}
 
-	// Create the document fingerprint
+	// Create the document fingerprint based on the previous document chain
 	err = tc.Fingerprint(td, prev)
 	if err != nil {
 		return err
 	}
 
+	// Add the QR code to the document
 	if err := tc.AddQR(td, env); err != nil {
 		return err
 	}

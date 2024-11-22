@@ -10,7 +10,7 @@ import (
 func NewRegistroAnulacion(inv *bill.Invoice, ts time.Time, r IssuerRole, s *Software) (*RegistroAnulacion, error) {
 	reg := &RegistroAnulacion{
 		IDVersion: CurrentVersion,
-		IDFactura: &IDFactura{
+		IDFactura: &IDFacturaAnulada{
 			IDEmisorFactura:        inv.Supplier.TaxID.Code.String(),
 			NumSerieFactura:        invoiceNumber(inv.Series, inv.Code),
 			FechaExpedicionFactura: inv.IssueDate.Time().Format("02-01-2006"),

@@ -66,47 +66,47 @@ func (d *VeriFactu) fingerprintAnulacion(inv *RegistroAnulacion) error {
 }
 
 // GenerateHash generates the SHA-256 hash for the invoice data.
-func (d *VeriFactu) GenerateHash(prev *ChainData) error {
+func (d *VeriFactu) GenerateHashAlta(prev *ChainData) error {
 	if prev == nil {
-		if d.RegistroFactura.RegistroAlta != nil {
-			s := "S"
-			d.RegistroFactura.RegistroAlta.Encadenamiento = &Encadenamiento{
-				PrimerRegistro: &s,
-			}
-		} else if d.RegistroFactura.RegistroAnulacion != nil {
-			s := "S"
-			d.RegistroFactura.RegistroAnulacion.Encadenamiento = &Encadenamiento{
-				PrimerRegistro: &s,
-			}
+		s := "S"
+		d.RegistroFactura.RegistroAlta.Encadenamiento = &Encadenamiento{
+			PrimerRegistro: &s,
 		}
 		return nil
 	}
 	// Concatenate f according to Verifactu specifications
-	if d.RegistroFactura.RegistroAlta != nil {
-		d.RegistroFactura.RegistroAlta.Encadenamiento = &Encadenamiento{
-			RegistroAnterior: RegistroAnterior{
-				IDEmisorFactura:        prev.IDEmisorFactura,
-				NumSerieFactura:        prev.NumSerieFactura,
-				FechaExpedicionFactura: prev.FechaExpedicionFactura,
-				Huella:                 prev.Huella,
-			},
-		}
-		if err := d.fingerprintAlta(d.RegistroFactura.RegistroAlta); err != nil {
-			return err
-		}
-	} else if d.RegistroFactura.RegistroAnulacion != nil {
-		d.RegistroFactura.RegistroAnulacion.Encadenamiento = &Encadenamiento{
-			RegistroAnterior: RegistroAnterior{
-				IDEmisorFactura:        prev.IDEmisorFactura,
-				NumSerieFactura:        prev.NumSerieFactura,
-				FechaExpedicionFactura: prev.FechaExpedicionFactura,
-				Huella:                 prev.Huella,
-			},
-		}
-		if err := d.fingerprintAnulacion(d.RegistroFactura.RegistroAnulacion); err != nil {
-			return err
-		}
+	d.RegistroFactura.RegistroAlta.Encadenamiento = &Encadenamiento{
+		RegistroAnterior: &RegistroAnterior{
+			IDEmisorFactura:        prev.IDEmisorFactura,
+			NumSerieFactura:        prev.NumSerieFactura,
+			FechaExpedicionFactura: prev.FechaExpedicionFactura,
+			Huella:                 prev.Huella,
+		},
 	}
+	if err := d.fingerprintAlta(d.RegistroFactura.RegistroAlta); err != nil {
+		return err
+	}
+	return nil
+}
 
+func (d *VeriFactu) GenerateHashAnulacion(prev *ChainData) error {
+	if prev == nil {
+		s := "S"
+		d.RegistroFactura.RegistroAnulacion.Encadenamiento = &Encadenamiento{
+			PrimerRegistro: &s,
+		}
+		return nil
+	}
+	d.RegistroFactura.RegistroAnulacion.Encadenamiento = &Encadenamiento{
+		RegistroAnterior: &RegistroAnterior{
+			IDEmisorFactura:        prev.IDEmisorFactura,
+			NumSerieFactura:        prev.NumSerieFactura,
+			FechaExpedicionFactura: prev.FechaExpedicionFactura,
+			Huella:                 prev.Huella,
+		},
+	}
+	if err := d.fingerprintAnulacion(d.RegistroFactura.RegistroAnulacion); err != nil {
+		return err
+	}
 	return nil
 }

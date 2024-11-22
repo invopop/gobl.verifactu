@@ -53,7 +53,7 @@ func init() {
 }
 
 // NewDocument creates a new VeriFactu document
-func NewDocument(inv *bill.Invoice, ts time.Time, r IssuerRole, s *Software) (*VeriFactu, error) {
+func NewDocument(inv *bill.Invoice, ts time.Time, r IssuerRole, s *Software, c bool) (*VeriFactu, error) {
 
 	doc := &VeriFactu{
 		Cabecera: &Cabecera{
@@ -65,7 +65,7 @@ func NewDocument(inv *bill.Invoice, ts time.Time, r IssuerRole, s *Software) (*V
 		RegistroFactura: &RegistroFactura{},
 	}
 
-	if inv.Type == bill.InvoiceTypeCreditNote {
+	if c {
 		reg, err := NewRegistroAnulacion(inv, ts, r, s)
 		if err != nil {
 			return nil, err
@@ -95,7 +95,7 @@ func (d *VeriFactu) QRCodes() string {
 func (d *VeriFactu) ChainData() Encadenamiento {
 	if d.RegistroFactura.RegistroAlta != nil {
 		return Encadenamiento{
-			RegistroAnterior: RegistroAnterior{
+			RegistroAnterior: &RegistroAnterior{
 				IDEmisorFactura:        d.Cabecera.Obligado.NIF,
 				NumSerieFactura:        d.RegistroFactura.RegistroAlta.IDFactura.NumSerieFactura,
 				FechaExpedicionFactura: d.RegistroFactura.RegistroAlta.IDFactura.FechaExpedicionFactura,
@@ -104,7 +104,7 @@ func (d *VeriFactu) ChainData() Encadenamiento {
 		}
 	}
 	return Encadenamiento{
-		RegistroAnterior: RegistroAnterior{
+		RegistroAnterior: &RegistroAnterior{
 			IDEmisorFactura:        d.Cabecera.Obligado.NIF,
 			NumSerieFactura:        d.RegistroFactura.RegistroAnulacion.IDFactura.NumSerieFactura,
 			FechaExpedicionFactura: d.RegistroFactura.RegistroAnulacion.IDFactura.FechaExpedicionFactura,
@@ -115,7 +115,12 @@ func (d *VeriFactu) ChainData() Encadenamiento {
 
 // Fingerprint generates the SHA-256 fingerprint for the document
 func (d *VeriFactu) Fingerprint(prev *ChainData) error {
-	return d.GenerateHash(prev)
+	return d.GenerateHashAlta(prev)
+}
+
+// Fingerprint generates the SHA-256 fingerprint for the document
+func (d *VeriFactu) FingerprintCancel(prev *ChainData) error {
+	return d.GenerateHashAnulacion(prev)
 }
 
 // Bytes returns the XML document bytes

@@ -19,7 +19,7 @@ func TestBreakdownConversion(t *testing.T) {
 	t.Run("basic-invoice", func(t *testing.T) {
 		inv := test.LoadInvoice("inv-base.json")
 		_ = inv.Calculate()
-		doc, err := NewDocument(inv, time.Now(), IssuerRoleSupplier, nil)
+		doc, err := NewDocument(inv, time.Now(), IssuerRoleSupplier, nil, false)
 		require.NoError(t, err)
 
 		assert.Equal(t, 1800.00, doc.RegistroFactura.RegistroAlta.Desglose.DetalleDesglose[0].BaseImponibleOImporteNoSujeto)
@@ -49,7 +49,7 @@ func TestBreakdownConversion(t *testing.T) {
 			},
 		}
 		_ = inv.Calculate()
-		doc, err := NewDocument(inv, time.Now(), IssuerRoleSupplier, nil)
+		doc, err := NewDocument(inv, time.Now(), IssuerRoleSupplier, nil, false)
 		require.NoError(t, err)
 		assert.Equal(t, 100.00, doc.RegistroFactura.RegistroAlta.Desglose.DetalleDesglose[0].BaseImponibleOImporteNoSujeto)
 		assert.Equal(t, "01", doc.RegistroFactura.RegistroAlta.Desglose.DetalleDesglose[0].Impuesto)
@@ -91,7 +91,7 @@ func TestBreakdownConversion(t *testing.T) {
 			},
 		}
 		_ = inv.Calculate()
-		doc, err := NewDocument(inv, time.Now(), IssuerRoleSupplier, nil)
+		doc, err := NewDocument(inv, time.Now(), IssuerRoleSupplier, nil, false)
 		require.NoError(t, err)
 		assert.Equal(t, 100.00, doc.RegistroFactura.RegistroAlta.Desglose.DetalleDesglose[0].BaseImponibleOImporteNoSujeto)
 		assert.Equal(t, 21.00, doc.RegistroFactura.RegistroAlta.Desglose.DetalleDesglose[0].CuotaRepercutida)
@@ -124,7 +124,7 @@ func TestBreakdownConversion(t *testing.T) {
 			},
 		}
 		_ = inv.Calculate()
-		doc, err := NewDocument(inv, time.Now(), IssuerRoleSupplier, nil)
+		doc, err := NewDocument(inv, time.Now(), IssuerRoleSupplier, nil, false)
 		require.NoError(t, err)
 		assert.Equal(t, 100.00, doc.RegistroFactura.RegistroAlta.Desglose.DetalleDesglose[0].BaseImponibleOImporteNoSujeto)
 		assert.Equal(t, 0.00, doc.RegistroFactura.RegistroAlta.Desglose.DetalleDesglose[0].CuotaRepercutida)
@@ -150,7 +150,7 @@ func TestBreakdownConversion(t *testing.T) {
 			},
 		}
 		_ = inv.Calculate()
-		_, err := NewDocument(inv, time.Now(), IssuerRoleSupplier, nil)
+		_, err := NewDocument(inv, time.Now(), IssuerRoleSupplier, nil, false)
 		require.Error(t, err)
 	})
 
@@ -174,7 +174,7 @@ func TestBreakdownConversion(t *testing.T) {
 			},
 		}
 		_ = inv.Calculate()
-		doc, err := NewDocument(inv, time.Now(), IssuerRoleSupplier, nil)
+		doc, err := NewDocument(inv, time.Now(), IssuerRoleSupplier, nil, false)
 		require.NoError(t, err)
 		assert.Equal(t, 100.00, doc.RegistroFactura.RegistroAlta.Desglose.DetalleDesglose[0].BaseImponibleOImporteNoSujeto)
 		assert.Equal(t, 21.00, doc.RegistroFactura.RegistroAlta.Desglose.DetalleDesglose[0].CuotaRepercutida)
@@ -205,7 +205,7 @@ func TestBreakdownConversion(t *testing.T) {
 			},
 		}
 		_ = inv.Calculate()
-		doc, err := NewDocument(inv, time.Now(), IssuerRoleSupplier, nil)
+		doc, err := NewDocument(inv, time.Now(), IssuerRoleSupplier, nil, false)
 		require.NoError(t, err)
 		assert.Equal(t, 100.00, doc.RegistroFactura.RegistroAlta.Desglose.DetalleDesglose[0].BaseImponibleOImporteNoSujeto)
 		assert.Equal(t, 10.00, doc.RegistroFactura.RegistroAlta.Desglose.DetalleDesglose[0].CuotaRepercutida)
@@ -235,7 +235,7 @@ func TestBreakdownConversion(t *testing.T) {
 			},
 		}
 		_ = inv.Calculate()
-		doc, err := NewDocument(inv, time.Now(), IssuerRoleSupplier, nil)
+		doc, err := NewDocument(inv, time.Now(), IssuerRoleSupplier, nil, false)
 		require.NoError(t, err)
 		assert.Equal(t, 1000.00, doc.RegistroFactura.RegistroAlta.Desglose.DetalleDesglose[0].BaseImponibleOImporteNoSujeto)
 		assert.Equal(t, 100.00, doc.RegistroFactura.RegistroAlta.Desglose.DetalleDesglose[0].CuotaRepercutida)
