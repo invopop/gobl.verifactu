@@ -1,10 +1,14 @@
-package doc
+package doc_test
 
 import (
 	"testing"
 	"time"
 
+	"github.com/invopop/gobl.verifactu/doc"
 	"github.com/invopop/gobl.verifactu/test"
+	"github.com/invopop/gobl/addons/es/verifactu"
+	"github.com/invopop/gobl/cal"
+	"github.com/invopop/gobl/org"
 	"github.com/invopop/gobl/tax"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -13,15 +17,15 @@ import (
 func TestNewRegistroAlta(t *testing.T) {
 	ts, err := time.Parse(time.RFC3339, "2022-02-01T04:00:00Z")
 	require.NoError(t, err)
-	role := IssuerRoleSupplier
-	sw := &Software{}
+	role := doc.IssuerRoleSupplier
+	sw := &doc.Software{}
 
 	t.Run("should contain basic document info", func(t *testing.T) {
 		inv := test.LoadInvoice("inv-base.json")
-		doc, err := NewDocument(inv, ts, role, sw, false)
+		d, err := doc.NewDocument(inv, ts, role, sw, false)
 		require.NoError(t, err)
 
-		reg := doc.RegistroFactura.RegistroAlta
+		reg := d.RegistroFactura.RegistroAlta
 		assert.Equal(t, "1.0", reg.IDVersion)
 		assert.Equal(t, "B85905495", reg.IDFactura.IDEmisorFactura)
 		assert.Equal(t, "SAMPLE-003", reg.IDFactura.NumSerieFactura)
@@ -51,9 +55,49 @@ func TestNewRegistroAlta(t *testing.T) {
 		inv.SetTags(tax.TagSimplified)
 		inv.Customer = nil
 
-		doc, err := NewDocument(inv, ts, role, sw, false)
+		d, err := doc.NewDocument(inv, ts, role, sw, false)
 		require.NoError(t, err)
 
-		assert.Equal(t, "S", doc.RegistroFactura.RegistroAlta.FacturaSinIdentifDestinatarioArt61d)
+		assert.Equal(t, "S", d.RegistroFactura.RegistroAlta.FacturaSinIdentifDestinatarioArt61d)
+	})
+
+	t.Run("should handle rectificative invoices", func(t *testing.T) {
+		inv := test.LoadInvoice("cred-note-base.json")
+
+		d, err := doc.NewDocument(inv, ts, role, sw, false)
+		require.NoError(t, err)
+
+		reg := d.RegistroFactura.RegistroAlta
+		assert.Equal(t, "R1", reg.TipoFactura)
+		assert.Equal(t, "I", reg.TipoRectificativa)
+		require.Len(t, reg.FacturasRectificadas, 1)
+
+		rectified := reg.FacturasRectificadas[0]
+		assert.Equal(t, "B98602642", rectified.IDFactura.IDEmisorFactura)
+		assert.Equal(t, "SAMPLE-085", rectified.IDFactura.NumSerieFactura)
+		assert.Equal(t, "10-01-2022", rectified.IDFactura.FechaExpedicionFactura)
+	})
+
+	t.Run("should handle substitution invoices", func(t *testing.T) {
+		inv := test.LoadInvoice("inv-base.json")
+		inv.SetTags(verifactu.TagSubstitution)
+		inv.Preceding = []*org.DocumentRef{
+			{
+				Series:    "SAMPLE",
+				Code:      "002",
+				IssueDate: cal.NewDate(2024, 1, 15),
+			},
+		}
+
+		d, err := doc.NewDocument(inv, ts, role, sw, false)
+		require.NoError(t, err)
+
+		reg := d.RegistroFactura.RegistroAlta
+		require.Len(t, reg.FacturasSustituidas, 1)
+
+		substituted := reg.FacturasSustituidas[0]
+		assert.Equal(t, "B85905495", substituted.IDFactura.IDEmisorFactura)
+		assert.Equal(t, "SAMPLE-002", substituted.IDFactura.NumSerieFactura)
+		assert.Equal(t, "15-01-2024", substituted.IDFactura.FechaExpedicionFactura)
 	})
 }

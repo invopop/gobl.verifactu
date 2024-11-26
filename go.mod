@@ -8,9 +8,10 @@ toolchain go1.22.1
 
 require (
 	github.com/go-resty/resty/v2 v2.15.3
-	github.com/invopop/gobl v0.205.2-0.20241119180855-1b04b703647d
+	github.com/invopop/gobl v0.206.1-0.20241126104736-056b02fb77f1
 	github.com/invopop/xmldsig v0.10.0
 	github.com/joho/godotenv v1.5.1
+	github.com/lestrrat-go/libxml2 v0.0.0-20240905100032-c934e3fcb9d3
 	github.com/magefile/mage v1.15.0
 	github.com/nbio/xml v0.0.0-20241028124227-eac89c735a80
 	github.com/spf13/cobra v1.8.1
@@ -33,6 +34,7 @@ require (
 	github.com/invopop/yaml v0.3.1 // indirect
 	github.com/kr/text v0.2.0 // indirect
 	github.com/mailru/easyjson v0.7.7 // indirect
+	github.com/pkg/errors v0.9.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/square/go-jose/v3 v3.0.0-20200630053402-0a67ce9b0693 // indirect
 	github.com/wk8/go-ordered-map/v2 v2.1.8 // indirect

@@ -1,21 +1,23 @@
-package doc
+package doc_test
 
 import (
 	"testing"
+
+	"github.com/invopop/gobl.verifactu/doc"
 )
 
 func TestGenerateCodes(t *testing.T) {
 	tests := []struct {
 		name     string
-		doc      *VeriFactu
+		doc      *doc.VeriFactu
 		expected string
 	}{
 		{
 			name: "valid codes generation",
-			doc: &VeriFactu{
-				RegistroFactura: &RegistroFactura{
-					RegistroAlta: &RegistroAlta{
-						IDFactura: &IDFactura{
+			doc: &doc.VeriFactu{
+				RegistroFactura: &doc.RegistroFactura{
+					RegistroAlta: &doc.RegistroAlta{
+						IDFactura: &doc.IDFactura{
 							IDEmisorFactura:        "89890001K",
 							NumSerieFactura:        "12345678-G33",
 							FechaExpedicionFactura: "01-09-2024",
@@ -28,10 +30,10 @@ func TestGenerateCodes(t *testing.T) {
 		},
 		{
 			name: "empty fields",
-			doc: &VeriFactu{
-				RegistroFactura: &RegistroFactura{
-					RegistroAlta: &RegistroAlta{
-						IDFactura: &IDFactura{
+			doc: &doc.VeriFactu{
+				RegistroFactura: &doc.RegistroFactura{
+					RegistroAlta: &doc.RegistroAlta{
+						IDFactura: &doc.IDFactura{
 							IDEmisorFactura:        "",
 							NumSerieFactura:        "",
 							FechaExpedicionFactura: "",
@@ -46,7 +48,7 @@ func TestGenerateCodes(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := tt.doc.generateURL()
+			got := tt.doc.QRCodes()
 			if got != tt.expected {
 				t.Errorf("generateURL() = %v, want %v", got, tt.expected)
 			}
@@ -57,15 +59,15 @@ func TestGenerateCodes(t *testing.T) {
 func TestGenerateURLCodeAlta(t *testing.T) {
 	tests := []struct {
 		name     string
-		doc      *VeriFactu
+		doc      *doc.VeriFactu
 		expected string
 	}{
 		{
 			name: "valid URL generation",
-			doc: &VeriFactu{
-				RegistroFactura: &RegistroFactura{
-					RegistroAlta: &RegistroAlta{
-						IDFactura: &IDFactura{
+			doc: &doc.VeriFactu{
+				RegistroFactura: &doc.RegistroFactura{
+					RegistroAlta: &doc.RegistroAlta{
+						IDFactura: &doc.IDFactura{
 							IDEmisorFactura:        "89890001K",
 							NumSerieFactura:        "12345678-G33",
 							FechaExpedicionFactura: "01-09-2024",
@@ -78,10 +80,10 @@ func TestGenerateURLCodeAlta(t *testing.T) {
 		},
 		{
 			name: "URL with special characters",
-			doc: &VeriFactu{
-				RegistroFactura: &RegistroFactura{
-					RegistroAlta: &RegistroAlta{
-						IDFactura: &IDFactura{
+			doc: &doc.VeriFactu{
+				RegistroFactura: &doc.RegistroFactura{
+					RegistroAlta: &doc.RegistroAlta{
+						IDFactura: &doc.IDFactura{
 							IDEmisorFactura:        "A12 345&67",
 							NumSerieFactura:        "SERIE/2023",
 							FechaExpedicionFactura: "01-09-2024",
@@ -96,7 +98,10 @@ func TestGenerateURLCodeAlta(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := tt.doc.generateURL()
+			tt.doc.RegistroFactura.RegistroAlta.Encadenamiento = &doc.Encadenamiento{
+				PrimerRegistro: &s,
+			}
+			got := tt.doc.QRCodes()
 			if got != tt.expected {
 				t.Errorf("generateURLCodeAlta() = %v, want %v", got, tt.expected)
 			}

@@ -111,7 +111,7 @@ func (c *cancelOpts) runE(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	data, err := json.Marshal(td.ChainData())
+	data, err := json.Marshal(td.ChainDataCancel())
 	if err != nil {
 		return err
 	}

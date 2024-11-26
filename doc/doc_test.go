@@ -1,9 +1,10 @@
-package doc
+package doc_test
 
 import (
 	"testing"
 	"time"
 
+	"github.com/invopop/gobl.verifactu/doc"
 	"github.com/invopop/gobl.verifactu/test"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -12,12 +13,12 @@ import (
 func TestInvoiceConversion(t *testing.T) {
 	ts, err := time.Parse(time.RFC3339, "2022-02-01T04:00:00Z")
 	require.NoError(t, err)
-	role := IssuerRoleSupplier
-	sw := &Software{}
+	role := doc.IssuerRoleSupplier
+	sw := &doc.Software{}
 
 	t.Run("should contain basic document info", func(t *testing.T) {
 		inv := test.LoadInvoice("inv-base.json")
-		doc, err := NewDocument(inv, ts, role, sw, false)
+		doc, err := doc.NewDocument(inv, ts, role, sw, false)
 
 		require.NoError(t, err)
 		assert.Equal(t, "Invopop S.L.", doc.Cabecera.Obligado.NombreRazon)

@@ -23,7 +23,7 @@ func (c *Client) GenerateCancel(env *gobl.Envelope) (*doc.VeriFactu, error) {
 	}
 	// Extract the time when the invoice was posted to TicketBAI gateway
 	// ts, err := extractPostTime(env)
-	ts, err := time.Parse(time.DateOnly, inv.IssueDate.String()) // REVISAR
+	ts, err := time.Parse("2006-01-02", inv.IssueDate.String()) // REVISAR
 	if err != nil {
 		return nil, err
 	}
@@ -44,19 +44,3 @@ func (c *Client) GenerateCancel(env *gobl.Envelope) (*doc.VeriFactu, error) {
 func (c *Client) FingerprintCancel(d *doc.VeriFactu, prev *doc.ChainData) error {
 	return d.FingerprintCancel(prev)
 }
-
-// func extractPostTime(env *gobl.Envelope) (time.Time, error) {
-// 	for _, stamp := range env.Head.Stamps {
-// 		if stamp.Provider == verifactu.StampCode {
-// 			parts := strings.Split(stamp.Value, "-")
-// 			ts, err := time.Parse("020106", parts[2])
-// 			if err != nil {
-// 				return time.Time{}, fmt.Errorf("parsing previous invoice date: %w", err)
-// 			}
-
-// 			return ts, nil
-// 		}
-// 	}
-
-// 	return time.Time{}, fmt.Errorf("missing previous %s stamp in envelope", verifactu.StampCode)
-// }

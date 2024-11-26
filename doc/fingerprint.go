@@ -66,7 +66,7 @@ func (d *VeriFactu) fingerprintAnulacion(inv *RegistroAnulacion) error {
 }
 
 // GenerateHash generates the SHA-256 hash for the invoice data.
-func (d *VeriFactu) GenerateHashAlta(prev *ChainData) error {
+func (d *VeriFactu) generateHashAlta(prev *ChainData) error {
 	if prev == nil {
 		s := "S"
 		d.RegistroFactura.RegistroAlta.Encadenamiento = &Encadenamiento{
@@ -89,7 +89,7 @@ func (d *VeriFactu) GenerateHashAlta(prev *ChainData) error {
 	return nil
 }
 
-func (d *VeriFactu) GenerateHashAnulacion(prev *ChainData) error {
+func (d *VeriFactu) generateHashAnulacion(prev *ChainData) error {
 	if prev == nil {
 		s := "S"
 		d.RegistroFactura.RegistroAnulacion.Encadenamiento = &Encadenamiento{

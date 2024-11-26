@@ -54,7 +54,6 @@ func init() {
 
 // NewDocument creates a new VeriFactu document
 func NewDocument(inv *bill.Invoice, ts time.Time, r IssuerRole, s *Software, c bool) (*VeriFactu, error) {
-
 	doc := &VeriFactu{
 		Cabecera: &Cabecera{
 			Obligado: Obligado{
@@ -84,25 +83,23 @@ func NewDocument(inv *bill.Invoice, ts time.Time, r IssuerRole, s *Software, c b
 
 // QRCodes generates the QR code for the document
 func (d *VeriFactu) QRCodes() string {
-	if d.RegistroFactura.RegistroAlta.Encadenamiento == nil {
-		return ""
-	}
 	return d.generateURL()
 }
 
 // ChainData generates the data to be used to link to this one
 // in the next entry.
 func (d *VeriFactu) ChainData() Encadenamiento {
-	if d.RegistroFactura.RegistroAlta != nil {
-		return Encadenamiento{
-			RegistroAnterior: &RegistroAnterior{
-				IDEmisorFactura:        d.Cabecera.Obligado.NIF,
-				NumSerieFactura:        d.RegistroFactura.RegistroAlta.IDFactura.NumSerieFactura,
-				FechaExpedicionFactura: d.RegistroFactura.RegistroAlta.IDFactura.FechaExpedicionFactura,
-				Huella:                 d.RegistroFactura.RegistroAlta.Huella,
-			},
-		}
+	return Encadenamiento{
+		RegistroAnterior: &RegistroAnterior{
+			IDEmisorFactura:        d.Cabecera.Obligado.NIF,
+			NumSerieFactura:        d.RegistroFactura.RegistroAlta.IDFactura.NumSerieFactura,
+			FechaExpedicionFactura: d.RegistroFactura.RegistroAlta.IDFactura.FechaExpedicionFactura,
+			Huella:                 d.RegistroFactura.RegistroAlta.Huella,
+		},
 	}
+}
+
+func (d *VeriFactu) ChainDataCancel() Encadenamiento {
 	return Encadenamiento{
 		RegistroAnterior: &RegistroAnterior{
 			IDEmisorFactura:        d.Cabecera.Obligado.NIF,
@@ -115,12 +112,12 @@ func (d *VeriFactu) ChainData() Encadenamiento {
 
 // Fingerprint generates the SHA-256 fingerprint for the document
 func (d *VeriFactu) Fingerprint(prev *ChainData) error {
-	return d.GenerateHashAlta(prev)
+	return d.generateHashAlta(prev)
 }
 
 // Fingerprint generates the SHA-256 fingerprint for the document
 func (d *VeriFactu) FingerprintCancel(prev *ChainData) error {
-	return d.GenerateHashAnulacion(prev)
+	return d.generateHashAnulacion(prev)
 }
 
 // Bytes returns the XML document bytes

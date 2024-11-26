@@ -3,6 +3,8 @@ package test
 
 import (
 	"bytes"
+	"encoding/json"
+	"flag"
 	"os"
 	"path"
 	"path/filepath"
@@ -11,6 +13,9 @@ import (
 	"github.com/invopop/gobl"
 	"github.com/invopop/gobl/bill"
 )
+
+// UpdateOut is a flag that can be set to update example files
+var UpdateOut = flag.Bool("update", false, "Update the example files in test/data and test/data/out")
 
 // LoadEnvelope loads a test file from the test/data folder as a GOBL envelope
 // and will rebuild it if necessary to ensure any changes are accounted for.
@@ -48,6 +53,17 @@ func LoadEnvelope(file string) *gobl.Envelope {
 
 	if err := env.Validate(); err != nil {
 		panic(err)
+	}
+
+	if *UpdateOut {
+		data, err := json.MarshalIndent(env, "", "\t")
+		if err != nil {
+			panic(err)
+		}
+
+		if err := os.WriteFile(path, data, 0644); err != nil {
+			panic(err)
+		}
 	}
 
 	return env

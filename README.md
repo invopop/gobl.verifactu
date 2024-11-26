@@ -215,14 +215,14 @@ The following extension can be applied to each line tax:
 
 ### Use-Cases
 
-Under what situations should the TicketBAI system be expected to function:
+Under what situations should the Veri*Factu system be expected to function:
 
 - B2B & B2C: regular national invoice with VAT. Operation with minimal data.
 - B2B Provider to Retailer: Include equalisation surcharge VAT rates
 - B2B Retailer: Same as regular invoice, except with invoice lines that include `ext[es-tbai-product] = resale` when the goods being provided are being sold without modification (recargo de equivalencia), very much related to the next point.
 - B2B Retailer Simplified: Include the simplified scheme key. (This implies that the `OperacionEnRecargoDeEquivalenciaORegimenSimplificado` tag will be set to `S`).
 - EU B2B: Reverse charge EU export, scheme: reverse-charge taxes calculated, but not applied to totals. By default all line items assumed to be services. Individual lines can use the `ext[es-tbai-product] = goods` value to identify when the line is a physical good. Operations like this are normally assigned the TipoNoExenta value of S2. If however the service or goods are exempt of tax, each line's tax `ext[exempt]` field can be used to identify a reason.
-- EU B2C Digital Goods: use tax tag `customer-rates`, that applies VAT according to customer location. In TicketBAI, these cases are "not subject" to tax, and thus should have the cause RL (por reglas de localización).
+- EU B2C Digital Goods: use tax tag `customer-rates`, that applies VAT according to customer location. In TicketBAI, these cases are "not subject" to tax, and thus should have the cause N2 (por reglas de localización).
 
 ## Test Data
 
@@ -231,5 +231,3 @@ Some sample test data is available in the `./test` directory. To update the JSON
 ```bash
 go test ./examples_test.go --update
 ```
-
-All generate XML documents will be validated against the Veri*Factu XSD documents.
