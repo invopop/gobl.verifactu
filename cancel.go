@@ -2,7 +2,6 @@ package verifactu
 
 import (
 	"errors"
-	"time"
 
 	"github.com/invopop/gobl"
 	"github.com/invopop/gobl.verifactu/doc"
@@ -21,15 +20,9 @@ func (c *Client) GenerateCancel(env *gobl.Envelope) (*doc.VeriFactu, error) {
 	if inv.Supplier.TaxID.Country != l10n.ES.Tax() {
 		return nil, errors.New("only spanish invoices are supported")
 	}
-	// Extract the time when the invoice was posted to TicketBAI gateway
-	// ts, err := extractPostTime(env)
-	ts, err := time.Parse("2006-01-02", inv.IssueDate.String()) // REVISAR
-	if err != nil {
-		return nil, err
-	}
 
 	// Create the document
-	cd, err := doc.NewVerifactu(inv, ts, c.issuerRole, c.software, true)
+	cd, err := doc.NewVerifactu(inv, c.CurrentTime(), c.issuerRole, c.software, true)
 	if err != nil {
 		return nil, err
 	}

@@ -18,52 +18,11 @@ func TestNewRegistroAnulacion(t *testing.T) {
 		d, err := doc.NewVerifactu(inv, time.Now(), doc.IssuerRoleSupplier, nil, true)
 		require.NoError(t, err)
 
-		reg := d.RegistroFactura.RegistroAnulacion
+		ra := d.RegistroFactura.RegistroAnulacion
+		assert.Equal(t, "B85905495", ra.IDFactura.IDEmisorFactura)
+		assert.Equal(t, "FR-012", ra.IDFactura.NumSerieFactura)
+		assert.Equal(t, "01-02-2022", ra.IDFactura.FechaExpedicionFactura)
+		assert.Equal(t, "01", ra.TipoHuella)
 
-		assert.Equal(t, "E", reg.GeneradoPor)
-		assert.NotNil(t, reg.Generador)
-		assert.Equal(t, "Provide One S.L.", reg.Generador.NombreRazon)
-		assert.Equal(t, "B98602642", reg.Generador.NIF)
-
-		data, err := d.BytesIndent()
-		require.NoError(t, err)
-		assert.NotEmpty(t, data)
 	})
-
-	t.Run("customer issuer", func(t *testing.T) {
-		inv := test.LoadInvoice("cred-note-base.json")
-
-		d, err := doc.NewVerifactu(inv, time.Now(), doc.IssuerRoleCustomer, nil, true)
-		require.NoError(t, err)
-
-		reg := d.RegistroFactura.RegistroAnulacion
-
-		assert.Equal(t, "D", reg.GeneradoPor)
-		assert.NotNil(t, reg.Generador)
-		assert.Equal(t, "Sample Customer", reg.Generador.NombreRazon)
-		assert.Equal(t, "54387763P", reg.Generador.NIF)
-
-		data, err := d.BytesIndent()
-		require.NoError(t, err)
-		assert.NotEmpty(t, data)
-	})
-
-	t.Run("third party issuer", func(t *testing.T) {
-		inv := test.LoadInvoice("cred-note-base.json")
-
-		d, err := doc.NewVerifactu(inv, time.Now(), doc.IssuerRoleThirdParty, nil, true)
-		require.NoError(t, err)
-
-		reg := d.RegistroFactura.RegistroAnulacion
-
-		assert.Equal(t, "T", reg.GeneradoPor)
-		assert.NotNil(t, reg.Generador)
-		assert.Equal(t, "Provide One S.L.", reg.Generador.NombreRazon)
-		assert.Equal(t, "B98602642", reg.Generador.NIF)
-
-		data, err := d.BytesIndent()
-		require.NoError(t, err)
-		assert.NotEmpty(t, data)
-	})
-
 }

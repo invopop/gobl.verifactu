@@ -65,7 +65,7 @@ func NewVerifactu(inv *bill.Invoice, ts time.Time, r IssuerRole, s *Software, c 
 	}
 
 	if c {
-		reg, err := NewRegistroAnulacion(inv, ts, r, s)
+		reg, err := NewRegistroAnulacion(inv, ts, s)
 		if err != nil {
 			return nil, err
 		}

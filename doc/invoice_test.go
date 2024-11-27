@@ -73,7 +73,7 @@ func TestNewRegistroAlta(t *testing.T) {
 		require.Len(t, reg.FacturasRectificadas, 1)
 
 		rectified := reg.FacturasRectificadas[0]
-		assert.Equal(t, "B98602642", rectified.IDFactura.IDEmisorFactura)
+		assert.Equal(t, "B85905495", rectified.IDFactura.IDEmisorFactura)
 		assert.Equal(t, "SAMPLE-085", rectified.IDFactura.NumSerieFactura)
 		assert.Equal(t, "10-01-2022", rectified.IDFactura.FechaExpedicionFactura)
 	})

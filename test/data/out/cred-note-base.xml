@@ -4,14 +4,14 @@
       <sum:Cabecera>
         <sum1:ObligadoEmision>
           <sum1:NombreRazon>Provide One S.L.</sum1:NombreRazon>
-          <sum1:NIF>B98602642</sum1:NIF>
+          <sum1:NIF>B85905495</sum1:NIF>
         </sum1:ObligadoEmision>
       </sum:Cabecera>
       <sum:RegistroFactura>
         <sum1:RegistroAlta>
           <sum1:IDVersion>1.0</sum1:IDVersion>
           <sum1:IDFactura>
-            <sum1:IDEmisorFactura>B98602642</sum1:IDEmisorFactura>
+            <sum1:IDEmisorFactura>B85905495</sum1:IDEmisorFactura>
             <sum1:NumSerieFactura>FR-012</sum1:NumSerieFactura>
             <sum1:FechaExpedicionFactura>01-02-2022</sum1:FechaExpedicionFactura>
           </sum1:IDFactura>
@@ -20,7 +20,7 @@
           <sum1:TipoRectificativa>I</sum1:TipoRectificativa>
           <sum1:FacturasRectificadas>
             <sum1:IDFacturaRectificada>
-              <sum1:IDEmisorFactura>B98602642</sum1:IDEmisorFactura>
+              <sum1:IDEmisorFactura>B85905495</sum1:IDEmisorFactura>
               <sum1:NumSerieFactura>SAMPLE-085</sum1:NumSerieFactura>
               <sum1:FechaExpedicionFactura>10-01-2022</sum1:FechaExpedicionFactura>
             </sum1:IDFacturaRectificada>
@@ -29,7 +29,7 @@
           <sum1:EmitidaPorTerceroODestinatario>T</sum1:EmitidaPorTerceroODestinatario>
           <sum1:Tercero>
             <sum1:NombreRazon>Provide One S.L.</sum1:NombreRazon>
-            <sum1:NIF>B98602642</sum1:NIF>
+            <sum1:NIF>B85905495</sum1:NIF>
           </sum1:Tercero>
           <sum1:Destinatarios>
             <sum1:IDDestinatario>
@@ -76,7 +76,7 @@
           </sum1:SistemaInformatico>
           <sum1:FechaHoraHusoGenRegistro>2024-11-26T05:00:00+01:00</sum1:FechaHoraHusoGenRegistro>
           <sum1:TipoHuella>01</sum1:TipoHuella>
-          <sum1:Huella>E5DFED6D2E3C1BF8C47EF57823FFF15CC8CB638CE95FDB235DB2CA9BC51FE9F5</sum1:Huella>
+          <sum1:Huella>1FA6A85768A46410EE4D9A5E53A12DADBF5C75F75E2D13C27557C3C4B073F606</sum1:Huella>
         </sum1:RegistroAlta>
       </sum:RegistroFactura>
     </sum:RegFactuSistemaFacturacion>
