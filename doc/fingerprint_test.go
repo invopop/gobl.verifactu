@@ -6,8 +6,6 @@ import (
 	"github.com/invopop/gobl.verifactu/doc"
 )
 
-var s = "S"
-
 func TestFingerprintAlta(t *testing.T) {
 	t.Run("Alta", func(t *testing.T) {
 		tests := []struct {
@@ -69,7 +67,7 @@ func TestFingerprintAlta(t *testing.T) {
 					TipoFactura:              "F1",
 					CuotaTotal:               500.0,
 					ImporteTotal:             2500.0,
-					Encadenamiento:           &doc.Encadenamiento{PrimerRegistro: &s},
+					Encadenamiento:           &doc.Encadenamiento{PrimerRegistro: "S"},
 					FechaHoraHusoGenRegistro: "2024-11-20T20:00:55+01:00",
 				},
 				prev:     nil,
@@ -138,7 +136,12 @@ func TestFingerprintAnulacion(t *testing.T) {
 						FechaExpedicionFactura: "11-11-2024",
 					},
 					FechaHoraHusoGenRegistro: "2024-11-21T10:00:55+01:00",
-					Encadenamiento:           &doc.Encadenamiento{RegistroAnterior: &doc.RegistroAnterior{Huella: "4B0A5C1D3F28E6A79B8C2D1E0F3A4B5C6D7E8F9A0B1C2D3E4F5A6B7C8D9E0F1"}},
+				},
+				prev: &doc.ChainData{
+					IDEmisorFactura:        "foo",
+					NumSerieFactura:        "bar",
+					FechaExpedicionFactura: "baz",
+					Huella:                 "4B0A5C1D3F28E6A79B8C2D1E0F3A4B5C6D7E8F9A0B1C2D3E4F5A6B7C8D9E0F1",
 				},
 				expected: "BAB9B4AE157321642F6AFD8030288B7E595129B29A00A69CEB308CEAA53BFBD7",
 			},
@@ -151,7 +154,12 @@ func TestFingerprintAnulacion(t *testing.T) {
 						FechaExpedicionFactura: "12-11-2024",
 					},
 					FechaHoraHusoGenRegistro: "2024-11-21T12:00:55+01:00",
-					Encadenamiento:           &doc.Encadenamiento{RegistroAnterior: &doc.RegistroAnterior{Huella: "CBA051CBF59488B6978FA66E95ED4D0A84A97F5C0700EA952B923BD6E7C3FD7A"}},
+				},
+				prev: &doc.ChainData{
+					IDEmisorFactura:        "foo",
+					NumSerieFactura:        "bar",
+					FechaExpedicionFactura: "baz",
+					Huella:                 "CBA051CBF59488B6978FA66E95ED4D0A84A97F5C0700EA952B923BD6E7C3FD7A",
 				},
 				expected: "548707E0984AA867CC173B24389E648DECDEE48A2674DA8CE8A3682EF8F119DD",
 			},
@@ -164,8 +172,9 @@ func TestFingerprintAnulacion(t *testing.T) {
 						FechaExpedicionFactura: "11-11-2024",
 					},
 					FechaHoraHusoGenRegistro: "2024-11-21T10:00:55+01:00",
-					Encadenamiento:           &doc.Encadenamiento{PrimerRegistro: &s},
+					Encadenamiento:           &doc.Encadenamiento{PrimerRegistro: "S"},
 				},
+				prev:     nil,
 				expected: "CBA051CBF59488B6978FA66E95ED4D0A84A97F5C0700EA952B923BD6E7C3FD7A",
 			},
 		}

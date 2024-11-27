@@ -4,7 +4,7 @@
 		"uuid": "8a51fd30-2a27-11ee-be56-0242ac120002",
 		"dig": {
 			"alg": "sha256",
-			"val": "88c970d2e4aa21a7fd711856c45fcf847a4af61bce0d4c2dafb2c1550f9701fc"
+			"val": "1737d61d53252d2072ef02821cc386fbc52df806627354782cff46cd9213eff7"
 		}
 	},
 	"doc": {
@@ -67,6 +67,7 @@
 					{
 						"cat": "VAT",
 						"rate": "zero",
+						"percent": "0.0%",
 						"ext": {
 							"es-verifactu-tax-classification": "E1"
 						}
@@ -85,12 +86,12 @@
 						"rates": [
 							{
 								"key": "zero",
-								"base": "1800.00",
-								"percent": "0.0%",
-								"amount": "0.00",
 								"ext": {
 									"es-verifactu-tax-classification": "E1"
-								}
+								},
+								"base": "1800.00",
+								"percent": "0.0%",
+								"amount": "0.00"
 							}
 						],
 						"amount": "0.00"

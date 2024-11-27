@@ -31,6 +31,12 @@ func FormatField(key, value string) string {
 
 // Concatenatef builds the concatenated string based on Verifactu requirements.
 func (d *VeriFactu) fingerprintAlta(inv *RegistroAlta) error {
+	var h string
+	if inv.Encadenamiento.PrimerRegistro == "S" {
+		h = ""
+	} else {
+		h = inv.Encadenamiento.RegistroAnterior.Huella
+	}
 	f := []string{
 		FormatField("IDEmisorFactura", inv.IDFactura.IDEmisorFactura),
 		FormatField("NumSerieFactura", inv.IDFactura.NumSerieFactura),
@@ -38,7 +44,7 @@ func (d *VeriFactu) fingerprintAlta(inv *RegistroAlta) error {
 		FormatField("TipoFactura", inv.TipoFactura),
 		FormatField("CuotaTotal", fmt.Sprintf("%g", inv.CuotaTotal)),
 		FormatField("ImporteTotal", fmt.Sprintf("%g", inv.ImporteTotal)),
-		FormatField("Huella", inv.Encadenamiento.RegistroAnterior.Huella),
+		FormatField("Huella", h),
 		FormatField("FechaHoraHusoGenRegistro", inv.FechaHoraHusoGenRegistro),
 	}
 	st := strings.Join(f, "&")
@@ -50,11 +56,17 @@ func (d *VeriFactu) fingerprintAlta(inv *RegistroAlta) error {
 }
 
 func (d *VeriFactu) fingerprintAnulacion(inv *RegistroAnulacion) error {
+	var h string
+	if inv.Encadenamiento.PrimerRegistro == "S" {
+		h = ""
+	} else {
+		h = inv.Encadenamiento.RegistroAnterior.Huella
+	}
 	f := []string{
 		FormatField("IDEmisorFactura", inv.IDFactura.IDEmisorFactura),
 		FormatField("NumSerieFactura", inv.IDFactura.NumSerieFactura),
 		FormatField("FechaExpedicionFactura", inv.IDFactura.FechaExpedicionFactura),
-		FormatField("Huella", inv.Encadenamiento.RegistroAnterior.Huella),
+		FormatField("Huella", h),
 		FormatField("FechaHoraHusoGenRegistro", inv.FechaHoraHusoGenRegistro),
 	}
 	st := strings.Join(f, "&")
@@ -68,9 +80,11 @@ func (d *VeriFactu) fingerprintAnulacion(inv *RegistroAnulacion) error {
 // GenerateHash generates the SHA-256 hash for the invoice data.
 func (d *VeriFactu) generateHashAlta(prev *ChainData) error {
 	if prev == nil {
-		s := "S"
 		d.RegistroFactura.RegistroAlta.Encadenamiento = &Encadenamiento{
-			PrimerRegistro: &s,
+			PrimerRegistro: "S",
+		}
+		if err := d.fingerprintAlta(d.RegistroFactura.RegistroAlta); err != nil {
+			return err
 		}
 		return nil
 	}
@@ -91,9 +105,11 @@ func (d *VeriFactu) generateHashAlta(prev *ChainData) error {
 
 func (d *VeriFactu) generateHashAnulacion(prev *ChainData) error {
 	if prev == nil {
-		s := "S"
 		d.RegistroFactura.RegistroAnulacion.Encadenamiento = &Encadenamiento{
-			PrimerRegistro: &s,
+			PrimerRegistro: "S",
+		}
+		if err := d.fingerprintAnulacion(d.RegistroFactura.RegistroAnulacion); err != nil {
+			return err
 		}
 		return nil
 	}

@@ -99,6 +99,8 @@ func (d *VeriFactu) ChainData() Encadenamiento {
 	}
 }
 
+// ChainDataCancel generates the data to be used to link to this one
+// in the next entry for cancelling invoices.
 func (d *VeriFactu) ChainDataCancel() Encadenamiento {
 	return Encadenamiento{
 		RegistroAnterior: &RegistroAnterior{
@@ -115,7 +117,7 @@ func (d *VeriFactu) Fingerprint(prev *ChainData) error {
 	return d.generateHashAlta(prev)
 }
 
-// Fingerprint generates the SHA-256 fingerprint for the document
+// FingerprintCancel generates the SHA-256 fingerprint for the document
 func (d *VeriFactu) FingerprintCancel(prev *ChainData) error {
 	return d.generateHashAnulacion(prev)
 }

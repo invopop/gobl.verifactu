@@ -4,7 +4,7 @@
 		"uuid": "8a51fd30-2a27-11ee-be56-0242ac120002",
 		"dig": {
 			"alg": "sha256",
-			"val": "bd55d1603bc9a657f994684631ad5890c1adfe88c00dbb1f9edb40b7c6d215c5"
+			"val": "f6d40829a5535964e19c4ff27601578633ea48f670fd25c9a2c95d3c0740e8e5"
 		}
 	},
 	"doc": {
@@ -19,11 +19,6 @@
 		"code": "012",
 		"issue_date": "2022-02-01",
 		"currency": "EUR",
-		"tax": {
-			"ext": {
-				"es-verifactu-doc-type": "R1"
-			}
-		},
 		"preceding": [
 			{
 				"type": "standard",
@@ -32,6 +27,11 @@
 				"code": "085"
 			}
 		],
+		"tax": {
+			"ext": {
+				"es-verifactu-doc-type": "R1"
+			}
+		},
 		"supplier": {
 			"name": "Provide One S.L.",
 			"tax_id": {
@@ -136,12 +136,18 @@
 						"rates": [
 							{
 								"key": "standard",
+								"ext": {
+									"es-verifactu-tax-classification": "S1"
+								},
 								"base": "1620.00",
 								"percent": "21.0%",
 								"amount": "340.20"
 							},
 							{
 								"key": "zero",
+								"ext": {
+									"es-verifactu-tax-classification": "E1"
+								},
 								"base": "10.00",
 								"percent": "0.0%",
 								"amount": "0.00"

@@ -37,7 +37,7 @@ func (c *Client) GenerateCancel(env *gobl.Envelope) (*doc.VeriFactu, error) {
 	return cd, nil
 }
 
-// Fingerprint generates a fingerprint for the  document using the
+// FingerprintCancel generates a fingerprint for the cancellation document using the
 // data provided from the previous chain data. If there was no previous
 // document in the chain, the parameter should be nil. The document is updated
 // in place.

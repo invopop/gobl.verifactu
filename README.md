@@ -173,6 +173,13 @@ gobl.verifactu send ./test/data/sample-invoice.json
 
 - Currently VeriFactu supportts sending more than one invoice at a time (up to 1000). However, this module only currently supports 1 invoice at a time.
 
+- VeriFactu supports the following rectification types:
+	- Factura Recitificativa por Diferencias
+	- Factura Recitificativa por Sustitución
+	- Factura en Sustitución de Facturas Simplificadas
+	- Registro de Anulación
+	- 
+
 ## Tags, Keys and Extensions
 
 In order to provide the supplier specific data required by Veri*Factu, invoices need to include a bit of extra data. We've managed to simplify these into specific cases.

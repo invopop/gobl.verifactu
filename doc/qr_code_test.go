@@ -99,7 +99,7 @@ func TestGenerateURLCodeAlta(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			tt.doc.RegistroFactura.RegistroAlta.Encadenamiento = &doc.Encadenamiento{
-				PrimerRegistro: &s,
+				PrimerRegistro: "S",
 			}
 			got := tt.doc.QRCodes()
 			if got != tt.expected {

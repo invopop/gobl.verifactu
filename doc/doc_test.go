@@ -25,7 +25,7 @@ func TestInvoiceConversion(t *testing.T) {
 		assert.Equal(t, "B85905495", doc.Cabecera.Obligado.NIF)
 		assert.Equal(t, "1.0", doc.RegistroFactura.RegistroAlta.IDVersion)
 		assert.Equal(t, "B85905495", doc.RegistroFactura.RegistroAlta.IDFactura.IDEmisorFactura)
-		assert.Equal(t, "SAMPLE-003", doc.RegistroFactura.RegistroAlta.IDFactura.NumSerieFactura)
+		assert.Equal(t, "SAMPLE-004", doc.RegistroFactura.RegistroAlta.IDFactura.NumSerieFactura)
 		assert.Equal(t, "13-11-2024", doc.RegistroFactura.RegistroAlta.IDFactura.FechaExpedicionFactura)
 	})
 }

@@ -28,7 +28,7 @@ func TestNewRegistroAlta(t *testing.T) {
 		reg := d.RegistroFactura.RegistroAlta
 		assert.Equal(t, "1.0", reg.IDVersion)
 		assert.Equal(t, "B85905495", reg.IDFactura.IDEmisorFactura)
-		assert.Equal(t, "SAMPLE-003", reg.IDFactura.NumSerieFactura)
+		assert.Equal(t, "SAMPLE-004", reg.IDFactura.NumSerieFactura)
 		assert.Equal(t, "13-11-2024", reg.IDFactura.FechaExpedicionFactura)
 		assert.Equal(t, "Invopop S.L.", reg.NombreRazonEmisor)
 		assert.Equal(t, "F1", reg.TipoFactura)

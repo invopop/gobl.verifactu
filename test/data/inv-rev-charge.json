@@ -4,7 +4,7 @@
 		"uuid": "8a51fd30-2a27-11ee-be56-0242ac120002",
 		"dig": {
 			"alg": "sha256",
-			"val": "88c970d2e4aa21a7fd711856c45fcf847a4af61bce0d4c2dafb2c1550f9701fc"
+			"val": "01616e964c42ffec6342b37e6cbf5018f6cf72f586a06a3662cafe5af235be3b"
 		}
 	},
 	"doc": {
@@ -69,7 +69,7 @@
 						"rate": "standard",
 						"percent": "21.0%",
 						"ext": {
-							"es-verifactu-tax-classification": "S1"
+							"es-verifactu-tax-classification": "S2"
 						}
 					}
 				],
@@ -86,12 +86,12 @@
 						"rates": [
 							{
 								"key": "standard",
+								"ext": {
+									"es-verifactu-tax-classification": "S2"
+								},
 								"base": "1800.00",
 								"percent": "21.0%",
-								"amount": "378.00",
-								"ext": {
-									"es-verifactu-tax-classification": "S1"
-								}
+								"amount": "378.00"
 							}
 						],
 						"amount": "378.00"

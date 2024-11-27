@@ -4,7 +4,7 @@
 		"uuid": "8a51fd30-2a27-11ee-be56-0242ac120002",
 		"dig": {
 			"alg": "sha256",
-			"val": "88c970d2e4aa21a7fd711856c45fcf847a4af61bce0d4c2dafb2c1550f9701fc"
+			"val": "32be8f884459a5cb5d7cfb85c775c9a3a3710e52dfeca749dd21cc2d61352420"
 		}
 	},
 	"doc": {
@@ -16,7 +16,7 @@
 		"uuid": "3aea7b56-59d8-4beb-90bd-f8f280d852a0",
 		"type": "standard",
 		"series": "SAMPLE",
-		"code": "003",
+		"code": "004",
 		"issue_date": "2024-11-13",
 		"currency": "EUR",
 		"tax": {
@@ -86,12 +86,12 @@
 						"rates": [
 							{
 								"key": "standard",
-								"base": "1800.00",
-								"percent": "21.0%",
-								"amount": "378.00",
 								"ext": {
 									"es-verifactu-tax-classification": "S1"
-								}
+								},
+								"base": "1800.00",
+								"percent": "21.0%",
+								"amount": "378.00"
 							}
 						],
 						"amount": "378.00"

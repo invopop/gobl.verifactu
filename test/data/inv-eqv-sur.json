@@ -4,17 +4,17 @@
 		"uuid": "8a51fd30-2a27-11ee-be56-0242ac120728",
 		"dig": {
 			"alg": "sha256",
-			"val": "88c970d2e4aa21a7fd711856c45fcf847a4af61bce0d4c2dafb2c1550f9701fc"
+			"val": "f74efabf4c5cf10f1649230f84d33f62810a897b8b65d3a7eb260fc74161f87d"
 		}
 	},
 	"doc": {
 		"$schema": "https://gobl.org/draft-0/bill/invoice",
 		"$regime": "ES",
-		"uuid": "3aea7b56-59d8-4beb-90bd-f8f280d852a0",
-		"type": "standard",
 		"$addons": [
 			"es-verifactu-v1"
 		],
+		"uuid": "3aea7b56-59d8-4beb-90bd-f8f280d852a0",
+		"type": "standard",
 		"series": "SAMPLE",
 		"code": "432",
 		"issue_date": "2024-11-11",
@@ -68,7 +68,10 @@
 						"cat": "VAT",
 						"rate": "standard+eqs",
 						"percent": "21.0%",
-						"surcharge": "5.2%"
+						"surcharge": "5.2%",
+						"ext": {
+							"es-verifactu-tax-classification": "S1"
+						}
 					}
 				],
 				"total": "1800.00"
@@ -84,16 +87,16 @@
 						"rates": [
 							{
 								"key": "standard+eqs",
+								"ext": {
+									"es-verifactu-tax-classification": "S1"
+								},
 								"base": "1800.00",
 								"percent": "21.0%",
 								"surcharge": {
 									"percent": "5.2%",
 									"amount": "93.60"
 								},
-								"amount": "378.00",
-								"ext": {
-									"es-verifactu-tax-classification": "S1"
-								}
+								"amount": "378.00"
 							}
 						],
 						"amount": "378.00",

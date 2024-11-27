@@ -50,14 +50,14 @@ type Obligado struct {
 
 // RemisionVoluntaria contains voluntary submission details
 type RemisionVoluntaria struct {
-	FechaFinVerifactu string `xml:"sum1:FechaFinVerifactu"`
-	Incidencia        string `xml:"sum1:Incidencia"`
+	FechaFinVerifactu string `xml:"sum1:FechaFinVerifactu,omitempty"`
+	Incidencia        string `xml:"sum1:Incidencia,omitempty"`
 }
 
 // RemisionRequerimiento contains requirement submission details
 type RemisionRequerimiento struct {
 	RefRequerimiento string `xml:"sum1:RefRequerimiento"`
-	FinRequerimiento string `xml:"sum1:FinRequerimiento"`
+	FinRequerimiento string `xml:"sum1:FinRequerimiento,omitempty"`
 }
 
 // RegistroAlta contains the details of an invoice registration
@@ -73,7 +73,7 @@ type RegistroAlta struct {
 	FacturasRectificadas                []*FacturaRectificada `xml:"sum1:FacturasRectificadas,omitempty"`
 	FacturasSustituidas                 []*FacturaSustituida  `xml:"sum1:FacturasSustituidas,omitempty"`
 	ImporteRectificacion                *ImporteRectificacion `xml:"sum1:ImporteRectificacion,omitempty"`
-	FechaOperacion                      string                `xml:"sum1:FechaOperacion"`
+	FechaOperacion                      string                `xml:"sum1:FechaOperacion,omitempty"`
 	DescripcionOperacion                string                `xml:"sum1:DescripcionOperacion"`
 	FacturaSimplificadaArt7273          string                `xml:"sum1:FacturaSimplificadaArt7273,omitempty"`
 	FacturaSinIdentifDestinatarioArt61d string                `xml:"sum1:FacturaSinIdentifDestinatarioArt61d,omitempty"`
@@ -100,16 +100,16 @@ type RegistroAnulacion struct {
 	IDVersion                string            `xml:"sum1:IDVersion"`
 	IDFactura                *IDFacturaAnulada `xml:"sum1:IDFactura"`
 	RefExterna               string            `xml:"sum1:RefExterna,omitempty"`
-	SinRegistroPrevio        string            `xml:"sum1:SinRegistroPrevio"`
+	SinRegistroPrevio        string            `xml:"sum1:SinRegistroPrevio,omitempty"`
 	RechazoPrevio            string            `xml:"sum1:RechazoPrevio,omitempty"`
-	GeneradoPor              string            `xml:"sum1:GeneradoPor"`
-	Generador                *Party            `xml:"sum1:Generador"`
+	GeneradoPor              string            `xml:"sum1:GeneradoPor,omitempty"`
+	Generador                *Party            `xml:"sum1:Generador,omitempty"`
 	Encadenamiento           *Encadenamiento   `xml:"sum1:Encadenamiento"`
 	SistemaInformatico       *Software         `xml:"sum1:SistemaInformatico"`
 	FechaHoraHusoGenRegistro string            `xml:"sum1:FechaHoraHusoGenRegistro"`
 	TipoHuella               string            `xml:"sum1:TipoHuella"`
 	Huella                   string            `xml:"sum1:Huella"`
-	Signature                string            `xml:"sum1:Signature"`
+	// Signature               *xmldsig.Signature            `xml:"sum1:Signature"`
 }
 
 // IDFactura contains the identifying information for an invoice
@@ -119,7 +119,7 @@ type IDFactura struct {
 	FechaExpedicionFactura string `xml:"sum1:FechaExpedicionFactura"`
 }
 
-// IDFactura contains the identifying information for an invoice
+// IDFacturaAnulada contains the identifying information for an invoice
 type IDFacturaAnulada struct {
 	IDEmisorFactura        string `xml:"sum1:IDEmisorFacturaAnulada"`
 	NumSerieFactura        string `xml:"sum1:NumSerieFacturaAnulada"`
@@ -128,12 +128,12 @@ type IDFacturaAnulada struct {
 
 // FacturaRectificada represents a rectified invoice
 type FacturaRectificada struct {
-	IDFactura IDFactura `xml:"sum1:IDFactura"`
+	IDFactura IDFactura `xml:"sum1:IDFacturaRectificada"`
 }
 
 // FacturaSustituida represents a substituted invoice
 type FacturaSustituida struct {
-	IDFactura IDFactura `xml:"sum1:IDFactura"`
+	IDFactura IDFactura `xml:"sum1:IDFacturaSustituida"`
 }
 
 // ImporteRectificacion contains rectification amounts
@@ -183,7 +183,7 @@ type DetalleDesglose struct {
 
 // Encadenamiento contains chaining information between documents
 type Encadenamiento struct {
-	PrimerRegistro   *string           `xml:"sum1:PrimerRegistro,omitempty"`
+	PrimerRegistro   string            `xml:"sum1:PrimerRegistro,omitempty"`
 	RegistroAnterior *RegistroAnterior `xml:"sum1:RegistroAnterior,omitempty"`
 }
 

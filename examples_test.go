@@ -11,6 +11,7 @@ import (
 	verifactu "github.com/invopop/gobl.verifactu"
 	"github.com/invopop/gobl.verifactu/doc"
 	"github.com/invopop/gobl.verifactu/test"
+
 	"github.com/lestrrat-go/libxml2"
 	"github.com/lestrrat-go/libxml2/xsd"
 	"github.com/stretchr/testify/assert"
@@ -29,29 +30,49 @@ func TestXMLGeneration(t *testing.T) {
 	examples, err := lookupExamples()
 	require.NoError(t, err)
 
-	tbai, err := loadClient()
+	c, err := loadClient()
 	require.NoError(t, err)
 
 	for _, example := range examples {
 		name := fmt.Sprintf("should convert %s example file successfully", example)
 
 		t.Run(name, func(t *testing.T) {
-			data, err := convertExample(tbai, example)
+			env := test.LoadEnvelope(example)
+			td, err := c.Convert(env)
+			require.NoError(t, err)
+
+			prev := &doc.ChainData{
+				IDEmisorFactura:        "B85905495",
+				NumSerieFactura:        "SAMPLE-003",
+				FechaExpedicionFactura: "13-11-2024",
+				Huella:                 "E7A3C41C5CA53E7B78A3F3A1E9BA2BB5C2BFDD63E1BF8E2E0B4178F3961B2371",
+			}
+
+			err = c.Fingerprint(td, prev)
 			require.NoError(t, err)
 
 			outPath := test.Path("test", "data", "out",
 				strings.TrimSuffix(example, ".json")+".xml",
 			)
 
+			valData, err := td.Bytes()
+			require.NoError(t, err)
+
+			valData, err = addNamespaces(valData)
+			require.NoError(t, err)
+
+			errs := validateDoc(schema, valData)
+			for _, e := range errs {
+				assert.NoError(t, e)
+			}
+			if len(errs) > 0 {
+				assert.Fail(t, "Invalid XML:\n"+string(valData))
+				return
+			}
+
 			if *test.UpdateOut {
-				errs := validateDoc(schema, data)
-				for _, e := range errs {
-					assert.NoError(t, e)
-				}
-				if len(errs) > 0 {
-					assert.Fail(t, "Invalid XML:\n"+string(data))
-					return
-				}
+				data, err := td.Envelop()
+				require.NoError(t, err)
 
 				err = os.WriteFile(outPath, data, 0644)
 				require.NoError(t, err)
@@ -63,7 +84,9 @@ func TestXMLGeneration(t *testing.T) {
 
 			require.False(t, os.IsNotExist(err), msgMissingOutFile, filepath.Base(outPath))
 			require.NoError(t, err)
-			require.Equal(t, string(expected), string(data), msgUnmatchingOutFile, filepath.Base(outPath))
+			outData, err := td.Envelop()
+			require.NoError(t, err)
+			require.Equal(t, string(expected), string(outData), msgUnmatchingOutFile, filepath.Base(outPath))
 		})
 	}
 }
@@ -85,12 +108,15 @@ func loadClient() (*verifactu.Client, error) {
 	}
 
 	return verifactu.New(&doc.Software{
-		NombreRazon:              "My Software",
-		NIF:                      "12345678A",
-		NombreSistemaInformatico: "My Software",
-		IdSistemaInformatico:     "12345678A",
-		Version:                  "1.0",
-		NumeroInstalacion:        "12345678A",
+		NombreRazon:                 "My Software",
+		NIF:                         "12345678A",
+		NombreSistemaInformatico:    "My Software",
+		IdSistemaInformatico:        "A1",
+		Version:                     "1.0",
+		NumeroInstalacion:           "12345678A",
+		TipoUsoPosibleSoloVerifactu: "S",
+		TipoUsoPosibleMultiOT:       "S",
+		IndicadorMultiplesOT:        "N",
 	},
 		verifactu.WithCurrentTime(ts),
 		verifactu.WithThirdPartyIssuer(),
@@ -110,22 +136,6 @@ func lookupExamples() ([]string, error) {
 	return examples, nil
 }
 
-func convertExample(c *verifactu.Client, example string) ([]byte, error) {
-	env := test.LoadEnvelope(example)
-
-	td, err := c.Convert(env)
-	if err != nil {
-		return nil, err
-	}
-
-	err = c.Fingerprint(td, &doc.ChainData{})
-	if err != nil {
-		return nil, err
-	}
-
-	return td.BytesIndent()
-}
-
 func validateDoc(schema *xsd.Schema, doc []byte) []error {
 	xmlDoc, err := libxml2.ParseString(string(doc))
 	if err != nil {
@@ -138,4 +148,14 @@ func validateDoc(schema *xsd.Schema, doc []byte) []error {
 	}
 
 	return nil
+}
+
+// Helper function to inject namespaces into XML without using Envelop()
+// Just for xsd validation purposes
+func addNamespaces(data []byte) ([]byte, error) {
+	xmlString := string(data)
+	xmlNamespaces := ` xmlns:sum="https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/tike/cont/ws/SuministroLR.xsd" xmlns:sum1="https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/tike/cont/ws/SuministroInformacion.xsd"`
+	xmlString = strings.Replace(xmlString, "<sum:RegFactuSistemaFacturacion>", "<sum:RegFactuSistemaFacturacion"+xmlNamespaces+">", 1)
+	finalXMLBytes := []byte(xmlString)
+	return finalXMLBytes, nil
 }

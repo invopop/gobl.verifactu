@@ -8,35 +8,76 @@
         </sum1:ObligadoEmision>
       </sum:Cabecera>
       <sum:RegistroFactura>
-        <sum1:RegistroAnulacion>
-          <IDVersion>1.0</IDVersion>
-          <IDFactura>
+        <sum1:RegistroAlta>
+          <sum1:IDVersion>1.0</sum1:IDVersion>
+          <sum1:IDFactura>
             <sum1:IDEmisorFactura>B98602642</sum1:IDEmisorFactura>
             <sum1:NumSerieFactura>FR-012</sum1:NumSerieFactura>
             <sum1:FechaExpedicionFactura>01-02-2022</sum1:FechaExpedicionFactura>
-          </IDFactura>
-          <SinRegistroPrevio></SinRegistroPrevio>
-          <GeneradoPor>E</GeneradoPor>
-          <Generador>
+          </sum1:IDFactura>
+          <sum1:NombreRazonEmisor>Provide One S.L.</sum1:NombreRazonEmisor>
+          <sum1:TipoFactura>R1</sum1:TipoFactura>
+          <sum1:TipoRectificativa>I</sum1:TipoRectificativa>
+          <sum1:FacturasRectificadas>
+            <sum1:IDFacturaRectificada>
+              <sum1:IDEmisorFactura>B98602642</sum1:IDEmisorFactura>
+              <sum1:NumSerieFactura>SAMPLE-085</sum1:NumSerieFactura>
+              <sum1:FechaExpedicionFactura>10-01-2022</sum1:FechaExpedicionFactura>
+            </sum1:IDFacturaRectificada>
+          </sum1:FacturasRectificadas>
+          <sum1:DescripcionOperacion>Some random description</sum1:DescripcionOperacion>
+          <sum1:EmitidaPorTerceroODestinatario>T</sum1:EmitidaPorTerceroODestinatario>
+          <sum1:Tercero>
             <sum1:NombreRazon>Provide One S.L.</sum1:NombreRazon>
             <sum1:NIF>B98602642</sum1:NIF>
-          </Generador>
-          <SistemaInformatico>
-            <sum1:NombreRazon>Invopop S.L.</sum1:NombreRazon>
-            <sum1:NIF>B85905495</sum1:NIF>
-            <sum1:NombreSistemaInformatico>gobl.verifactu</sum1:NombreSistemaInformatico>
+          </sum1:Tercero>
+          <sum1:Destinatarios>
+            <sum1:IDDestinatario>
+              <sum1:NombreRazon>Sample Customer</sum1:NombreRazon>
+              <sum1:NIF>54387763P</sum1:NIF>
+            </sum1:IDDestinatario>
+          </sum1:Destinatarios>
+          <sum1:Desglose>
+            <sum1:DetalleDesglose>
+              <sum1:Impuesto>01</sum1:Impuesto>
+              <sum1:ClaveRegimen>01</sum1:ClaveRegimen>
+              <sum1:CalificacionOperacion>S1</sum1:CalificacionOperacion>
+              <sum1:TipoImpositivo>21</sum1:TipoImpositivo>
+              <sum1:BaseImponibleOimporteNoSujeto>1620</sum1:BaseImponibleOimporteNoSujeto>
+              <sum1:CuotaRepercutida>340.2</sum1:CuotaRepercutida>
+            </sum1:DetalleDesglose>
+            <sum1:DetalleDesglose>
+              <sum1:Impuesto>01</sum1:Impuesto>
+              <sum1:ClaveRegimen>01</sum1:ClaveRegimen>
+              <sum1:OperacionExenta>E1</sum1:OperacionExenta>
+              <sum1:BaseImponibleOimporteNoSujeto>10</sum1:BaseImponibleOimporteNoSujeto>
+            </sum1:DetalleDesglose>
+          </sum1:Desglose>
+          <sum1:CuotaTotal>340.2</sum1:CuotaTotal>
+          <sum1:ImporteTotal>1970.2</sum1:ImporteTotal>
+          <sum1:Encadenamiento>
+            <sum1:RegistroAnterior>
+              <sum1:IDEmisorFactura>B85905495</sum1:IDEmisorFactura>
+              <sum1:NumSerieFactura>SAMPLE-003</sum1:NumSerieFactura>
+              <sum1:FechaExpedicionFactura>13-11-2024</sum1:FechaExpedicionFactura>
+              <sum1:Huella>E7A3C41C5CA53E7B78A3F3A1E9BA2BB5C2BFDD63E1BF8E2E0B4178F3961B2371</sum1:Huella>
+            </sum1:RegistroAnterior>
+          </sum1:Encadenamiento>
+          <sum1:SistemaInformatico>
+            <sum1:NombreRazon>My Software</sum1:NombreRazon>
+            <sum1:NIF>12345678A</sum1:NIF>
+            <sum1:NombreSistemaInformatico>My Software</sum1:NombreSistemaInformatico>
             <sum1:IdSistemaInformatico>A1</sum1:IdSistemaInformatico>
             <sum1:Version>1.0</sum1:Version>
-            <sum1:NumeroInstalacion>00001</sum1:NumeroInstalacion>
+            <sum1:NumeroInstalacion>12345678A</sum1:NumeroInstalacion>
             <sum1:TipoUsoPosibleSoloVerifactu>S</sum1:TipoUsoPosibleSoloVerifactu>
             <sum1:TipoUsoPosibleMultiOT>S</sum1:TipoUsoPosibleMultiOT>
-            <sum1:IndicadorMultiplesOT>S</sum1:IndicadorMultiplesOT>
-          </SistemaInformatico>
-          <FechaHoraHusoGenRegistro>2024-11-21T18:26:22+01:00</FechaHoraHusoGenRegistro>
-          <TipoHuella>01</TipoHuella>
-          <Huella></Huella>
-          <Signature></Signature>
-        </sum1:RegistroAnulacion>
+            <sum1:IndicadorMultiplesOT>N</sum1:IndicadorMultiplesOT>
+          </sum1:SistemaInformatico>
+          <sum1:FechaHoraHusoGenRegistro>2024-11-26T05:00:00+01:00</sum1:FechaHoraHusoGenRegistro>
+          <sum1:TipoHuella>01</sum1:TipoHuella>
+          <sum1:Huella>E5DFED6D2E3C1BF8C47EF57823FFF15CC8CB638CE95FDB235DB2CA9BC51FE9F5</sum1:Huella>
+        </sum1:RegistroAlta>
       </sum:RegistroFactura>
     </sum:RegFactuSistemaFacturacion>
   </soapenv:Body>

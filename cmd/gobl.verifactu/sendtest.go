@@ -77,8 +77,8 @@ func (c *sendTestOpts) runE(cmd *cobra.Command, args []string) error {
 
 	c.previous = `{
 		"emisor": "B85905495",
-		"serie": "SAMPLE-001", 
-		"fecha": "11-11-2024",
+		"serie": "SAMPLE-011", 
+		"fecha": "21-11-2024",
 		"huella": "13EC0696104D1E529667184C6CDFC67D08036BCA4CD1B7887DE9C6F8F7EEC69C"
 		}`
 
