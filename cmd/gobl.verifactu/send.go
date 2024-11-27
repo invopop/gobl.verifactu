@@ -9,6 +9,7 @@ import (
 	"github.com/invopop/gobl"
 	verifactu "github.com/invopop/gobl.verifactu"
 	"github.com/invopop/gobl.verifactu/doc"
+	"github.com/invopop/xmldsig"
 	"github.com/spf13/cobra"
 )
 
@@ -53,14 +54,19 @@ func (c *sendOpts) runE(cmd *cobra.Command, args []string) error {
 		return fmt.Errorf("unmarshaling gobl envelope: %w", err)
 	}
 
+	cert, err := xmldsig.LoadCertificate(c.cert, c.password)
+	if err != nil {
+		return err
+	}
+
 	opts := []verifactu.Option{
-		verifactu.WithThirdPartyIssuer(),
+		verifactu.WithCertificate(cert),
 	}
 
 	if c.production {
 		opts = append(opts, verifactu.InProduction())
 	} else {
-		opts = append(opts, verifactu.InTesting())
+		opts = append(opts, verifactu.InSandbox())
 	}
 
 	tc, err := verifactu.New(c.software(), opts...)

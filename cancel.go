@@ -29,7 +29,7 @@ func (c *Client) GenerateCancel(env *gobl.Envelope) (*doc.VeriFactu, error) {
 	}
 
 	// Create the document
-	cd, err := doc.NewDocument(inv, ts, c.issuerRole, c.software, true)
+	cd, err := doc.NewVerifactu(inv, ts, c.issuerRole, c.software, true)
 	if err != nil {
 		return nil, err
 	}
@@ -38,9 +38,7 @@ func (c *Client) GenerateCancel(env *gobl.Envelope) (*doc.VeriFactu, error) {
 }
 
 // FingerprintCancel generates a fingerprint for the cancellation document using the
-// data provided from the previous chain data. If there was no previous
-// document in the chain, the parameter should be nil. The document is updated
-// in place.
+// data provided from the previous chain data. The document is updated in place.
 func (c *Client) FingerprintCancel(d *doc.VeriFactu, prev *doc.ChainData) error {
 	return d.FingerprintCancel(prev)
 }

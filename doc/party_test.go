@@ -19,7 +19,7 @@ func TestNewParty(t *testing.T) {
 	sw := &doc.Software{}
 	t.Run("with tax ID", func(t *testing.T) {
 		inv := test.LoadInvoice("inv-base.json")
-		d, err := doc.NewDocument(inv, ts, role, sw, false)
+		d, err := doc.NewVerifactu(inv, ts, role, sw, false)
 		require.NoError(t, err)
 
 		p := d.RegistroFactura.RegistroAlta.Destinatarios[0].IDDestinatario
@@ -40,7 +40,7 @@ func TestNewParty(t *testing.T) {
 			},
 		}
 
-		d, err := doc.NewDocument(inv, ts, role, sw, false)
+		d, err := doc.NewVerifactu(inv, ts, role, sw, false)
 		require.NoError(t, err)
 
 		p := d.RegistroFactura.RegistroAlta.Destinatarios[0].IDDestinatario
@@ -61,7 +61,7 @@ func TestNewParty(t *testing.T) {
 			},
 		}
 
-		d, err := doc.NewDocument(inv, ts, role, sw, false)
+		d, err := doc.NewVerifactu(inv, ts, role, sw, false)
 		require.NoError(t, err)
 
 		p := d.RegistroFactura.RegistroAlta.Destinatarios[0].IDDestinatario
@@ -79,7 +79,7 @@ func TestNewParty(t *testing.T) {
 			Name: "Simple Company",
 		}
 
-		_, err := doc.NewDocument(inv, ts, role, sw, false)
+		_, err := doc.NewVerifactu(inv, ts, role, sw, false)
 		require.Error(t, err)
 	})
 }

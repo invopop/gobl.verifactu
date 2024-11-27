@@ -119,8 +119,8 @@ func InProduction() Option {
 	}
 }
 
-// InTesting defines the connection to use the testing environment.
-func InTesting() Option {
+// InSandbox defines the connection to use the testing environment.
+func InSandbox() Option {
 	return func(c *Client) {
 		c.env = gateways.EnvironmentSandbox
 	}

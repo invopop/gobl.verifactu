@@ -67,7 +67,7 @@ func (c *cancelOpts) runE(cmd *cobra.Command, args []string) error {
 	if c.production {
 		opts = append(opts, verifactu.InProduction())
 	} else {
-		opts = append(opts, verifactu.InTesting())
+		opts = append(opts, verifactu.InSandbox())
 	}
 
 	tc, err := verifactu.New(c.software(), opts...)

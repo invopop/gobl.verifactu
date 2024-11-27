@@ -52,8 +52,8 @@ func init() {
 	}
 }
 
-// NewDocument creates a new VeriFactu document
-func NewDocument(inv *bill.Invoice, ts time.Time, r IssuerRole, s *Software, c bool) (*VeriFactu, error) {
+// NewVerifactu creates a new VeriFactu document
+func NewVerifactu(inv *bill.Invoice, ts time.Time, r IssuerRole, s *Software, c bool) (*VeriFactu, error) {
 	doc := &VeriFactu{
 		Cabecera: &Cabecera{
 			Obligado: Obligado{

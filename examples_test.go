@@ -155,6 +155,9 @@ func validateDoc(schema *xsd.Schema, doc []byte) []error {
 func addNamespaces(data []byte) ([]byte, error) {
 	xmlString := string(data)
 	xmlNamespaces := ` xmlns:sum="https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/tike/cont/ws/SuministroLR.xsd" xmlns:sum1="https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/tike/cont/ws/SuministroInformacion.xsd"`
+	if !strings.Contains(xmlString, "<sum:RegFactuSistemaFacturacion>") {
+		return nil, fmt.Errorf("could not find RegFactuSistemaFacturacion tag in XML")
+	}
 	xmlString = strings.Replace(xmlString, "<sum:RegFactuSistemaFacturacion>", "<sum:RegFactuSistemaFacturacion"+xmlNamespaces+">", 1)
 	finalXMLBytes := []byte(xmlString)
 	return finalXMLBytes, nil

@@ -15,7 +15,7 @@ func TestNewRegistroAnulacion(t *testing.T) {
 	t.Run("basic", func(t *testing.T) {
 		inv := test.LoadInvoice("cred-note-base.json")
 
-		d, err := doc.NewDocument(inv, time.Now(), doc.IssuerRoleSupplier, nil, true)
+		d, err := doc.NewVerifactu(inv, time.Now(), doc.IssuerRoleSupplier, nil, true)
 		require.NoError(t, err)
 
 		reg := d.RegistroFactura.RegistroAnulacion
@@ -33,7 +33,7 @@ func TestNewRegistroAnulacion(t *testing.T) {
 	t.Run("customer issuer", func(t *testing.T) {
 		inv := test.LoadInvoice("cred-note-base.json")
 
-		d, err := doc.NewDocument(inv, time.Now(), doc.IssuerRoleCustomer, nil, true)
+		d, err := doc.NewVerifactu(inv, time.Now(), doc.IssuerRoleCustomer, nil, true)
 		require.NoError(t, err)
 
 		reg := d.RegistroFactura.RegistroAnulacion
@@ -51,7 +51,7 @@ func TestNewRegistroAnulacion(t *testing.T) {
 	t.Run("third party issuer", func(t *testing.T) {
 		inv := test.LoadInvoice("cred-note-base.json")
 
-		d, err := doc.NewDocument(inv, time.Now(), doc.IssuerRoleThirdParty, nil, true)
+		d, err := doc.NewVerifactu(inv, time.Now(), doc.IssuerRoleThirdParty, nil, true)
 		require.NoError(t, err)
 
 		reg := d.RegistroFactura.RegistroAnulacion

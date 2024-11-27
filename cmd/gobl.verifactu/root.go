@@ -35,7 +35,6 @@ func (o *rootOpts) cmd() *cobra.Command {
 
 	cmd.AddCommand(versionCmd())
 	cmd.AddCommand(send(o).cmd())
-	cmd.AddCommand(sendTest(o).cmd())
 	cmd.AddCommand(convert(o).cmd())
 	cmd.AddCommand(cancel(o).cmd())
 
@@ -64,7 +63,7 @@ func (o *rootOpts) software() *doc.Software {
 		NombreSistemaInformatico:    o.swName,
 		TipoUsoPosibleSoloVerifactu: "S",
 		TipoUsoPosibleMultiOT:       "S",
-		IndicadorMultiplesOT:        "S",
+		IndicadorMultiplesOT:        "N",
 	}
 }
 

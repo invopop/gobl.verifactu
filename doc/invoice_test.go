@@ -22,7 +22,7 @@ func TestNewRegistroAlta(t *testing.T) {
 
 	t.Run("should contain basic document info", func(t *testing.T) {
 		inv := test.LoadInvoice("inv-base.json")
-		d, err := doc.NewDocument(inv, ts, role, sw, false)
+		d, err := doc.NewVerifactu(inv, ts, role, sw, false)
 		require.NoError(t, err)
 
 		reg := d.RegistroFactura.RegistroAlta
@@ -55,7 +55,7 @@ func TestNewRegistroAlta(t *testing.T) {
 		inv.SetTags(tax.TagSimplified)
 		inv.Customer = nil
 
-		d, err := doc.NewDocument(inv, ts, role, sw, false)
+		d, err := doc.NewVerifactu(inv, ts, role, sw, false)
 		require.NoError(t, err)
 
 		assert.Equal(t, "S", d.RegistroFactura.RegistroAlta.FacturaSinIdentifDestinatarioArt61d)
@@ -64,7 +64,7 @@ func TestNewRegistroAlta(t *testing.T) {
 	t.Run("should handle rectificative invoices", func(t *testing.T) {
 		inv := test.LoadInvoice("cred-note-base.json")
 
-		d, err := doc.NewDocument(inv, ts, role, sw, false)
+		d, err := doc.NewVerifactu(inv, ts, role, sw, false)
 		require.NoError(t, err)
 
 		reg := d.RegistroFactura.RegistroAlta
@@ -89,7 +89,7 @@ func TestNewRegistroAlta(t *testing.T) {
 			},
 		}
 
-		d, err := doc.NewDocument(inv, ts, role, sw, false)
+		d, err := doc.NewVerifactu(inv, ts, role, sw, false)
 		require.NoError(t, err)
 
 		reg := d.RegistroFactura.RegistroAlta

@@ -86,7 +86,6 @@ func (c *Connection) post(ctx context.Context, path string, payload []byte) erro
 			e1 := out.Body.Respuesta.RespuestaLinea[0]
 			err = err.withMessage(e1.DescripcionErrorRegistro).withCode(e1.CodigoErrorRegistro)
 		}
-		fmt.Println(out.Body.Respuesta)
 		return err
 	}
 
