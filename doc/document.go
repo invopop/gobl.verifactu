@@ -1,6 +1,9 @@
 package doc
 
-import "encoding/xml"
+import (
+	"encoding/xml"
+	"time"
+)
 
 // SUM is the namespace for the main VeriFactu schema
 const (
@@ -26,6 +29,9 @@ type VeriFactu struct {
 	XMLName         xml.Name         `xml:"sum:RegFactuSistemaFacturacion"`
 	Cabecera        *Cabecera        `xml:"sum:Cabecera"`
 	RegistroFactura *RegistroFactura `xml:"sum:RegistroFactura"`
+
+	//Internal
+	ts time.Time
 }
 
 // RegistroFactura contains either an invoice registration or cancellation

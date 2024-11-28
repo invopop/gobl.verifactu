@@ -3,6 +3,7 @@ package verifactu
 
 import (
 	"context"
+	"encoding/xml"
 	"errors"
 	"time"
 
@@ -134,6 +135,15 @@ func (c *Client) Post(ctx context.Context, d *doc.VeriFactu) error {
 	return nil
 }
 
+// ParseDocument will parse the XML data into a VeriFactu document.
+func ParseDocument(data []byte) (*doc.VeriFactu, error) {
+	d := new(doc.VeriFactu)
+	if err := xml.Unmarshal(data, d); err != nil {
+		return nil, err
+	}
+	return d, nil
+}
+
 // CurrentTime returns the current time to use when generating
 // the VeriFactu document.
 func (c *Client) CurrentTime() time.Time {
@@ -141,4 +151,9 @@ func (c *Client) CurrentTime() time.Time {
 		return c.curTime
 	}
 	return time.Now()
+}
+
+// Sandbox returns true if the client is using the sandbox environment.
+func (c *Client) Sandbox() bool {
+	return c.env == gateways.EnvironmentSandbox
 }
