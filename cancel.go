@@ -9,7 +9,7 @@ import (
 	"github.com/invopop/gobl/l10n"
 )
 
-// GenerateCancel creates a new AnulaTicketBAI document from the provided
+// GenerateCancel creates a new cancellation document from the provided
 // GOBL Envelope.
 func (c *Client) GenerateCancel(env *gobl.Envelope) (*doc.VeriFactu, error) {
 	// Extract the Invoice

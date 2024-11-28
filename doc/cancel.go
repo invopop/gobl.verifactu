@@ -6,7 +6,7 @@ import (
 	"github.com/invopop/gobl/bill"
 )
 
-// NewRegistroAnulacion provides support for credit notes
+// NewRegistroAnulacion provides support for cancelling invoices
 func NewRegistroAnulacion(inv *bill.Invoice, ts time.Time, s *Software) (*RegistroAnulacion, error) {
 	reg := &RegistroAnulacion{
 		IDVersion: CurrentVersion,

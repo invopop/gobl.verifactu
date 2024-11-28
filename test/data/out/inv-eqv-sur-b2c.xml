@@ -40,10 +40,10 @@
           <sum1:ImporteTotal>2178</sum1:ImporteTotal>
           <sum1:Encadenamiento>
             <sum1:RegistroAnterior>
-              <sum1:IDEmisorFactura>B85905495</sum1:IDEmisorFactura>
-              <sum1:NumSerieFactura>SAMPLE-003</sum1:NumSerieFactura>
-              <sum1:FechaExpedicionFactura>13-11-2024</sum1:FechaExpedicionFactura>
-              <sum1:Huella>E7A3C41C5CA53E7B78A3F3A1E9BA2BB5C2BFDD63E1BF8E2E0B4178F3961B2371</sum1:Huella>
+              <sum1:IDEmisorFactura>B12345678</sum1:IDEmisorFactura>
+              <sum1:NumSerieFactura>SAMPLE-001</sum1:NumSerieFactura>
+              <sum1:FechaExpedicionFactura>26-11-2024</sum1:FechaExpedicionFactura>
+              <sum1:Huella>0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF</sum1:Huella>
             </sum1:RegistroAnterior>
           </sum1:Encadenamiento>
           <sum1:SistemaInformatico>
@@ -59,7 +59,7 @@
           </sum1:SistemaInformatico>
           <sum1:FechaHoraHusoGenRegistro>2024-11-26T05:00:00+01:00</sum1:FechaHoraHusoGenRegistro>
           <sum1:TipoHuella>01</sum1:TipoHuella>
-          <sum1:Huella>AD2FA611FACE79B5077DF536BA1700636D08A39F243F141A5BF92927FBE69A18</sum1:Huella>
+          <sum1:Huella>8C446C65AD424BBFB8A8E7DC8B3DC331B7FFBBDD08C87D8DEAEAB82E6EBA921F</sum1:Huella>
         </sum1:RegistroAlta>
       </sum:RegistroFactura>
     </sum:RegFactuSistemaFacturacion>

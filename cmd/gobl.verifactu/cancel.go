@@ -93,19 +93,6 @@ func (c *cancelOpts) runE(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	out, err := c.openOutput(cmd, args)
-	if err != nil {
-		return err
-	}
-	defer out.Close() // nolint:errcheck
-	convOut, err := td.BytesIndent()
-	if err != nil {
-		return fmt.Errorf("generating verifactu xml: %w", err)
-	}
-	if _, err = out.Write(append(convOut, '\n')); err != nil {
-		return fmt.Errorf("writing verifactu xml: %w", err)
-	}
-
 	err = tc.Post(cmd.Context(), td)
 	if err != nil {
 		return err

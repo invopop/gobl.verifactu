@@ -41,11 +41,12 @@ func TestXMLGeneration(t *testing.T) {
 			td, err := c.Convert(env)
 			require.NoError(t, err)
 
+			// Example Data to Test the Fingerprint.
 			prev := &doc.ChainData{
-				IDEmisorFactura:        "B85905495",
-				NumSerieFactura:        "SAMPLE-003",
-				FechaExpedicionFactura: "13-11-2024",
-				Huella:                 "E7A3C41C5CA53E7B78A3F3A1E9BA2BB5C2BFDD63E1BF8E2E0B4178F3961B2371",
+				IDEmisorFactura:        "B12345678",
+				NumSerieFactura:        "SAMPLE-001",
+				FechaExpedicionFactura: "26-11-2024",
+				Huella:                 "0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF",
 			}
 
 			err = c.Fingerprint(td, prev)

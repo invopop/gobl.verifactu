@@ -143,7 +143,7 @@ func TestFingerprintAnulacion(t *testing.T) {
 					FechaExpedicionFactura: "baz",
 					Huella:                 "4B0A5C1D3F28E6A79B8C2D1E0F3A4B5C6D7E8F9A0B1C2D3E4F5A6B7C8D9E0F1",
 				},
-				expected: "BAB9B4AE157321642F6AFD8030288B7E595129B29A00A69CEB308CEAA53BFBD7",
+				expected: "F5AB85A94450DF8752F4A7840C72456B753010E5EC1F26D8EAE0D4523E287948",
 			},
 			{
 				name: "Basic 2",
@@ -161,7 +161,7 @@ func TestFingerprintAnulacion(t *testing.T) {
 					FechaExpedicionFactura: "baz",
 					Huella:                 "CBA051CBF59488B6978FA66E95ED4D0A84A97F5C0700EA952B923BD6E7C3FD7A",
 				},
-				expected: "548707E0984AA867CC173B24389E648DECDEE48A2674DA8CE8A3682EF8F119DD",
+				expected: "E86A5172477A636958B2F98770FB796BEEDA43F3F1C6A1C601EC3EEDF9C033B1",
 			},
 			{
 				name: "No Previous",
@@ -175,7 +175,7 @@ func TestFingerprintAnulacion(t *testing.T) {
 					Encadenamiento:           &doc.Encadenamiento{PrimerRegistro: "S"},
 				},
 				prev:     nil,
-				expected: "CBA051CBF59488B6978FA66E95ED4D0A84A97F5C0700EA952B923BD6E7C3FD7A",
+				expected: "A166B0391BCE34DA3A5B022837D0C426F7A4E2F795EBB4581B7BD79E74BCAA95",
 			},
 		}
 

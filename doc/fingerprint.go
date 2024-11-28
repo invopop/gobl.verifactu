@@ -8,6 +8,7 @@ import (
 )
 
 // TipoHuella is the SHA-256 fingerprint type for Verifactu - L12
+// Might include support for other encryption types in the future.
 const TipoHuella = "01"
 
 // ChainData contains the fields of this invoice that will be
@@ -63,9 +64,9 @@ func (d *VeriFactu) fingerprintAnulacion(inv *RegistroAnulacion) error {
 		h = inv.Encadenamiento.RegistroAnterior.Huella
 	}
 	f := []string{
-		FormatField("IDEmisorFactura", inv.IDFactura.IDEmisorFactura),
-		FormatField("NumSerieFactura", inv.IDFactura.NumSerieFactura),
-		FormatField("FechaExpedicionFactura", inv.IDFactura.FechaExpedicionFactura),
+		FormatField("IDEmisorFacturaAnulada", inv.IDFactura.IDEmisorFactura),
+		FormatField("NumSerieFacturaAnulada", inv.IDFactura.NumSerieFactura),
+		FormatField("FechaExpedicionFacturaAnulada", inv.IDFactura.FechaExpedicionFactura),
 		FormatField("Huella", h),
 		FormatField("FechaHoraHusoGenRegistro", inv.FechaHoraHusoGenRegistro),
 	}
