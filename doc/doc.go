@@ -64,6 +64,17 @@ func NewVerifactu(inv *bill.Invoice, ts time.Time, r IssuerRole, s *Software, c 
 		RegistroFactura: &RegistroFactura{},
 	}
 
+	if inv.Type == bill.InvoiceTypeCreditNote {
+		// GOBL credit note's amounts represent the amounts to be credited to the customer,
+		// and they are provided as positive numbers. In VeriFactu, however, credit notes
+		// become "facturas rectificativas por diferencias" and, when a correction is for a
+		// credit operation, the amounts must be negative to cancel out the ones in the
+		// original invoice. For that reason, we invert the credit note quantities here.
+		if err := inv.Invert(); err != nil {
+			return nil, err
+		}
+	}
+
 	if c {
 		reg, err := NewRegistroAnulacion(inv, ts, s)
 		if err != nil {

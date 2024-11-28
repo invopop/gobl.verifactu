@@ -19,7 +19,6 @@ func (doc *VeriFactu) generateURL(production bool) string {
 
 	if production {
 		return fmt.Sprintf("%s&nif=%s&numserie=%s&fecha=%s&importe=%s", prodURL, nif, numSerie, fecha, importe)
-	} else {
-		return fmt.Sprintf("%snif=%s&numserie=%s&fecha=%s&importe=%s", testURL, nif, numSerie, fecha, importe)
 	}
+	return fmt.Sprintf("%snif=%s&numserie=%s&fecha=%s&importe=%s", testURL, nif, numSerie, fecha, importe)
 }

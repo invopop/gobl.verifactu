@@ -4,7 +4,7 @@
 		"uuid": "8a51fd30-2a27-11ee-be56-0242ac120002",
 		"dig": {
 			"alg": "sha256",
-			"val": "b3b00f6a955ad8a51e8ebaed574124162053a6fcccffba6921880114f94be99f"
+			"val": "b76e4c256c9c0e593545bbc31c13714d736c533a9ad19bcab83902d78cd95332"
 		}
 	},
 	"doc": {
@@ -104,11 +104,31 @@
 					}
 				],
 				"total": "1620.00"
+			},
+			{
+				"i": 2,
+				"quantity": "1",
+				"item": {
+					"name": "Financial service",
+					"price": "10.00"
+				},
+				"sum": "10.00",
+				"taxes": [
+					{
+						"cat": "VAT",
+						"rate": "zero",
+						"percent": "0.0%",
+						"ext": {
+							"es-verifactu-tax-classification": "E1"
+						}
+					}
+				],
+				"total": "10.00"
 			}
 		],
 		"totals": {
-			"sum": "1620.00",
-			"total": "1620.00",
+			"sum": "1630.00",
+			"total": "1630.00",
 			"taxes": {
 				"categories": [
 					{
@@ -122,6 +142,15 @@
 								"base": "1620.00",
 								"percent": "21.0%",
 								"amount": "340.20"
+							},
+							{
+								"key": "zero",
+								"ext": {
+									"es-verifactu-tax-classification": "E1"
+								},
+								"base": "10.00",
+								"percent": "0.0%",
+								"amount": "0.00"
 							}
 						],
 						"amount": "340.20"
@@ -130,8 +159,8 @@
 				"sum": "340.20"
 			},
 			"tax": "340.20",
-			"total_with_tax": "1960.20",
-			"payable": "1960.20"
+			"total_with_tax": "1970.20",
+			"payable": "1970.20"
 		},
 		"notes": [
 			{

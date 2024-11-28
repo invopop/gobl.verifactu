@@ -33,7 +33,7 @@ type Connection struct {
 	client *resty.Client
 }
 
-// New instantiates a new connection using the provided config.
+// New instantiates and configures a new connection to the VeriFactu gateway.
 func New(env Environment, cert *xmldsig.Certificate) (*Connection, error) {
 	tlsConf, err := cert.TLSAuthConfig()
 	if err != nil {

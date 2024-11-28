@@ -76,6 +76,10 @@ func TestNewRegistroAlta(t *testing.T) {
 		assert.Equal(t, "B85905495", rectified.IDFactura.IDEmisorFactura)
 		assert.Equal(t, "SAMPLE-085", rectified.IDFactura.NumSerieFactura)
 		assert.Equal(t, "10-01-2022", rectified.IDFactura.FechaExpedicionFactura)
+		assert.Equal(t, float64(-1620), reg.Desglose.DetalleDesglose[0].BaseImponibleOImporteNoSujeto)
+		assert.Equal(t, float64(-340.2), reg.Desglose.DetalleDesglose[0].CuotaRepercutida)
+		assert.Equal(t, float64(-340.2), reg.CuotaTotal)
+		assert.Equal(t, float64(-1960.2), reg.ImporteTotal)
 	})
 
 	t.Run("should handle substitution invoices", func(t *testing.T) {
