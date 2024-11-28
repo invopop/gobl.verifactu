@@ -1,6 +1,6 @@
-# GOBL to Veri*Factu
+# GOBL to VeriFactu
 
-Go library to convert [GOBL](https://github.com/invopop/gobl) invoices into Veri*Factu declarations and send them to the AEAT (Agencia Estatal de Administración Tributaria) web services. This library assumes that clients will handle a local database of previous invoices in order to comply with the local requirements of chaining all invoices together.
+Go library to convert [GOBL](https://github.com/invopop/gobl) invoices into VeriFactu declarations and send them to the AEAT (Agencia Estatal de Administración Tributaria) web services. This library assumes that clients will handle a local database of previous invoices in order to comply with the local requirements of chaining all invoices together.
 
 Copyright [Invopop Ltd.](https://invopop.com) 2023. Released publicly under the [GNU Affero General Public License v3.0](LICENSE). For commercial licenses please contact the [dev team at invopop](mailto:dev@invopop.com). For contributions to this library to be accepted, we will require you to accept transferring your copyright to Invopop Ltd.
 
@@ -8,8 +8,8 @@ Copyright [Invopop Ltd.](https://invopop.com) 2023. Released publicly under the 
 
 The main resources used in this module include:
 
-- [Veri*Factu documentation](https://www.agenciatributaria.es/AEAT.desarrolladores/Desarrolladores/_menu_/Documentacion/Sistemas_Informaticos_de_Facturacion_y_Sistemas_VERI_FACTU/Sistemas_Informaticos_de_Facturacion_y_Sistemas_VERI_FACTU.html)
-- [Veri*Factu Ministerial Order](https://www.boe.es/diario_boe/txt.php?id=BOE-A-2024-22138)
+- [VeriFactu documentation](https://www.agenciatributaria.es/AEAT.desarrolladores/Desarrolladores/_menu_/Documentacion/Sistemas_Informaticos_de_Facturacion_y_Sistemas_VERI_FACTU/Sistemas_Informaticos_de_Facturacion_y_Sistemas_VERI_FACTU.html)
+- [VeriFactu Ministerial Order](https://www.boe.es/diario_boe/txt.php?id=BOE-A-2024-22138)
 - [Spanish VAT Law](https://www.boe.es/buscar/act.php?id=BOE-A-1992-28740).
 
 ## Usage
@@ -18,7 +18,7 @@ The main resources used in this module include:
 
 You must have first created a GOBL Envelope containing an Invoice that you'd like to send to the AEAT. For the document to be converted, the supplier contained in the invoice should have a "Tax ID" with the country set to `ES`.
 
-The following is an example of how the GOBL Veri*Factu package could be used:
+The following is an example of how the GOBL VeriFactu package could be used:
 
 ```go
 package main
@@ -75,7 +75,7 @@ func main() {
 		panic(err)
 	}
 
-	// Convert the GOBL envelope to a Veri*Factu document
+	// Convert the GOBL envelope to a VeriFactu document
 	td, err := tc.Convert(env)
 	if err != nil {
 		panic(err)
@@ -117,7 +117,7 @@ func main() {
 
 ### Command Line
 
-The GOBL Veri*Factu package tool also includes a command line helper. You can install manually in your Go environment with:
+The GOBL VeriFactu package tool also includes a command line helper. You can install manually in your Go environment with:
 
 ```bash
 go install github.com/invopop/gobl.verifactu
@@ -161,14 +161,14 @@ Now, the output file will include a fingerprint, linked to the previous document
 
 ## Tags and Extensions
 
-In order to provide the supplier specific data required by Veri*Factu, invoices need to include a bit of extra data. We've managed to simplify these into specific cases.
+In order to provide the supplier specific data required by VeriFactu, invoices need to include a bit of extra data. We've managed to simplify these into specific cases.
 
 ### Invoice Tags
 
 Invoice tax tags can be added to invoice documents in order to reflect a special situation. The following schemes are supported:
 
 - `simplified` - a retailer operating under a simplified tax regime (regimen simplificado) that must indicate that all of their sales are under this scheme. This implies that all operations in the invoice will have the `FacturaSinIdentifDestinatarioArt61d` tag set to `S` and the `TipoFactura` field set to `F2` in case of a regular invoice and `R5` in case of a corrective invoice.
-- `substitution` - A simplified invoice that is being replaced by a standard invoice. Called a `Factura en Sustitución de Facturas Simplificadas` in Veri*Factu.
+- `substitution` - A simplified invoice that is being replaced by a standard invoice. Called a `Factura en Sustitución de Facturas Simplificadas` in VeriFactu. The `TipoFactura` field will be set to `F3`.
 
 ### Tax Extensions
 
@@ -184,7 +184,8 @@ The following extensions must be added to the document:
   - `R4` - Rectified invoice based on law and other reasons.
   - `R5` - Rectified invoice based on simplified invoices.
 
-- `es-verifactu-tax-classification` - combines the tax classification and exemption codes used in Veri*Factu. Must be included in each line item, or an error will be raised. These are the valid values:
+
+- `es-verifactu-tax-classification` - combines the tax classification and exemption codes used in VeriFactu. Must be included in each line item, or an error will be raised. These are the valid values:
   - `S1` - Subject and not exempt - Without reverse charge
   - `S2` - Subject and not exempt - With reverse charge. Known as `Inversión del Sujeto Pasivo` in Spanish VAT Law
   - `N1` - Not subject - Articles 7, 14, others
@@ -196,21 +197,15 @@ The following extensions must be added to the document:
   - `E5` - Exempt pursuant to Article 25 of the VAT Law
   - `E6` - Exempt for other reasons
 
-As a small consideration GOBL's tax internal tax framework differentiates between `exempt` and `zero-rated` taxes. In Veri*Factu, GOBL `zero-rated` taxes refer to `Exenciones` (values `E1` to `E6` in the list above) and `exempt` taxes refer to `No Sujeto` (values `N1` and `N2` in the list above).
-
-### Example
-
-An example of a 
+As a small consideration GOBL's tax internal tax framework differentiates between `exempt` and `zero-rated` taxes. In VeriFactu, GOBL `zero-rated` taxes refer to `Exenciones` (values `E1` to `E6` in the list above) and `exempt` taxes refer to `No Sujeto` (values `N1` and `N2` in the list above).
 
 ## Limitations
 
-- Veri*Factu allows more than one customer per invoice, but GOBL only has one possible customer.
-
+- VeriFactu allows more than one customer per invoice, but GOBL only has one possible customer.
 - Invoices must have a note of type general that will be used as a general description of the invoice. If an invoice is missing this info, it will be rejected with an error.
-
 - VeriFactu supports sending more than one invoice at a time (up to 1000). However, this module only currently supports 1 invoice at a time.
-
 - VeriFactu requires a valid certificate to be provided, even when using the testing environment. It is the same certificate needed to access the AEAT's portal.
+- When cancelling invoices, this module assumes the party issuing the cancellation is the same as the party that issued the original invoice. In the context of the app this would always be true, but VeriFactu does allow for a different issuer.
 
 ## Testing
 
@@ -223,5 +218,5 @@ go test
 Some sample test data is available in the `./test` directory. To update the JSON documents and regenerate the XML files for testing, use the following command:
 
 ```bash
-go test ./examples_test.go --update
+go test --update
 ```

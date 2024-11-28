@@ -5,6 +5,7 @@ import (
 
 	"github.com/invopop/gobl"
 	"github.com/invopop/gobl.verifactu/doc"
+	"github.com/invopop/gobl.verifactu/internal/gateways"
 	"github.com/invopop/gobl/addons/es/verifactu"
 	"github.com/invopop/gobl/bill"
 	"github.com/invopop/gobl/head"
@@ -46,7 +47,7 @@ func (c *Client) Fingerprint(d *doc.VeriFactu, prev *doc.ChainData) error {
 // AddQR adds the QR code stamp to the envelope.
 func (c *Client) AddQR(d *doc.VeriFactu, env *gobl.Envelope) error {
 	// now generate the QR codes and add them to the envelope
-	code := d.QRCodes()
+	code := d.QRCodes(c.env == gateways.EnvironmentProduction)
 	env.Head.AddStamp(
 		&head.Stamp{
 			Provider: verifactu.StampQR,

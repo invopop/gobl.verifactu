@@ -82,8 +82,8 @@ func NewVerifactu(inv *bill.Invoice, ts time.Time, r IssuerRole, s *Software, c 
 }
 
 // QRCodes generates the QR code for the document
-func (d *VeriFactu) QRCodes() string {
-	return d.generateURL()
+func (d *VeriFactu) QRCodes(production bool) string {
+	return d.generateURL(production)
 }
 
 // ChainData generates the data to be used to link to this one

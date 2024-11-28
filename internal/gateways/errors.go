@@ -7,7 +7,6 @@ import (
 
 // ErrorCodes and their descriptions from VeriFactu
 var ErrorCodes = map[string]string{
-	// Errors that cause rejection of the entire submission
 	"4102": "El XML no cumple el esquema. Falta informar campo obligatorio.",
 	"4103": "Se ha producido un error inesperado al parsear el XML.",
 	"4104": "Error en la cabecera: el valor del campo NIF del bloque ObligadoEmision no está identificado.",
@@ -43,8 +42,6 @@ var ErrorCodes = map[string]string{
 	"3501": "Error técnico de base de datos.",
 	"3502": "La factura consultada para el suministro de pagos/cobros/inmuebles no existe.",
 	"3503": "La factura especificada no pertenece al titular registrado en el sistema.",
-
-	// Errors that cause rejection of the invoice or entire request if in header
 	"1100": "Valor o tipo incorrecto del campo.",
 	"1101": "El valor del campo CodigoPais es incorrecto.",
 	"1102": "El valor del campo IDType es incorrecto.",

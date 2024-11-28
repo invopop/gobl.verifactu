@@ -48,9 +48,9 @@ func TestGenerateCodes(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := tt.doc.QRCodes()
+			got := tt.doc.QRCodes(false)
 			if got != tt.expected {
-				t.Errorf("generateURL() = %v, want %v", got, tt.expected)
+				t.Errorf("got %v, want %v", got, tt.expected)
 			}
 		})
 	}
@@ -101,9 +101,9 @@ func TestGenerateURLCodeAlta(t *testing.T) {
 			tt.doc.RegistroFactura.RegistroAlta.Encadenamiento = &doc.Encadenamiento{
 				PrimerRegistro: "S",
 			}
-			got := tt.doc.QRCodes()
+			got := tt.doc.QRCodes(false)
 			if got != tt.expected {
-				t.Errorf("generateURLCodeAlta() = %v, want %v", got, tt.expected)
+				t.Errorf("got %v, want %v", got, tt.expected)
 			}
 		})
 	}
