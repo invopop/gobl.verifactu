@@ -24,6 +24,7 @@ The following is an example of how the GOBL VeriFactu package could be used:
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"os"
@@ -82,8 +83,13 @@ func main() {
 	}
 
 	// Prepare the previous document chain data
+	previous, err := os.ReadFile("./path/to/previous_invoice.json")
+	if err != nil {
+		panic(err)
+	}
+
 	prev := new(doc.ChainData)
-	if err := json.Unmarshal([]byte(c.previous), prev); err != nil {
+	if err := json.Unmarshal([]byte(previous), prev); err != nil {
 		panic(err)
 	}
 
