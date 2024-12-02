@@ -78,13 +78,13 @@ func (c *Connection) post(ctx context.Context, path string, payload []byte) erro
 		return err
 	}
 	if res.StatusCode() != http.StatusOK {
-		return ErrInvalid.withCode(strconv.Itoa(res.StatusCode()))
+		return doc.ErrInvalid.WithCode(strconv.Itoa(res.StatusCode()))
 	}
 	if out.Body.Respuesta.EstadoEnvio != correctStatus {
-		err := ErrInvalid
+		err := doc.ErrInvalid.WithCode(strconv.Itoa(res.StatusCode()))
 		if len(out.Body.Respuesta.RespuestaLinea) > 0 {
 			e1 := out.Body.Respuesta.RespuestaLinea[0]
-			err = err.withMessage(e1.DescripcionErrorRegistro).withCode(e1.CodigoErrorRegistro)
+			err = err.WithMessage(e1.DescripcionErrorRegistro).WithCode(e1.CodigoErrorRegistro)
 		}
 		return err
 	}

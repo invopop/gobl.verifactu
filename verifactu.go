@@ -130,7 +130,7 @@ func InSandbox() Option {
 // Post will send the document to the VeriFactu gateway.
 func (c *Client) Post(ctx context.Context, d *doc.VeriFactu) error {
 	if err := c.gw.Post(ctx, *d); err != nil {
-		return err
+		return doc.NewErrorFrom(err)
 	}
 	return nil
 }

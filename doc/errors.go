@@ -1,4 +1,4 @@
-package gateways
+package doc
 
 import (
 	"errors"
@@ -72,6 +72,28 @@ type Error struct {
 	cause   error
 }
 
+// NewErrorFrom attempts to wrap the provided error into the Error type.
+func NewErrorFrom(err error) *Error {
+	if err == nil {
+		return nil
+	}
+	if e, ok := err.(*Error); ok {
+		return e
+	} else if e, ok := err.(*Error); ok {
+		return &Error{
+			key:     e.Key(),
+			code:    e.Code(),
+			message: e.Message(),
+			cause:   e,
+		}
+	}
+	return &Error{
+		key:     "internal",
+		message: err.Error(),
+		cause:   err,
+	}
+}
+
 // Error produces a human readable error message.
 func (e *Error) Error() string {
 	out := []string{e.key}
@@ -103,15 +125,15 @@ func newError(key string) *Error {
 	return &Error{key: key}
 }
 
-// withCode duplicates and adds the code to the error.
-func (e *Error) withCode(code string) *Error {
+// WithCode duplicates and adds the code to the error.
+func (e *Error) WithCode(code string) *Error {
 	e = e.clone()
 	e.code = code
 	return e
 }
 
-// withMessage duplicates and adds the message to the error.
-func (e *Error) withMessage(msg string) *Error {
+// WithMessage duplicates and adds the message to the error.
+func (e *Error) WithMessage(msg string) *Error {
 	e = e.clone()
 	e.message = msg
 	return e
