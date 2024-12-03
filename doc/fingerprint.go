@@ -21,8 +21,7 @@ type ChainData struct {
 	Huella                 string `json:"huella"`
 }
 
-// FormatField returns a formatted field as key=value or key= if the value is empty.
-func FormatField(key, value string) string {
+func formatField(key, value string) string {
 	value = strings.TrimSpace(value) // Remove whitespace
 	if value == "" {
 		return fmt.Sprintf("%s=", key)
@@ -30,7 +29,6 @@ func FormatField(key, value string) string {
 	return fmt.Sprintf("%s=%s", key, value)
 }
 
-// Concatenatef builds the concatenated string based on Verifactu requirements.
 func (d *VeriFactu) fingerprintAlta(inv *RegistroAlta) error {
 	var h string
 	if inv.Encadenamiento.PrimerRegistro == "S" {
@@ -39,14 +37,14 @@ func (d *VeriFactu) fingerprintAlta(inv *RegistroAlta) error {
 		h = inv.Encadenamiento.RegistroAnterior.Huella
 	}
 	f := []string{
-		FormatField("IDEmisorFactura", inv.IDFactura.IDEmisorFactura),
-		FormatField("NumSerieFactura", inv.IDFactura.NumSerieFactura),
-		FormatField("FechaExpedicionFactura", inv.IDFactura.FechaExpedicionFactura),
-		FormatField("TipoFactura", inv.TipoFactura),
-		FormatField("CuotaTotal", fmt.Sprintf("%g", inv.CuotaTotal)),
-		FormatField("ImporteTotal", fmt.Sprintf("%g", inv.ImporteTotal)),
-		FormatField("Huella", h),
-		FormatField("FechaHoraHusoGenRegistro", inv.FechaHoraHusoGenRegistro),
+		formatField("IDEmisorFactura", inv.IDFactura.IDEmisorFactura),
+		formatField("NumSerieFactura", inv.IDFactura.NumSerieFactura),
+		formatField("FechaExpedicionFactura", inv.IDFactura.FechaExpedicionFactura),
+		formatField("TipoFactura", inv.TipoFactura),
+		formatField("CuotaTotal", fmt.Sprintf("%g", inv.CuotaTotal)),
+		formatField("ImporteTotal", fmt.Sprintf("%g", inv.ImporteTotal)),
+		formatField("Huella", h),
+		formatField("FechaHoraHusoGenRegistro", inv.FechaHoraHusoGenRegistro),
 	}
 	st := strings.Join(f, "&")
 	hash := sha256.New()
@@ -64,11 +62,11 @@ func (d *VeriFactu) fingerprintAnulacion(inv *RegistroAnulacion) error {
 		h = inv.Encadenamiento.RegistroAnterior.Huella
 	}
 	f := []string{
-		FormatField("IDEmisorFacturaAnulada", inv.IDFactura.IDEmisorFactura),
-		FormatField("NumSerieFacturaAnulada", inv.IDFactura.NumSerieFactura),
-		FormatField("FechaExpedicionFacturaAnulada", inv.IDFactura.FechaExpedicionFactura),
-		FormatField("Huella", h),
-		FormatField("FechaHoraHusoGenRegistro", inv.FechaHoraHusoGenRegistro),
+		formatField("IDEmisorFacturaAnulada", inv.IDFactura.IDEmisorFactura),
+		formatField("NumSerieFacturaAnulada", inv.IDFactura.NumSerieFactura),
+		formatField("FechaExpedicionFacturaAnulada", inv.IDFactura.FechaExpedicionFactura),
+		formatField("Huella", h),
+		formatField("FechaHoraHusoGenRegistro", inv.FechaHoraHusoGenRegistro),
 	}
 	st := strings.Join(f, "&")
 	hash := sha256.New()
