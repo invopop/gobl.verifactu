@@ -65,7 +65,7 @@ func NewVerifactu(inv *bill.Invoice, ts time.Time, r IssuerRole, s *Software, c 
 	}
 
 	if inv.Type == bill.InvoiceTypeCreditNote {
-		// GOBL credit note's amounts represent the amounts to be credited to the customer,
+		// GOBL credit and debit notes' amounts represent the amounts to be credited to the customer,
 		// and they are provided as positive numbers. In VeriFactu, however, credit notes
 		// become "facturas rectificativas por diferencias" and, when a correction is for a
 		// credit operation, the amounts must be negative to cancel out the ones in the

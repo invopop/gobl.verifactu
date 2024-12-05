@@ -43,7 +43,7 @@ func TestBreakdownConversion(t *testing.T) {
 						Category: "VAT",
 						Rate:     "zero",
 						Ext: tax.Extensions{
-							verifactu.ExtKeyTaxClassification: "E1",
+							verifactu.ExtKeyExempt: "E1",
 						},
 					},
 				},
@@ -70,7 +70,7 @@ func TestBreakdownConversion(t *testing.T) {
 						Category: "VAT",
 						Rate:     "standard",
 						Ext: tax.Extensions{
-							verifactu.ExtKeyTaxClassification: "S1",
+							verifactu.ExtKeyOpClass: "S1",
 						},
 					},
 				},
@@ -85,7 +85,7 @@ func TestBreakdownConversion(t *testing.T) {
 						Category: "VAT",
 						Rate:     "reduced",
 						Ext: tax.Extensions{
-							verifactu.ExtKeyTaxClassification: "S1",
+							verifactu.ExtKeyOpClass: "S1",
 						},
 					},
 				},
@@ -118,7 +118,7 @@ func TestBreakdownConversion(t *testing.T) {
 						Category: "VAT",
 						Rate:     "exempt",
 						Ext: tax.Extensions{
-							verifactu.ExtKeyTaxClassification: "N1",
+							verifactu.ExtKeyOpClass: "N1",
 						},
 					},
 				},
@@ -168,7 +168,7 @@ func TestBreakdownConversion(t *testing.T) {
 						Category: "VAT",
 						Rate:     "standard+eqs",
 						Ext: tax.Extensions{
-							verifactu.ExtKeyTaxClassification: "S1",
+							verifactu.ExtKeyOpClass: "S1",
 						},
 					},
 				},
@@ -199,7 +199,7 @@ func TestBreakdownConversion(t *testing.T) {
 						Category: es.TaxCategoryIPSI,
 						Percent:  &p,
 						Ext: tax.Extensions{
-							verifactu.ExtKeyTaxClassification: "S1",
+							verifactu.ExtKeyOpClass: "S1",
 						},
 					},
 				},
@@ -211,13 +211,12 @@ func TestBreakdownConversion(t *testing.T) {
 		assert.Equal(t, 100.00, d.RegistroFactura.RegistroAlta.Desglose.DetalleDesglose[0].BaseImponibleOImporteNoSujeto)
 		assert.Equal(t, 10.00, d.RegistroFactura.RegistroAlta.Desglose.DetalleDesglose[0].CuotaRepercutida)
 		assert.Equal(t, "03", d.RegistroFactura.RegistroAlta.Desglose.DetalleDesglose[0].Impuesto)
-		assert.Empty(t, d.RegistroFactura.RegistroAlta.Desglose.DetalleDesglose[0].ClaveRegimen)
+		assert.Nil(t, d.RegistroFactura.RegistroAlta.Desglose.DetalleDesglose[0].ClaveRegimen)
 		assert.Equal(t, "S1", d.RegistroFactura.RegistroAlta.Desglose.DetalleDesglose[0].CalificacionOperacion)
 	})
 
 	t.Run("antiques", func(t *testing.T) {
 		inv := test.LoadInvoice("inv-base.json")
-		inv.Tags = tax.WithTags(es.TagAntiques)
 		inv.Lines = []*bill.Line{
 			{
 				Quantity: num.MakeAmount(1, 0),
@@ -229,7 +228,8 @@ func TestBreakdownConversion(t *testing.T) {
 						Category: "VAT",
 						Rate:     "reduced",
 						Ext: tax.Extensions{
-							verifactu.ExtKeyTaxClassification: "S1",
+							verifactu.ExtKeyOpClass: "S1",
+							verifactu.ExtKeyRegime:  "04",
 						},
 					},
 				},
@@ -241,7 +241,7 @@ func TestBreakdownConversion(t *testing.T) {
 		assert.Equal(t, 1000.00, d.RegistroFactura.RegistroAlta.Desglose.DetalleDesglose[0].BaseImponibleOImporteNoSujeto)
 		assert.Equal(t, 100.00, d.RegistroFactura.RegistroAlta.Desglose.DetalleDesglose[0].CuotaRepercutida)
 		assert.Equal(t, "01", d.RegistroFactura.RegistroAlta.Desglose.DetalleDesglose[0].Impuesto)
-		assert.Equal(t, "03", d.RegistroFactura.RegistroAlta.Desglose.DetalleDesglose[0].ClaveRegimen)
+		assert.Equal(t, "04", d.RegistroFactura.RegistroAlta.Desglose.DetalleDesglose[0].ClaveRegimen)
 		assert.Equal(t, "S1", d.RegistroFactura.RegistroAlta.Desglose.DetalleDesglose[0].CalificacionOperacion)
 	})
 }

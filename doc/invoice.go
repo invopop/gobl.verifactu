@@ -1,28 +1,35 @@
 package doc
 
 import (
+	"errors"
 	"fmt"
-	"slices"
 	"time"
 
 	"github.com/invopop/gobl/addons/es/verifactu"
 	"github.com/invopop/gobl/bill"
 	"github.com/invopop/gobl/cbc"
 	"github.com/invopop/gobl/num"
+	"github.com/invopop/gobl/tax"
+	"github.com/invopop/validation"
 )
 
-var (
-	rectificative = []string{"R1", "R2", "R3", "R4", "R5", "R6"}
-)
+var docTypesCreditDebit = []tax.ExtValue{ // Credit or Debit notes
+	"R1", "R2", "R3", "R4", "R5",
+}
 
 // NewRegistroAlta creates a new VeriFactu registration for an invoice.
 func NewRegistroAlta(inv *bill.Invoice, ts time.Time, r IssuerRole, s *Software) (*RegistroAlta, error) {
-	description, err := newDescription(inv.Notes)
+	tf, err := getTaxKey(inv, verifactu.ExtKeyDocType)
 	if err != nil {
 		return nil, err
 	}
 
-	desglose, err := newDesglose(inv)
+	desc, err := newDescription(inv.Notes)
+	if err != nil {
+		return nil, err
+	}
+
+	dg, err := newDesglose(inv)
 	if err != nil {
 		return nil, err
 	}
@@ -35,9 +42,9 @@ func NewRegistroAlta(inv *bill.Invoice, ts time.Time, r IssuerRole, s *Software)
 			FechaExpedicionFactura: inv.IssueDate.Time().Format("02-01-2006"),
 		},
 		NombreRazonEmisor:        inv.Supplier.Name,
-		TipoFactura:              inv.Tax.Ext[verifactu.ExtKeyDocType].String(),
-		DescripcionOperacion:     description,
-		Desglose:                 desglose,
+		TipoFactura:              tf,
+		DescripcionOperacion:     desc,
+		Desglose:                 dg,
 		CuotaTotal:               newTotalTaxes(inv),
 		ImporteTotal:             newImporteTotal(inv),
 		SistemaInformatico:       s,
@@ -58,9 +65,13 @@ func NewRegistroAlta(inv *bill.Invoice, ts time.Time, r IssuerRole, s *Software)
 		reg.FacturaSinIdentifDestinatarioArt61d = "S"
 	}
 
-	if slices.Contains(rectificative, reg.TipoFactura) {
+	if inv.Tax.Ext[verifactu.ExtKeyDocType].In(docTypesCreditDebit...) {
 		// GOBL does not currently have explicit support for Facturas Rectificativas por Sustitución
-		reg.TipoRectificativa = "I"
+		k, err := getTaxKey(inv, verifactu.ExtKeyCorrectionType)
+		if err != nil {
+			return nil, err
+		}
+		reg.TipoRectificativa = k
 		if inv.Preceding != nil {
 			rs := make([]*FacturaRectificada, 0, len(inv.Preceding))
 			for _, ref := range inv.Preceding {
@@ -76,7 +87,7 @@ func NewRegistroAlta(inv *bill.Invoice, ts time.Time, r IssuerRole, s *Software)
 		}
 	}
 
-	if inv.HasTags(verifactu.TagSubstitution) {
+	if reg.TipoFactura == "F3" {
 		if inv.Preceding != nil {
 			subs := make([]*FacturaSustituida, 0, len(inv.Preceding))
 			for _, ref := range inv.Preceding {
@@ -147,4 +158,17 @@ func newTotalTaxes(inv *bill.Invoice) float64 {
 	}
 
 	return totalTaxes.Float64()
+}
+
+func getTaxKey(inv *bill.Invoice, k cbc.Key) (string, error) {
+	if inv.Tax == nil || inv.Tax.Ext == nil || inv.Tax.Ext[k].String() == "" {
+		return "", validation.Errors{
+			"tax": validation.Errors{
+				"ext": validation.Errors{
+					k.String(): errors.New("required"),
+				},
+			},
+		}
+	}
+	return inv.Tax.Ext[k].String(), nil
 }

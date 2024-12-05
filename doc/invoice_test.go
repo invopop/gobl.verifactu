@@ -6,7 +6,6 @@ import (
 
 	"github.com/invopop/gobl.verifactu/doc"
 	"github.com/invopop/gobl.verifactu/test"
-	"github.com/invopop/gobl/addons/es/verifactu"
 	"github.com/invopop/gobl/cal"
 	"github.com/invopop/gobl/org"
 	"github.com/invopop/gobl/tax"
@@ -84,7 +83,6 @@ func TestNewRegistroAlta(t *testing.T) {
 
 	t.Run("should handle substitution invoices", func(t *testing.T) {
 		inv := test.LoadInvoice("inv-base.json")
-		inv.SetTags(verifactu.TagSubstitution)
 		inv.Preceding = []*org.DocumentRef{
 			{
 				Series:    "SAMPLE",
