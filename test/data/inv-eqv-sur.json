@@ -70,7 +70,7 @@
 						"percent": "21.0%",
 						"surcharge": "5.2%",
 						"ext": {
-							"es-verifactu-tax-classification": "S1"
+							"es-verifactu-op-class": "S1"
 						}
 					}
 				],
@@ -88,7 +88,7 @@
 							{
 								"key": "standard+eqs",
 								"ext": {
-									"es-verifactu-tax-classification": "S1"
+									"es-verifactu-op-class": "S1"
 								},
 								"base": "1800.00",
 								"percent": "21.0%",

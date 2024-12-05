@@ -69,7 +69,7 @@
 						"rate": "zero",
 						"percent": "0.0%",
 						"ext": {
-							"es-verifactu-tax-classification": "E1"
+							"es-verifactu-exempt": "E1"
 						}
 					}
 				],
@@ -87,7 +87,7 @@
 							{
 								"key": "zero",
 								"ext": {
-									"es-verifactu-tax-classification": "E1"
+									"es-verifactu-exempt": "E1"
 								},
 								"base": "1800.00",
 								"percent": "0.0%",

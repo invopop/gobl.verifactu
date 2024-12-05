@@ -99,7 +99,7 @@
 						"rate": "standard",
 						"percent": "21.0%",
 						"ext": {
-							"es-verifactu-tax-classification": "S1"
+							"es-verifactu-op-class": "S1"
 						}
 					}
 				],
@@ -117,7 +117,7 @@
 							{
 								"key": "standard",
 								"ext": {
-									"es-verifactu-tax-classification": "S1"
+									"es-verifactu-op-class": "S1"
 								},
 								"base": "1620.00",
 								"percent": "21.0%",
