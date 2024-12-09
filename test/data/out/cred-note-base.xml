@@ -25,7 +25,7 @@
               <sum1:FechaExpedicionFactura>10-01-2022</sum1:FechaExpedicionFactura>
             </sum1:IDFacturaRectificada>
           </sum1:FacturasRectificadas>
-          <sum1:DescripcionOperacion>Some random description</sum1:DescripcionOperacion>
+          <sum1:DescripcionOperacion>This is a credit note with a standard tax</sum1:DescripcionOperacion>
           <sum1:EmitidaPorTerceroODestinatario>T</sum1:EmitidaPorTerceroODestinatario>
           <sum1:Tercero>
             <sum1:NombreRazon>Provide One S.L.</sum1:NombreRazon>

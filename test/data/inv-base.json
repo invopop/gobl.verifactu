@@ -4,7 +4,7 @@
 		"uuid": "8a51fd30-2a27-11ee-be56-0242ac120002",
 		"dig": {
 			"alg": "sha256",
-			"val": "32be8f884459a5cb5d7cfb85c775c9a3a3710e52dfeca749dd21cc2d61352420"
+			"val": "6d05f8571cef28298a289b5c0ca4ba91f2bc65c442fcaeadd483f7383be3d86d"
 		}
 	},
 	"doc": {
@@ -69,7 +69,8 @@
 						"rate": "standard",
 						"percent": "21.0%",
 						"ext": {
-							"es-verifactu-op-class": "S1"
+							"es-verifactu-op-class": "S1",
+							"es-verifactu-regime": "01"
 						}
 					}
 				],
@@ -87,7 +88,8 @@
 							{
 								"key": "standard",
 								"ext": {
-									"es-verifactu-op-class": "S1"
+									"es-verifactu-op-class": "S1",
+									"es-verifactu-regime": "01"
 								},
 								"base": "1800.00",
 								"percent": "21.0%",
@@ -106,7 +108,7 @@
 		"notes": [
 			{
 				"key": "general",
-				"text": "This is a sample invoice"
+				"text": "This is a sample invoice with a standard tax"
 			}
 		]
 	}

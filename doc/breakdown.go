@@ -55,10 +55,10 @@ func buildDetalleDesglose(c *tax.CategoryTotal, r *tax.RateTotal) (*DetalleDesgl
 		return nil, fmt.Errorf("missing tax extensions for rate %s", r.Key)
 	}
 
-	if r.Percent == nil {
-		detalle.OperacionExenta = r.Ext[verifactu.ExtKeyOpClass].String()
-	} else if !r.Ext.Has(verifactu.ExtKeyOpClass) {
-		detalle.CalificacionOperacion = r.Ext.Get(verifactu.ExtKeyExempt).String()
+	if r.Percent == nil && r.Ext.Has(verifactu.ExtKeyExempt) {
+		detalle.OperacionExenta = r.Ext[verifactu.ExtKeyExempt].String()
+	} else if r.Ext.Has(verifactu.ExtKeyOpClass) {
+		detalle.CalificacionOperacion = r.Ext.Get(verifactu.ExtKeyOpClass).String()
 	}
 
 	if detalle.Impuesto == "02" || detalle.Impuesto == "05" || detalle.ClaveRegimen == "06" {

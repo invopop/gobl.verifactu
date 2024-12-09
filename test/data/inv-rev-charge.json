@@ -4,7 +4,7 @@
 		"uuid": "8a51fd30-2a27-11ee-be56-0242ac120002",
 		"dig": {
 			"alg": "sha256",
-			"val": "01616e964c42ffec6342b37e6cbf5018f6cf72f586a06a3662cafe5af235be3b"
+			"val": "76bd0b5eaf3ffb5619271d2bcd0054b051202db7a350a0818f1a0a150a3287a1"
 		}
 	},
 	"doc": {
@@ -66,10 +66,9 @@
 				"taxes": [
 					{
 						"cat": "VAT",
-						"rate": "standard",
-						"percent": "21.0%",
 						"ext": {
-							"es-verifactu-op-class": "S2"
+							"es-verifactu-op-class": "S2",
+							"es-verifactu-regime": "01"
 						}
 					}
 				],
@@ -85,28 +84,27 @@
 						"code": "VAT",
 						"rates": [
 							{
-								"key": "standard",
 								"ext": {
-									"es-verifactu-op-class": "S2"
+									"es-verifactu-op-class": "S2",
+									"es-verifactu-regime": "01"
 								},
 								"base": "1800.00",
-								"percent": "21.0%",
-								"amount": "378.00"
+								"amount": "0.00"
 							}
 						],
-						"amount": "378.00"
+						"amount": "0.00"
 					}
 				],
-				"sum": "378.00"
+				"sum": "0.00"
 			},
-			"tax": "378.00",
-			"total_with_tax": "2178.00",
-			"payable": "2178.00"
+			"tax": "0.00",
+			"total_with_tax": "1800.00",
+			"payable": "1800.00"
 		},
 		"notes": [
 			{
 				"key": "general",
-				"text": "This is a sample invoice"
+				"text": "This is a sample invoice with a reverse charge"
 			}
 		]
 	}

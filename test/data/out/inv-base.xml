@@ -17,7 +17,7 @@
           </sum1:IDFactura>
           <sum1:NombreRazonEmisor>Invopop S.L.</sum1:NombreRazonEmisor>
           <sum1:TipoFactura>F1</sum1:TipoFactura>
-          <sum1:DescripcionOperacion>This is a sample invoice</sum1:DescripcionOperacion>
+          <sum1:DescripcionOperacion>This is a sample invoice with a standard tax</sum1:DescripcionOperacion>
           <sum1:EmitidaPorTerceroODestinatario>T</sum1:EmitidaPorTerceroODestinatario>
           <sum1:Tercero>
             <sum1:NombreRazon>Invopop S.L.</sum1:NombreRazon>

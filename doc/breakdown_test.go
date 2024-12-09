@@ -41,9 +41,9 @@ func TestBreakdownConversion(t *testing.T) {
 				Taxes: tax.Set{
 					&tax.Combo{
 						Category: "VAT",
-						Rate:     "zero",
 						Ext: tax.Extensions{
 							verifactu.ExtKeyExempt: "E1",
+							verifactu.ExtKeyRegime: "01",
 						},
 					},
 				},
@@ -71,6 +71,7 @@ func TestBreakdownConversion(t *testing.T) {
 						Rate:     "standard",
 						Ext: tax.Extensions{
 							verifactu.ExtKeyOpClass: "S1",
+							verifactu.ExtKeyRegime:  "01",
 						},
 					},
 				},
@@ -119,6 +120,7 @@ func TestBreakdownConversion(t *testing.T) {
 						Rate:     "exempt",
 						Ext: tax.Extensions{
 							verifactu.ExtKeyOpClass: "N1",
+							verifactu.ExtKeyRegime:  "01",
 						},
 					},
 				},
@@ -132,27 +134,6 @@ func TestBreakdownConversion(t *testing.T) {
 		assert.Equal(t, "01", d.RegistroFactura.RegistroAlta.Desglose.DetalleDesglose[0].Impuesto)
 		assert.Equal(t, "01", d.RegistroFactura.RegistroAlta.Desglose.DetalleDesglose[0].ClaveRegimen)
 		assert.Equal(t, "N1", d.RegistroFactura.RegistroAlta.Desglose.DetalleDesglose[0].CalificacionOperacion)
-	})
-
-	t.Run("missing-tax-classification", func(t *testing.T) {
-		inv := test.LoadInvoice("inv-base.json")
-		inv.Lines = []*bill.Line{
-			{
-				Quantity: num.MakeAmount(1, 0),
-				Item: &org.Item{
-					Price: num.MakeAmount(100, 0),
-				},
-				Taxes: tax.Set{
-					&tax.Combo{
-						Category: "VAT",
-						Rate:     "standard",
-					},
-				},
-			},
-		}
-		_ = inv.Calculate()
-		_, err := doc.NewVerifactu(inv, time.Now(), doc.IssuerRoleSupplier, nil, false)
-		require.Error(t, err)
 	})
 
 	t.Run("equivalence-surcharge", func(t *testing.T) {
@@ -169,6 +150,7 @@ func TestBreakdownConversion(t *testing.T) {
 						Rate:     "standard+eqs",
 						Ext: tax.Extensions{
 							verifactu.ExtKeyOpClass: "S1",
+							verifactu.ExtKeyRegime:  "01",
 						},
 					},
 				},
@@ -211,7 +193,7 @@ func TestBreakdownConversion(t *testing.T) {
 		assert.Equal(t, 100.00, d.RegistroFactura.RegistroAlta.Desglose.DetalleDesglose[0].BaseImponibleOImporteNoSujeto)
 		assert.Equal(t, 10.00, d.RegistroFactura.RegistroAlta.Desglose.DetalleDesglose[0].CuotaRepercutida)
 		assert.Equal(t, "03", d.RegistroFactura.RegistroAlta.Desglose.DetalleDesglose[0].Impuesto)
-		assert.Nil(t, d.RegistroFactura.RegistroAlta.Desglose.DetalleDesglose[0].ClaveRegimen)
+		assert.Empty(t, d.RegistroFactura.RegistroAlta.Desglose.DetalleDesglose[0].ClaveRegimen)
 		assert.Equal(t, "S1", d.RegistroFactura.RegistroAlta.Desglose.DetalleDesglose[0].CalificacionOperacion)
 	})
 

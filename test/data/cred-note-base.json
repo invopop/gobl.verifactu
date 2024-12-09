@@ -4,7 +4,7 @@
 		"uuid": "8a51fd30-2a27-11ee-be56-0242ac120002",
 		"dig": {
 			"alg": "sha256",
-			"val": "b3b00f6a955ad8a51e8ebaed574124162053a6fcccffba6921880114f94be99f"
+			"val": "9c40da45b9c066e38ce938250b723dd1a443e2ab00508d8cfe74c16827b42e48"
 		}
 	},
 	"doc": {
@@ -29,6 +29,7 @@
 		],
 		"tax": {
 			"ext": {
+				"es-verifactu-correction-type": "I",
 				"es-verifactu-doc-type": "R1"
 			}
 		},
@@ -99,7 +100,8 @@
 						"rate": "standard",
 						"percent": "21.0%",
 						"ext": {
-							"es-verifactu-op-class": "S1"
+							"es-verifactu-op-class": "S1",
+							"es-verifactu-regime": "01"
 						}
 					}
 				],
@@ -117,7 +119,8 @@
 							{
 								"key": "standard",
 								"ext": {
-									"es-verifactu-op-class": "S1"
+									"es-verifactu-op-class": "S1",
+									"es-verifactu-regime": "01"
 								},
 								"base": "1620.00",
 								"percent": "21.0%",
@@ -136,7 +139,7 @@
 		"notes": [
 			{
 				"key": "general",
-				"text": "Some random description"
+				"text": "This is a credit note with a standard tax"
 			}
 		]
 	}

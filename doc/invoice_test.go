@@ -6,6 +6,7 @@ import (
 
 	"github.com/invopop/gobl.verifactu/doc"
 	"github.com/invopop/gobl.verifactu/test"
+	"github.com/invopop/gobl/addons/es/verifactu"
 	"github.com/invopop/gobl/cal"
 	"github.com/invopop/gobl/org"
 	"github.com/invopop/gobl/tax"
@@ -31,7 +32,7 @@ func TestNewRegistroAlta(t *testing.T) {
 		assert.Equal(t, "13-11-2024", reg.IDFactura.FechaExpedicionFactura)
 		assert.Equal(t, "Invopop S.L.", reg.NombreRazonEmisor)
 		assert.Equal(t, "F1", reg.TipoFactura)
-		assert.Equal(t, "This is a sample invoice", reg.DescripcionOperacion)
+		assert.Equal(t, "This is a sample invoice with a standard tax", reg.DescripcionOperacion)
 		assert.Equal(t, float64(378), reg.CuotaTotal)
 		assert.Equal(t, float64(2178), reg.ImporteTotal)
 
@@ -90,6 +91,7 @@ func TestNewRegistroAlta(t *testing.T) {
 				IssueDate: cal.NewDate(2024, 1, 15),
 			},
 		}
+		inv.Tax.Ext[verifactu.ExtKeyDocType] = "F3"
 
 		d, err := doc.NewVerifactu(inv, ts, role, sw, false)
 		require.NoError(t, err)

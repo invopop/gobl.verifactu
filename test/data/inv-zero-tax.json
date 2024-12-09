@@ -4,7 +4,7 @@
 		"uuid": "8a51fd30-2a27-11ee-be56-0242ac120002",
 		"dig": {
 			"alg": "sha256",
-			"val": "1737d61d53252d2072ef02821cc386fbc52df806627354782cff46cd9213eff7"
+			"val": "d554de33c67a8646180b661d8600fe7d7ba1047d95643e6a3f49d2e9fceaa7a1"
 		}
 	},
 	"doc": {
@@ -66,10 +66,9 @@
 				"taxes": [
 					{
 						"cat": "VAT",
-						"rate": "zero",
-						"percent": "0.0%",
 						"ext": {
-							"es-verifactu-exempt": "E1"
+							"es-verifactu-exempt": "E1",
+							"es-verifactu-regime": "01"
 						}
 					}
 				],
@@ -85,12 +84,11 @@
 						"code": "VAT",
 						"rates": [
 							{
-								"key": "zero",
 								"ext": {
-									"es-verifactu-exempt": "E1"
+									"es-verifactu-exempt": "E1",
+									"es-verifactu-regime": "01"
 								},
 								"base": "1800.00",
-								"percent": "0.0%",
 								"amount": "0.00"
 							}
 						],
@@ -106,7 +104,7 @@
 		"notes": [
 			{
 				"key": "general",
-				"text": "This is a sample invoice"
+				"text": "This is an invoice exempt from tax"
 			}
 		]
 	}
