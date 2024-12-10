@@ -173,14 +173,13 @@ In order to provide the supplier specific data required by VeriFactu, invoices n
 
 Invoice tax tags can be added to invoice documents in order to reflect a special situation. The following schemes are supported:
 
-- `simplified` - a retailer operating under a simplified tax regime (regimen simplificado) that must indicate that all of their sales are under this scheme. This implies that all operations in the invoice will have the `FacturaSinIdentifDestinatarioArt61d` tag set to `S` and the `TipoFactura` field set to `F2` in case of a regular invoice and `R5` in case of a corrective invoice.
-- `substitution` - A simplified invoice that is being replaced by a standard invoice. Called a `Factura en Sustitución de Facturas Simplificadas` in VeriFactu. The `TipoFactura` field will be set to `F3`.
+- `simplified` - a retailer operating under a simplified tax regime (regimen simplificado). This implies that all operations in the invoice will have the `FacturaSinIdentifDestinatarioArt61d` tag set to `S` and the `TipoFactura` field set to `F2`. For corrective invoices, and credit and debit notes, the `TipoFactura` should instead be set to `R5` through the `es-verifactu-doc-type` extension.
 
 ### Tax Extensions
 
 The following extensions must be added to the document:
 
-- `es-verifactu-doc-type` – defines the type of invoice being sent. In most cases this will be set automatically by GOBL, but it must be present. These are the valid values:
+- `es-verifactu-doc-type` – defines the type of invoice being sent. In most cases this will be set automatically by GOBL, but it must be present. It is taken from list L2 of the VeriFactu Ministerial Order. These are the valid values:
   - `F1` - Standard invoice.
   - `F2` - Simplified invoice.
   - `F3` - Invoice in substitution of simplified invoices.
@@ -191,11 +190,13 @@ The following extensions must be added to the document:
   - `R5` - Rectified invoice based on simplified invoices.
 
 
-- `es-verifactu-tax-classification` - combines the tax classification and exemption codes used in VeriFactu. Must be included in each line item, or an error will be raised. These are the valid values:
+- `es-verifactu-op-class` - Operation classification code used to identify if taxes should be applied to the line. It is taken from list L9 of the VeriFactu Ministerial Order. These are the valid values:
   - `S1` - Subject and not exempt - Without reverse charge
   - `S2` - Subject and not exempt - With reverse charge. Known as `Inversión del Sujeto Pasivo` in Spanish VAT Law
   - `N1` - Not subject - Articles 7, 14, others
   - `N2` - Not subject - Due to location rules
+
+- `es-verifactu-exempt` - Exemption code used to identify if the line item is exempt from taxes. It is taken from list L10 of the VeriFactu Ministerial Order. These are the valid values:
   - `E1` - Exempt pursuant to Article 20 of the VAT Law
   - `E2` - Exempt pursuant to Article 21 of the VAT Law
   - `E3` - Exempt pursuant to Article 22 of the VAT Law
@@ -203,7 +204,30 @@ The following extensions must be added to the document:
   - `E5` - Exempt pursuant to Article 25 of the VAT Law
   - `E6` - Exempt for other reasons
 
-As a small consideration GOBL's tax internal tax framework differentiates between `exempt` and `zero-rated` taxes. In VeriFactu, GOBL `zero-rated` taxes refer to `Exenciones` (values `E1` to `E6` in the list above) and `exempt` taxes refer to `No Sujeto` (values `N1` and `N2` in the list above).
+- `es-verifactu-correction-type` - Differentiates between the correction method. Corrective invoices in VeriFactu can be *Facturas Rectificativas por Diferencias* or *Facturas Rectificativas por Sustitución*. It is taken from list L3 of the VeriFactu Ministerial Order. These are the valid values:
+  - `I` - Differences. Used for credit and debit notes. In case of credit notes the values of the invoice are inverted to reflect the amount being a credit instead of a debit.
+  - `S` - Substitution. Used for corrective invoices.
+
+
+- `es-verifactu-regime` - Regime code used to identify the type of VAT/IGIC regime to be applied to the invoice. It combines the values of lists L8A and L8B of the VeriFactu Ministerial Order. These are the valid values:
+  - `01` - General regime operation
+  - `02` - Export
+  - `03` - Special regime for used goods, art objects, antiques and collectibles
+  - `04` - Special regime for investment gold
+  - `05` - Special regime for travel agencies
+  - `06` - Special regime for VAT/IGIC groups (Advanced Level)
+  - `07` - Special cash accounting regime
+  - `08` - Operations subject to a different regime
+  - `09` - Billing of travel agency services acting as mediators in name and on behalf of others
+  - `10` - Collection of professional fees or rights on behalf of third parties
+  - `11` - Business premises rental operations
+  - `14` - Invoice with pending VAT/IGIC accrual in work certifications for Public Administration
+  - `15` - Invoice with pending VAT/IGIC accrual in successive tract operations
+  - `17` - Operation under OSS and IOSS regimes (VAT) / Special regime for retail traders. (IGIC)
+  - `18` - Equivalence surcharge (VAT) / Special regime for small traders or retailers (IGIC)
+  - `19` - Operations included in the Special Regime for Agriculture, Livestock and Fisheries
+  - `20` - Simplified regime (VAT only)
+  
 
 ## Limitations
 
