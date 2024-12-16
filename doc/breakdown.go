@@ -52,7 +52,7 @@ func buildDetalleDesglose(c *tax.CategoryTotal, r *tax.RateTotal) (*DetalleDesgl
 	}
 
 	if r.Ext == nil {
-		return nil, fmt.Errorf("missing tax extensions for rate %s", r.Key)
+		return nil, ErrValidation.WithMessage(fmt.Sprintf("missing tax extensions for rate %s", r.Key))
 	}
 
 	if r.Percent == nil && r.Ext.Has(verifactu.ExtKeyExempt) {
@@ -70,7 +70,7 @@ func buildDetalleDesglose(c *tax.CategoryTotal, r *tax.RateTotal) (*DetalleDesgl
 	}
 
 	if detalle.OperacionExenta == "" && detalle.CalificacionOperacion == "" {
-		return nil, fmt.Errorf("missing operation classification for rate %s", r.Key)
+		return nil, ErrValidation.WithMessage(fmt.Sprintf("missing operation classification for rate %s", r.Key))
 	}
 
 	if r.Key.Has(es.TaxRateEquivalence) {

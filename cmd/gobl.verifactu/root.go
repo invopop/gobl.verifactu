@@ -55,15 +55,15 @@ func (o *rootOpts) prepareFlags(f *pflag.FlagSet) {
 
 func (o *rootOpts) software() *doc.Software {
 	return &doc.Software{
-		NIF:                         o.swNIF,
-		NombreRazon:                 o.swNombreRazon,
-		Version:                     o.swVersion,
-		IdSistemaInformatico:        o.swIDSistemaInformatico,
-		NumeroInstalacion:           o.swNumeroInstalacion,
-		NombreSistemaInformatico:    o.swName,
-		TipoUsoPosibleSoloVerifactu: "S",
-		TipoUsoPosibleMultiOT:       "S",
-		IndicadorMultiplesOT:        "N",
+		TaxID:                  o.swNIF,
+		CompanyName:            o.swNombreRazon,
+		Version:                o.swVersion,
+		SoftwareID:             o.swIDSistemaInformatico,
+		InstallationNumber:     o.swNumeroInstalacion,
+		SoftwareName:           o.swName,
+		VerifactuOnlyUsageType: "S",
+		MultiOTUsageType:       "S",
+		MultiOTIndicator:       "N",
 	}
 }
 

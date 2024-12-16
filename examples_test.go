@@ -43,10 +43,10 @@ func TestXMLGeneration(t *testing.T) {
 
 			// Example Data to Test the Fingerprint.
 			prev := &doc.ChainData{
-				IDEmisorFactura:        "B12345678",
-				NumSerieFactura:        "SAMPLE-001",
-				FechaExpedicionFactura: "26-11-2024",
-				Huella:                 "0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF",
+				IDIssuer:    "B12345678",
+				NumSeries:   "SAMPLE-001",
+				IssueDate:   "26-11-2024",
+				Fingerprint: "0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF",
 			}
 
 			err = c.Fingerprint(td, prev)
@@ -109,15 +109,15 @@ func loadClient() (*verifactu.Client, error) {
 	}
 
 	return verifactu.New(&doc.Software{
-		NombreRazon:                 "My Software",
-		NIF:                         "12345678A",
-		NombreSistemaInformatico:    "My Software",
-		IdSistemaInformatico:        "A1",
-		Version:                     "1.0",
-		NumeroInstalacion:           "12345678A",
-		TipoUsoPosibleSoloVerifactu: "S",
-		TipoUsoPosibleMultiOT:       "S",
-		IndicadorMultiplesOT:        "N",
+		CompanyName:            "My Software",
+		TaxID:                  "12345678A",
+		SoftwareName:           "My Software",
+		SoftwareID:             "A1",
+		Version:                "1.0",
+		InstallationNumber:     "12345678A",
+		VerifactuOnlyUsageType: "S",
+		MultiOTUsageType:       "S",
+		MultiOTIndicator:       "N",
 	},
 		verifactu.WithCurrentTime(ts),
 		verifactu.WithThirdPartyIssuer(),

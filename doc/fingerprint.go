@@ -15,10 +15,10 @@ const TipoHuella = "01"
 // required for fingerprinting the next invoice. JSON tags are
 // provided to help with serialization.
 type ChainData struct {
-	IDEmisorFactura        string `json:"emisor"`
-	NumSerieFactura        string `json:"serie"`
-	FechaExpedicionFactura string `json:"fecha"`
-	Huella                 string `json:"huella"`
+	IDIssuer    string `json:"issuer"`
+	NumSeries   string `json:"num_series"`
+	IssueDate   string `json:"issue_date"`
+	Fingerprint string `json:"fingerprint"`
 }
 
 func formatField(key, value string) string {
@@ -90,10 +90,10 @@ func (d *VeriFactu) generateHashAlta(prev *ChainData) error {
 	// Concatenate f according to Verifactu specifications
 	d.RegistroFactura.RegistroAlta.Encadenamiento = &Encadenamiento{
 		RegistroAnterior: &RegistroAnterior{
-			IDEmisorFactura:        prev.IDEmisorFactura,
-			NumSerieFactura:        prev.NumSerieFactura,
-			FechaExpedicionFactura: prev.FechaExpedicionFactura,
-			Huella:                 prev.Huella,
+			IDEmisorFactura:        prev.IDIssuer,
+			NumSerieFactura:        prev.NumSeries,
+			FechaExpedicionFactura: prev.IssueDate,
+			Huella:                 prev.Fingerprint,
 		},
 	}
 	if err := d.fingerprintAlta(d.RegistroFactura.RegistroAlta); err != nil {
@@ -114,10 +114,10 @@ func (d *VeriFactu) generateHashAnulacion(prev *ChainData) error {
 	}
 	d.RegistroFactura.RegistroAnulacion.Encadenamiento = &Encadenamiento{
 		RegistroAnterior: &RegistroAnterior{
-			IDEmisorFactura:        prev.IDEmisorFactura,
-			NumSerieFactura:        prev.NumSerieFactura,
-			FechaExpedicionFactura: prev.FechaExpedicionFactura,
-			Huella:                 prev.Huella,
+			IDEmisorFactura:        prev.IDIssuer,
+			NumSerieFactura:        prev.NumSeries,
+			FechaExpedicionFactura: prev.IssueDate,
+			Huella:                 prev.Fingerprint,
 		},
 	}
 	if err := d.fingerprintAnulacion(d.RegistroFactura.RegistroAnulacion); err != nil {

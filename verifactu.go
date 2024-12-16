@@ -4,7 +4,6 @@ package verifactu
 import (
 	"context"
 	"encoding/xml"
-	"errors"
 	"time"
 
 	"github.com/invopop/gobl.verifactu/doc"
@@ -14,25 +13,10 @@ import (
 
 // Standard error responses.
 var (
-	ErrNotSpanish       = newValidationError("only spanish invoices are supported")
-	ErrAlreadyProcessed = newValidationError("already processed")
-	ErrOnlyInvoices     = newValidationError("only invoices are supported")
+	ErrNotSpanish       = doc.ErrValidation.WithMessage("only spanish invoices are supported")
+	ErrAlreadyProcessed = doc.ErrValidation.WithMessage("already processed")
+	ErrOnlyInvoices     = doc.ErrValidation.WithMessage("only invoices are supported")
 )
-
-// ValidationError is a simple wrapper around validation errors (that should not be retried) as opposed
-// to server-side errors (that should be retried).
-type ValidationError struct {
-	err error
-}
-
-// Error implements the error interface for ClientError.
-func (e *ValidationError) Error() string {
-	return e.err.Error()
-}
-
-func newValidationError(text string) error {
-	return &ValidationError{errors.New(text)}
-}
 
 // Client provides the main interface to the VeriFactu package.
 type Client struct {

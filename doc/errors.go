@@ -59,7 +59,7 @@ var ErrorCodes = map[string]string{
 // Standard gateway error responses
 var (
 	ErrConnection = newError("connection")
-	ErrInvalid    = newError("invalid")
+	ErrValidation = newError("validation")
 	ErrDuplicate  = newError("duplicate")
 )
 

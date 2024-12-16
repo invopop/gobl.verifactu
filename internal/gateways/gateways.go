@@ -37,14 +37,14 @@ type Connection struct {
 func New(env Environment, cert *xmldsig.Certificate) (*Connection, error) {
 	tlsConf, err := cert.TLSAuthConfig()
 	if err != nil {
-		return nil, fmt.Errorf("preparing TLS config: %w", err)
+		return nil, doc.ErrValidation.WithMessage(fmt.Errorf("preparing TLS config: %v", err).Error())
 	}
 	c := new(Connection)
 	c.client = resty.New()
 
 	switch env {
 	case EnvironmentProduction:
-		c.client.SetBaseURL(ProductionBaseURL)
+		return nil, doc.ErrValidation.WithMessage("production environment not available yet")
 	default:
 		c.client.SetBaseURL(TestingBaseURL)
 	}
@@ -78,10 +78,10 @@ func (c *Connection) post(ctx context.Context, path string, payload []byte) erro
 		return err
 	}
 	if res.StatusCode() != http.StatusOK {
-		return doc.ErrInvalid.WithCode(strconv.Itoa(res.StatusCode()))
+		return doc.ErrValidation.WithCode(strconv.Itoa(res.StatusCode()))
 	}
 	if out.Body.Respuesta.EstadoEnvio != correctStatus {
-		err := doc.ErrInvalid.WithCode(strconv.Itoa(res.StatusCode()))
+		err := doc.ErrValidation.WithCode(strconv.Itoa(res.StatusCode()))
 		if len(out.Body.Respuesta.RespuestaLinea) > 0 {
 			e1 := out.Body.Respuesta.RespuestaLinea[0]
 			err = err.WithMessage(e1.DescripcionErrorRegistro).WithCode(e1.CodigoErrorRegistro)

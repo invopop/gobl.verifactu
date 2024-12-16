@@ -28,22 +28,6 @@ const (
 	CurrentVersion = "1.0"
 )
 
-// ValidationError is a simple wrapper around validation errors
-type ValidationError struct {
-	text string
-}
-
-// Error implements the error interface for ValidationError.
-func (e *ValidationError) Error() string {
-	return e.text
-}
-
-func validationErr(text string, args ...any) error {
-	return &ValidationError{
-		text: fmt.Sprintf(text, args...),
-	}
-}
-
 func init() {
 	var err error
 	location, err = time.LoadLocation("Europe/Madrid")
@@ -76,13 +60,13 @@ func NewVerifactu(inv *bill.Invoice, ts time.Time, r IssuerRole, s *Software, c 
 	}
 
 	if c {
-		reg, err := NewRegistroAnulacion(inv, ts, s)
+		reg, err := NewCancel(inv, ts, s)
 		if err != nil {
 			return nil, err
 		}
 		doc.RegistroFactura.RegistroAnulacion = reg
 	} else {
-		reg, err := NewRegistroAlta(inv, ts, r, s)
+		reg, err := NewInvoice(inv, ts, r, s)
 		if err != nil {
 			return nil, err
 		}

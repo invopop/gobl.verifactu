@@ -13,12 +13,12 @@ import (
 	"github.com/invopop/validation"
 )
 
-var docTypesCreditDebit = []tax.ExtValue{ // Credit or Debit notes
+var rectificative = []tax.ExtValue{ // Credit or Debit notes
 	"R1", "R2", "R3", "R4", "R5",
 }
 
-// NewRegistroAlta creates a new VeriFactu registration for an invoice.
-func NewRegistroAlta(inv *bill.Invoice, ts time.Time, r IssuerRole, s *Software) (*RegistroAlta, error) {
+// NewInvoice creates a new VeriFactu registration for an invoice.
+func NewInvoice(inv *bill.Invoice, ts time.Time, r IssuerRole, s *Software) (*RegistroAlta, error) {
 	tf, err := getTaxKey(inv, verifactu.ExtKeyDocType)
 	if err != nil {
 		return nil, err
@@ -65,7 +65,7 @@ func NewRegistroAlta(inv *bill.Invoice, ts time.Time, r IssuerRole, s *Software)
 		reg.FacturaSinIdentifDestinatarioArt61d = "S"
 	}
 
-	if inv.Tax.Ext[verifactu.ExtKeyDocType].In(docTypesCreditDebit...) {
+	if inv.Tax.Ext[verifactu.ExtKeyDocType].In(rectificative...) {
 		// GOBL does not currently have explicit support for Facturas Rectificativas por Sustitución
 		k, err := getTaxKey(inv, verifactu.ExtKeyCorrectionType)
 		if err != nil {
@@ -133,7 +133,7 @@ func newDescription(notes []*cbc.Note) (string, error) {
 			return note.Text, nil
 		}
 	}
-	return "", validationErr(`notes: missing note with key '%s'`, cbc.NoteKeyGeneral)
+	return "", ErrValidation.WithMessage(fmt.Sprintf("notes: missing note with key '%s'", cbc.NoteKeyGeneral))
 }
 
 func newImporteTotal(inv *bill.Invoice) float64 {

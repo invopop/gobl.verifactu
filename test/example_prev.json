@@ -1,7 +1,7 @@
 {
-    "emisor": "B123456789",
-    "serie": "FACT-001",
-    "fecha": "2024-11-15",
-    "huella": "3C464DAF61ACB827C65FDA19F352A4E3BDC2C640E9E9FC4CC058073F38F12F60"
+    "issuer": "B123456789",
+    "num_series": "FACT-001", 
+    "issue_date": "2024-11-15",
+    "fingerprint": "3C464DAF61ACB827C65FDA19F352A4E3BDC2C640E9E9FC4CC058073F38F12F60"
 }
 

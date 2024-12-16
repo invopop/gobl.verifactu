@@ -6,8 +6,8 @@ import (
 	"github.com/invopop/gobl/bill"
 )
 
-// NewRegistroAnulacion provides support for cancelling invoices
-func NewRegistroAnulacion(inv *bill.Invoice, ts time.Time, s *Software) (*RegistroAnulacion, error) {
+// NewCancel provides support for cancelling invoices
+func NewCancel(inv *bill.Invoice, ts time.Time, s *Software) (*RegistroAnulacion, error) {
 	reg := &RegistroAnulacion{
 		IDVersion: CurrentVersion,
 		IDFactura: &IDFacturaAnulada{
