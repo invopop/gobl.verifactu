@@ -9,11 +9,10 @@ import (
 	"github.com/invopop/gobl/bill"
 	"github.com/invopop/gobl/cbc"
 	"github.com/invopop/gobl/num"
-	"github.com/invopop/gobl/tax"
 	"github.com/invopop/validation"
 )
 
-var rectificative = []tax.ExtValue{ // Credit or Debit notes
+var rectificative = []cbc.Code{ // Credit or Debit notes
 	"R1", "R2", "R3", "R4", "R5",
 }
 
