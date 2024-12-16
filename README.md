@@ -177,7 +177,7 @@ Invoice tax tags can be added to invoice documents in order to reflect a special
 
 ### Tax Extensions
 
-The following extensions must be added to the document:
+The following extensions must be included in the document. Note that the GOBL addon will automatically add these extensions when processing invoices:
 
 - `es-verifactu-doc-type` – defines the type of invoice being sent. In most cases this will be set automatically by GOBL, but it must be present. It is taken from list L2 of the VeriFactu Ministerial Order. These are the valid values:
   - `F1` - Standard invoice.
