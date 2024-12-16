@@ -25,7 +25,7 @@ type Envelope struct {
 
 // VeriFactu represents the root element of a VeriFactu document
 type VeriFactu struct {
-	XMLName         xml.Name         `xml:"sum:RegFactuSistemaFacturacion"`
+	// XMLName         xml.Name         `xml:"sum:RegFactuSistemaFacturacion"`
 	Cabecera        *Cabecera        `xml:"sum:Cabecera"`
 	RegistroFactura *RegistroFactura `xml:"sum:RegistroFactura"`
 }
