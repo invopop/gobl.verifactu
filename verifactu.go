@@ -3,8 +3,9 @@ package verifactu
 
 import (
 	"context"
-	"encoding/xml"
 	"time"
+
+	"github.com/nbio/xml"
 
 	"github.com/invopop/gobl.verifactu/doc"
 	"github.com/invopop/gobl.verifactu/internal/gateways"
