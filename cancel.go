@@ -11,7 +11,7 @@ import (
 
 // GenerateCancel creates a new cancellation document from the provided
 // GOBL Envelope.
-func (c *Client) GenerateCancel(env *gobl.Envelope) (*doc.VeriFactu, error) {
+func (c *Client) GenerateCancel(env *gobl.Envelope) (*doc.Envelope, error) {
 	// Extract the Invoice
 	inv, ok := env.Extract().(*bill.Invoice)
 	if !ok {
@@ -32,6 +32,6 @@ func (c *Client) GenerateCancel(env *gobl.Envelope) (*doc.VeriFactu, error) {
 
 // FingerprintCancel generates a fingerprint for the cancellation document using the
 // data provided from the previous chain data. The document is updated in place.
-func (c *Client) FingerprintCancel(d *doc.VeriFactu, prev *doc.ChainData) error {
+func (c *Client) FingerprintCancel(d *doc.Envelope, prev *doc.ChainData) error {
 	return d.FingerprintCancel(prev)
 }

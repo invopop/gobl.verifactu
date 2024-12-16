@@ -17,7 +17,7 @@ func TestNewRegistroAnulacion(t *testing.T) {
 		d, err := doc.NewVerifactu(inv, time.Now(), doc.IssuerRoleSupplier, nil, true)
 		require.NoError(t, err)
 
-		ra := d.RegistroFactura.RegistroAnulacion
+		ra := d.Body.VeriFactu.RegistroFactura.RegistroAnulacion
 		assert.Equal(t, "B85905495", ra.IDFactura.IDEmisorFactura)
 		assert.Equal(t, "FR-012", ra.IDFactura.NumSerieFactura)
 		assert.Equal(t, "01-02-2022", ra.IDFactura.FechaExpedicionFactura)

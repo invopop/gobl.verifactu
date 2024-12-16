@@ -14,7 +14,7 @@ import (
 
 // Convert creates a new  document from the provided GOBL Envelope.
 // The envelope must contain a valid Invoice.
-func (c *Client) Convert(env *gobl.Envelope) (*doc.VeriFactu, error) {
+func (c *Client) Convert(env *gobl.Envelope) (*doc.Envelope, error) {
 	// Extract the Invoice
 	inv, ok := env.Extract().(*bill.Invoice)
 	if !ok {
@@ -40,12 +40,12 @@ func (c *Client) Convert(env *gobl.Envelope) (*doc.VeriFactu, error) {
 // data provided from the previous chain data. If there was no previous
 // document in the chain, the parameter should be nil. The document is updated
 // in place.
-func (c *Client) Fingerprint(d *doc.VeriFactu, prev *doc.ChainData) error {
+func (c *Client) Fingerprint(d *doc.Envelope, prev *doc.ChainData) error {
 	return d.Fingerprint(prev)
 }
 
 // AddQR adds the QR code stamp to the envelope.
-func (c *Client) AddQR(d *doc.VeriFactu, env *gobl.Envelope) error {
+func (c *Client) AddQR(d *doc.Envelope, env *gobl.Envelope) error {
 	// now generate the QR codes and add them to the envelope
 	code := d.QRCodes(c.env == gateways.EnvironmentProduction)
 	env.Head.AddStamp(

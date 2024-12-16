@@ -29,7 +29,7 @@ func formatField(key, value string) string {
 	return fmt.Sprintf("%s=%s", key, value)
 }
 
-func (d *VeriFactu) fingerprintAlta(inv *RegistroAlta) error {
+func (d *Envelope) fingerprintAlta(inv *RegistroAlta) error {
 	var h string
 	if inv.Encadenamiento.PrimerRegistro == "S" {
 		h = ""
@@ -50,11 +50,11 @@ func (d *VeriFactu) fingerprintAlta(inv *RegistroAlta) error {
 	hash := sha256.New()
 	hash.Write([]byte(st))
 
-	d.RegistroFactura.RegistroAlta.Huella = strings.ToUpper(hex.EncodeToString(hash.Sum(nil)))
+	d.Body.VeriFactu.RegistroFactura.RegistroAlta.Huella = strings.ToUpper(hex.EncodeToString(hash.Sum(nil)))
 	return nil
 }
 
-func (d *VeriFactu) fingerprintAnulacion(inv *RegistroAnulacion) error {
+func (d *Envelope) fingerprintAnulacion(inv *RegistroAnulacion) error {
 	var h string
 	if inv.Encadenamiento.PrimerRegistro == "S" {
 		h = ""
@@ -72,22 +72,22 @@ func (d *VeriFactu) fingerprintAnulacion(inv *RegistroAnulacion) error {
 	hash := sha256.New()
 	hash.Write([]byte(st))
 
-	d.RegistroFactura.RegistroAnulacion.Huella = strings.ToUpper(hex.EncodeToString(hash.Sum(nil)))
+	d.Body.VeriFactu.RegistroFactura.RegistroAnulacion.Huella = strings.ToUpper(hex.EncodeToString(hash.Sum(nil)))
 	return nil
 }
 
-func (d *VeriFactu) generateHashAlta(prev *ChainData) error {
+func (d *Envelope) generateHashAlta(prev *ChainData) error {
 	if prev == nil {
-		d.RegistroFactura.RegistroAlta.Encadenamiento = &Encadenamiento{
+		d.Body.VeriFactu.RegistroFactura.RegistroAlta.Encadenamiento = &Encadenamiento{
 			PrimerRegistro: "S",
 		}
-		if err := d.fingerprintAlta(d.RegistroFactura.RegistroAlta); err != nil {
+		if err := d.fingerprintAlta(d.Body.VeriFactu.RegistroFactura.RegistroAlta); err != nil {
 			return err
 		}
 		return nil
 	}
 	// Concatenate f according to Verifactu specifications
-	d.RegistroFactura.RegistroAlta.Encadenamiento = &Encadenamiento{
+	d.Body.VeriFactu.RegistroFactura.RegistroAlta.Encadenamiento = &Encadenamiento{
 		RegistroAnterior: &RegistroAnterior{
 			IDEmisorFactura:        prev.IDIssuer,
 			NumSerieFactura:        prev.NumSeries,
@@ -95,23 +95,23 @@ func (d *VeriFactu) generateHashAlta(prev *ChainData) error {
 			Huella:                 prev.Fingerprint,
 		},
 	}
-	if err := d.fingerprintAlta(d.RegistroFactura.RegistroAlta); err != nil {
+	if err := d.fingerprintAlta(d.Body.VeriFactu.RegistroFactura.RegistroAlta); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (d *VeriFactu) generateHashAnulacion(prev *ChainData) error {
+func (d *Envelope) generateHashAnulacion(prev *ChainData) error {
 	if prev == nil {
-		d.RegistroFactura.RegistroAnulacion.Encadenamiento = &Encadenamiento{
+		d.Body.VeriFactu.RegistroFactura.RegistroAnulacion.Encadenamiento = &Encadenamiento{
 			PrimerRegistro: "S",
 		}
-		if err := d.fingerprintAnulacion(d.RegistroFactura.RegistroAnulacion); err != nil {
+		if err := d.fingerprintAnulacion(d.Body.VeriFactu.RegistroFactura.RegistroAnulacion); err != nil {
 			return err
 		}
 		return nil
 	}
-	d.RegistroFactura.RegistroAnulacion.Encadenamiento = &Encadenamiento{
+	d.Body.VeriFactu.RegistroFactura.RegistroAnulacion.Encadenamiento = &Encadenamiento{
 		RegistroAnterior: &RegistroAnterior{
 			IDEmisorFactura:        prev.IDIssuer,
 			NumSerieFactura:        prev.NumSeries,
@@ -119,7 +119,7 @@ func (d *VeriFactu) generateHashAnulacion(prev *ChainData) error {
 			Huella:                 prev.Fingerprint,
 		},
 	}
-	if err := d.fingerprintAnulacion(d.RegistroFactura.RegistroAnulacion); err != nil {
+	if err := d.fingerprintAnulacion(d.Body.VeriFactu.RegistroFactura.RegistroAnulacion); err != nil {
 		return err
 	}
 	return nil

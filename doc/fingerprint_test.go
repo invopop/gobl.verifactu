@@ -99,9 +99,13 @@ func TestFingerprintAlta(t *testing.T) {
 
 		for _, tt := range tests {
 			t.Run(tt.name, func(t *testing.T) {
-				d := &doc.VeriFactu{
-					RegistroFactura: &doc.RegistroFactura{
-						RegistroAlta: tt.alta,
+				d := &doc.Envelope{
+					Body: &doc.Body{
+						VeriFactu: &doc.RegFactuSistemaFacturacion{
+							RegistroFactura: &doc.RegistroFactura{
+								RegistroAlta: tt.alta,
+							},
+						},
 					},
 				}
 
@@ -181,9 +185,13 @@ func TestFingerprintAnulacion(t *testing.T) {
 
 		for _, tt := range tests {
 			t.Run(tt.name, func(t *testing.T) {
-				d := &doc.VeriFactu{
-					RegistroFactura: &doc.RegistroFactura{
-						RegistroAnulacion: tt.anulacion,
+				d := &doc.Envelope{
+					Body: &doc.Body{
+						VeriFactu: &doc.RegFactuSistemaFacturacion{
+							RegistroFactura: &doc.RegistroFactura{
+								RegistroAnulacion: tt.anulacion,
+							},
+						},
 					},
 				}
 

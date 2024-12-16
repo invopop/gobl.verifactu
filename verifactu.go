@@ -112,7 +112,7 @@ func InSandbox() Option {
 }
 
 // Post will send the document to the VeriFactu gateway.
-func (c *Client) Post(ctx context.Context, d *doc.VeriFactu) error {
+func (c *Client) Post(ctx context.Context, d *doc.Envelope) error {
 	if err := c.gw.Post(ctx, *d); err != nil {
 		return doc.NewErrorFrom(err)
 	}
@@ -120,8 +120,8 @@ func (c *Client) Post(ctx context.Context, d *doc.VeriFactu) error {
 }
 
 // ParseDocument will parse the XML data into a VeriFactu document.
-func ParseDocument(data []byte) (*doc.VeriFactu, error) {
-	d := new(doc.VeriFactu)
+func ParseDocument(data []byte) (*doc.Envelope, error) {
+	d := new(doc.Envelope)
 	if err := xml.Unmarshal(data, d); err != nil {
 		return nil, err
 	}

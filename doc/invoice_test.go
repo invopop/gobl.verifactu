@@ -25,7 +25,7 @@ func TestNewRegistroAlta(t *testing.T) {
 		d, err := doc.NewVerifactu(inv, ts, role, sw, false)
 		require.NoError(t, err)
 
-		reg := d.RegistroFactura.RegistroAlta
+		reg := d.Body.VeriFactu.RegistroFactura.RegistroAlta
 		assert.Equal(t, "1.0", reg.IDVersion)
 		assert.Equal(t, "B85905495", reg.IDFactura.IDEmisorFactura)
 		assert.Equal(t, "SAMPLE-004", reg.IDFactura.NumSerieFactura)
@@ -58,7 +58,7 @@ func TestNewRegistroAlta(t *testing.T) {
 		d, err := doc.NewVerifactu(inv, ts, role, sw, false)
 		require.NoError(t, err)
 
-		assert.Equal(t, "S", d.RegistroFactura.RegistroAlta.FacturaSinIdentifDestinatarioArt61d)
+		assert.Equal(t, "S", d.Body.VeriFactu.RegistroFactura.RegistroAlta.FacturaSinIdentifDestinatarioArt61d)
 	})
 
 	t.Run("should handle rectificative invoices", func(t *testing.T) {
@@ -67,7 +67,7 @@ func TestNewRegistroAlta(t *testing.T) {
 		d, err := doc.NewVerifactu(inv, ts, role, sw, false)
 		require.NoError(t, err)
 
-		reg := d.RegistroFactura.RegistroAlta
+		reg := d.Body.VeriFactu.RegistroFactura.RegistroAlta
 		assert.Equal(t, "R1", reg.TipoFactura)
 		assert.Equal(t, "I", reg.TipoRectificativa)
 		require.Len(t, reg.FacturasRectificadas, 1)
@@ -96,7 +96,7 @@ func TestNewRegistroAlta(t *testing.T) {
 		d, err := doc.NewVerifactu(inv, ts, role, sw, false)
 		require.NoError(t, err)
 
-		reg := d.RegistroFactura.RegistroAlta
+		reg := d.Body.VeriFactu.RegistroFactura.RegistroAlta
 		require.Len(t, reg.FacturasSustituidas, 1)
 
 		substituted := reg.FacturasSustituidas[0]

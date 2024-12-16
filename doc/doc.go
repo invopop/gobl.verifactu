@@ -37,8 +37,18 @@ func init() {
 }
 
 // NewVerifactu creates a new VeriFactu document
-func NewVerifactu(inv *bill.Invoice, ts time.Time, r IssuerRole, s *Software, c bool) (*VeriFactu, error) {
-	doc := &VeriFactu{
+func NewVerifactu(inv *bill.Invoice, ts time.Time, r IssuerRole, s *Software, c bool) (*Envelope, error) {
+
+	env := &Envelope{
+		XMLNs: EnvNamespace,
+		SUM:   SUM,
+		SUM1:  SUM1,
+		Body: &Body{
+			VeriFactu: &RegFactuSistemaFacturacion{},
+		},
+	}
+
+	doc := &RegFactuSistemaFacturacion{
 		Cabecera: &Cabecera{
 			Obligado: Obligado{
 				NombreRazon: inv.Supplier.Name,
@@ -73,82 +83,89 @@ func NewVerifactu(inv *bill.Invoice, ts time.Time, r IssuerRole, s *Software, c 
 		doc.RegistroFactura.RegistroAlta = reg
 	}
 
-	return doc, nil
+	env.Body.VeriFactu = doc
+
+	return env, nil
 }
 
 // QRCodes generates the QR code for the document
-func (d *VeriFactu) QRCodes(production bool) string {
+func (d *Envelope) QRCodes(production bool) string {
 	return d.generateURL(production)
 }
 
 // ChainData generates the data to be used to link to this one
 // in the next entry.
-func (d *VeriFactu) ChainData() Encadenamiento {
+func (d *Envelope) ChainData() Encadenamiento {
 	return Encadenamiento{
 		RegistroAnterior: &RegistroAnterior{
-			IDEmisorFactura:        d.Cabecera.Obligado.NIF,
-			NumSerieFactura:        d.RegistroFactura.RegistroAlta.IDFactura.NumSerieFactura,
-			FechaExpedicionFactura: d.RegistroFactura.RegistroAlta.IDFactura.FechaExpedicionFactura,
-			Huella:                 d.RegistroFactura.RegistroAlta.Huella,
+			IDEmisorFactura:        d.Body.VeriFactu.Cabecera.Obligado.NIF,
+			NumSerieFactura:        d.Body.VeriFactu.RegistroFactura.RegistroAlta.IDFactura.NumSerieFactura,
+			FechaExpedicionFactura: d.Body.VeriFactu.RegistroFactura.RegistroAlta.IDFactura.FechaExpedicionFactura,
+			Huella:                 d.Body.VeriFactu.RegistroFactura.RegistroAlta.Huella,
 		},
 	}
 }
 
 // ChainDataCancel generates the data to be used to link to this one
 // in the next entry for cancelling invoices.
-func (d *VeriFactu) ChainDataCancel() Encadenamiento {
+func (d *Envelope) ChainDataCancel() Encadenamiento {
 	return Encadenamiento{
 		RegistroAnterior: &RegistroAnterior{
-			IDEmisorFactura:        d.Cabecera.Obligado.NIF,
-			NumSerieFactura:        d.RegistroFactura.RegistroAnulacion.IDFactura.NumSerieFactura,
-			FechaExpedicionFactura: d.RegistroFactura.RegistroAnulacion.IDFactura.FechaExpedicionFactura,
-			Huella:                 d.RegistroFactura.RegistroAnulacion.Huella,
+			IDEmisorFactura:        d.Body.VeriFactu.Cabecera.Obligado.NIF,
+			NumSerieFactura:        d.Body.VeriFactu.RegistroFactura.RegistroAnulacion.IDFactura.NumSerieFactura,
+			FechaExpedicionFactura: d.Body.VeriFactu.RegistroFactura.RegistroAnulacion.IDFactura.FechaExpedicionFactura,
+			Huella:                 d.Body.VeriFactu.RegistroFactura.RegistroAnulacion.Huella,
 		},
 	}
 }
 
 // Fingerprint generates the SHA-256 fingerprint for the document
-func (d *VeriFactu) Fingerprint(prev *ChainData) error {
+func (d *Envelope) Fingerprint(prev *ChainData) error {
 	return d.generateHashAlta(prev)
 }
 
 // FingerprintCancel generates the SHA-256 fingerprint for the document
-func (d *VeriFactu) FingerprintCancel(prev *ChainData) error {
+func (d *Envelope) FingerprintCancel(prev *ChainData) error {
 	return d.generateHashAnulacion(prev)
 }
 
 // Bytes returns the XML document bytes
-func (d *VeriFactu) Bytes() ([]byte, error) {
+func (d *Envelope) Bytes() ([]byte, error) {
+	return toBytes(d)
+}
+
+// Bytes returns the XML document bytes
+func (d *RegFactuSistemaFacturacion) Bytes() ([]byte, error) {
 	return toBytes(d)
 }
 
 // BytesIndent returns the indented XML document bytes
-func (d *VeriFactu) BytesIndent() ([]byte, error) {
+func (d *Envelope) BytesIndent() ([]byte, error) {
 	return toBytesIndent(d)
 }
 
 // Envelop wraps the VeriFactu document in a SOAP envelope and includes the expected namespaces
-func (d *VeriFactu) Envelop() ([]byte, error) {
-	// Create and set the envelope with namespaces
-	env := Envelope{
-		XMLNs: EnvNamespace,
-		SUM:   SUM,
-		SUM1:  SUM1,
-	}
-	env.Body.VeriFactu = d
+// func (d *VeriFactu) Envelop() ([]byte, error) {
+// 	// Create and set the envelope with namespaces
+// 	env := Envelope{
+// 		XMLNs: EnvNamespace,
+// 		SUM:   SUM,
+// 		SUM1:  SUM1,
+// 	}
+// 	env.Body.VeriFactu = d
 
-	// Marshal the SOAP envelope into an XML byte slice
-	var result bytes.Buffer
-	enc := xml.NewEncoder(&result)
-	enc.Indent("", "  ")
-	err := enc.Encode(env)
-	if err != nil {
-		return nil, err
-	}
+// 	// Marshal the SOAP envelope into an XML byte slice
+// 	var result bytes.Buffer
+// 	enc := xml.NewEncoder(&result)
+// 	enc.Indent("", "  ")
+// 	err := enc.Encode(env)
+// 	if err != nil {
+// 		return nil, err
+// 	}
 
-	// Return the enveloped XML document
-	return result.Bytes(), nil
-}
+// 	// Return the enveloped XML document
+// 	return result.Bytes(), nil
+// }
 
 func toBytes(doc any) ([]byte, error) {
 	buf, err := buffer(doc, xml.Header, false)

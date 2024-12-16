@@ -21,11 +21,11 @@ func TestInvoiceConversion(t *testing.T) {
 		doc, err := doc.NewVerifactu(inv, ts, role, sw, false)
 
 		require.NoError(t, err)
-		assert.Equal(t, "Invopop S.L.", doc.Cabecera.Obligado.NombreRazon)
-		assert.Equal(t, "B85905495", doc.Cabecera.Obligado.NIF)
-		assert.Equal(t, "1.0", doc.RegistroFactura.RegistroAlta.IDVersion)
-		assert.Equal(t, "B85905495", doc.RegistroFactura.RegistroAlta.IDFactura.IDEmisorFactura)
-		assert.Equal(t, "SAMPLE-004", doc.RegistroFactura.RegistroAlta.IDFactura.NumSerieFactura)
-		assert.Equal(t, "13-11-2024", doc.RegistroFactura.RegistroAlta.IDFactura.FechaExpedicionFactura)
+		assert.Equal(t, "Invopop S.L.", doc.Body.VeriFactu.Cabecera.Obligado.NombreRazon)
+		assert.Equal(t, "B85905495", doc.Body.VeriFactu.Cabecera.Obligado.NIF)
+		assert.Equal(t, "1.0", doc.Body.VeriFactu.RegistroFactura.RegistroAlta.IDVersion)
+		assert.Equal(t, "B85905495", doc.Body.VeriFactu.RegistroFactura.RegistroAlta.IDFactura.IDEmisorFactura)
+		assert.Equal(t, "SAMPLE-004", doc.Body.VeriFactu.RegistroFactura.RegistroAlta.IDFactura.NumSerieFactura)
+		assert.Equal(t, "13-11-2024", doc.Body.VeriFactu.RegistroFactura.RegistroAlta.IDFactura.FechaExpedicionFactura)
 	})
 }

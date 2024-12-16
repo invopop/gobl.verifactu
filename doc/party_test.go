@@ -22,7 +22,7 @@ func TestNewParty(t *testing.T) {
 		d, err := doc.NewVerifactu(inv, ts, role, sw, false)
 		require.NoError(t, err)
 
-		p := d.RegistroFactura.RegistroAlta.Destinatarios[0].IDDestinatario
+		p := d.Body.VeriFactu.RegistroFactura.RegistroAlta.Destinatarios[0].IDDestinatario
 		assert.Equal(t, "Sample Consumer", p.NombreRazon)
 		assert.Equal(t, "B63272603", p.NIF)
 		assert.Nil(t, p.IDOtro)
@@ -43,7 +43,7 @@ func TestNewParty(t *testing.T) {
 		d, err := doc.NewVerifactu(inv, ts, role, sw, false)
 		require.NoError(t, err)
 
-		p := d.RegistroFactura.RegistroAlta.Destinatarios[0].IDDestinatario
+		p := d.Body.VeriFactu.RegistroFactura.RegistroAlta.Destinatarios[0].IDDestinatario
 		assert.Equal(t, "Mr. Pass Port", p.NombreRazon)
 		assert.Empty(t, p.NIF)
 		assert.NotNil(t, p.IDOtro)
@@ -64,7 +64,7 @@ func TestNewParty(t *testing.T) {
 		d, err := doc.NewVerifactu(inv, ts, role, sw, false)
 		require.NoError(t, err)
 
-		p := d.RegistroFactura.RegistroAlta.Destinatarios[0].IDDestinatario
+		p := d.Body.VeriFactu.RegistroFactura.RegistroAlta.Destinatarios[0].IDDestinatario
 
 		assert.Equal(t, "Foreign Company", p.NombreRazon)
 		assert.Empty(t, p.NIF)

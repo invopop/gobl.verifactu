@@ -17,14 +17,16 @@ type Envelope struct {
 	XMLNs   string   `xml:"xmlns:soapenv,attr"`
 	SUM     string   `xml:"xmlns:sum,attr"`
 	SUM1    string   `xml:"xmlns:sum1,attr"`
-	Body    struct {
-		XMLName   xml.Name   `xml:"soapenv:Body"`
-		VeriFactu *VeriFactu `xml:"sum:RegFactuSistemaFacturacion"`
-	}
+	Body    *Body    `xml:"soapenv:Body"`
 }
 
-// VeriFactu represents the root element of a VeriFactu document
-type VeriFactu struct {
+// Body is the body of the SOAP envelope
+type Body struct {
+	VeriFactu *RegFactuSistemaFacturacion `xml:"sum:RegFactuSistemaFacturacion"`
+}
+
+// RegFactuSistemaFacturacion represents the root element of a RegFactuSistemaFacturacion document
+type RegFactuSistemaFacturacion struct {
 	// XMLName         xml.Name         `xml:"sum:RegFactuSistemaFacturacion"`
 	Cabecera        *Cabecera        `xml:"sum:Cabecera"`
 	RegistroFactura *RegistroFactura `xml:"sum:RegistroFactura"`

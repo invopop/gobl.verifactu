@@ -9,20 +9,24 @@ import (
 func TestGenerateCodes(t *testing.T) {
 	tests := []struct {
 		name     string
-		doc      *doc.VeriFactu
+		doc      *doc.Envelope
 		expected string
 	}{
 		{
 			name: "valid codes generation",
-			doc: &doc.VeriFactu{
-				RegistroFactura: &doc.RegistroFactura{
-					RegistroAlta: &doc.RegistroAlta{
-						IDFactura: &doc.IDFactura{
-							IDEmisorFactura:        "89890001K",
-							NumSerieFactura:        "12345678-G33",
-							FechaExpedicionFactura: "01-09-2024",
+			doc: &doc.Envelope{
+				Body: &doc.Body{
+					VeriFactu: &doc.RegFactuSistemaFacturacion{
+						RegistroFactura: &doc.RegistroFactura{
+							RegistroAlta: &doc.RegistroAlta{
+								IDFactura: &doc.IDFactura{
+									IDEmisorFactura:        "89890001K",
+									NumSerieFactura:        "12345678-G33",
+									FechaExpedicionFactura: "01-09-2024",
+								},
+								ImporteTotal: 241.4,
+							},
 						},
-						ImporteTotal: 241.4,
 					},
 				},
 			},
@@ -30,15 +34,19 @@ func TestGenerateCodes(t *testing.T) {
 		},
 		{
 			name: "empty fields",
-			doc: &doc.VeriFactu{
-				RegistroFactura: &doc.RegistroFactura{
-					RegistroAlta: &doc.RegistroAlta{
-						IDFactura: &doc.IDFactura{
-							IDEmisorFactura:        "",
-							NumSerieFactura:        "",
-							FechaExpedicionFactura: "",
+			doc: &doc.Envelope{
+				Body: &doc.Body{
+					VeriFactu: &doc.RegFactuSistemaFacturacion{
+						RegistroFactura: &doc.RegistroFactura{
+							RegistroAlta: &doc.RegistroAlta{
+								IDFactura: &doc.IDFactura{
+									IDEmisorFactura:        "",
+									NumSerieFactura:        "",
+									FechaExpedicionFactura: "",
+								},
+								ImporteTotal: 0,
+							},
 						},
-						ImporteTotal: 0,
 					},
 				},
 			},
@@ -59,20 +67,24 @@ func TestGenerateCodes(t *testing.T) {
 func TestGenerateURLCodeAlta(t *testing.T) {
 	tests := []struct {
 		name     string
-		doc      *doc.VeriFactu
+		doc      *doc.Envelope
 		expected string
 	}{
 		{
 			name: "valid URL generation",
-			doc: &doc.VeriFactu{
-				RegistroFactura: &doc.RegistroFactura{
-					RegistroAlta: &doc.RegistroAlta{
-						IDFactura: &doc.IDFactura{
-							IDEmisorFactura:        "89890001K",
-							NumSerieFactura:        "12345678-G33",
-							FechaExpedicionFactura: "01-09-2024",
+			doc: &doc.Envelope{
+				Body: &doc.Body{
+					VeriFactu: &doc.RegFactuSistemaFacturacion{
+						RegistroFactura: &doc.RegistroFactura{
+							RegistroAlta: &doc.RegistroAlta{
+								IDFactura: &doc.IDFactura{
+									IDEmisorFactura:        "89890001K",
+									NumSerieFactura:        "12345678-G33",
+									FechaExpedicionFactura: "01-09-2024",
+								},
+								ImporteTotal: 241.4,
+							},
 						},
-						ImporteTotal: 241.4,
 					},
 				},
 			},
@@ -80,15 +92,19 @@ func TestGenerateURLCodeAlta(t *testing.T) {
 		},
 		{
 			name: "URL with special characters",
-			doc: &doc.VeriFactu{
-				RegistroFactura: &doc.RegistroFactura{
-					RegistroAlta: &doc.RegistroAlta{
-						IDFactura: &doc.IDFactura{
-							IDEmisorFactura:        "A12 345&67",
-							NumSerieFactura:        "SERIE/2023",
-							FechaExpedicionFactura: "01-09-2024",
+			doc: &doc.Envelope{
+				Body: &doc.Body{
+					VeriFactu: &doc.RegFactuSistemaFacturacion{
+						RegistroFactura: &doc.RegistroFactura{
+							RegistroAlta: &doc.RegistroAlta{
+								IDFactura: &doc.IDFactura{
+									IDEmisorFactura:        "A12 345&67",
+									NumSerieFactura:        "SERIE/2023",
+									FechaExpedicionFactura: "01-09-2024",
+								},
+								ImporteTotal: 1234.56,
+							},
 						},
-						ImporteTotal: 1234.56,
 					},
 				},
 			},
@@ -98,7 +114,7 @@ func TestGenerateURLCodeAlta(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			tt.doc.RegistroFactura.RegistroAlta.Encadenamiento = &doc.Encadenamiento{
+			tt.doc.Body.VeriFactu.RegistroFactura.RegistroAlta.Encadenamiento = &doc.Encadenamiento{
 				PrimerRegistro: "S",
 			}
 			got := tt.doc.QRCodes(false)

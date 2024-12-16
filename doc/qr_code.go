@@ -11,11 +11,11 @@ const (
 )
 
 // generateURL generates the encoded URL code with parameters.
-func (doc *VeriFactu) generateURL(production bool) string {
-	nif := url.QueryEscape(doc.RegistroFactura.RegistroAlta.IDFactura.IDEmisorFactura)
-	numSerie := url.QueryEscape(doc.RegistroFactura.RegistroAlta.IDFactura.NumSerieFactura)
-	fecha := url.QueryEscape(doc.RegistroFactura.RegistroAlta.IDFactura.FechaExpedicionFactura)
-	importe := url.QueryEscape(fmt.Sprintf("%g", doc.RegistroFactura.RegistroAlta.ImporteTotal))
+func (doc *Envelope) generateURL(production bool) string {
+	nif := url.QueryEscape(doc.Body.VeriFactu.RegistroFactura.RegistroAlta.IDFactura.IDEmisorFactura)
+	numSerie := url.QueryEscape(doc.Body.VeriFactu.RegistroFactura.RegistroAlta.IDFactura.NumSerieFactura)
+	fecha := url.QueryEscape(doc.Body.VeriFactu.RegistroFactura.RegistroAlta.IDFactura.FechaExpedicionFactura)
+	importe := url.QueryEscape(fmt.Sprintf("%g", doc.Body.VeriFactu.RegistroFactura.RegistroAlta.ImporteTotal))
 
 	if production {
 		return fmt.Sprintf("%s&nif=%s&numserie=%s&fecha=%s&importe=%s", prodURL, nif, numSerie, fecha, importe)
