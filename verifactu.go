@@ -121,6 +121,13 @@ func (c *Client) Post(ctx context.Context, d *doc.VeriFactu) error {
 
 // ParseDocument will parse the XML data into a VeriFactu document.
 func ParseDocument(data []byte) (*doc.VeriFactu, error) {
+	// First try to parse as enveloped document
+	env := new(doc.Envelope)
+	if err := xml.Unmarshal(data, env); err == nil && env.Body.VeriFactu != nil {
+		return env.Body.VeriFactu, nil
+	}
+
+	// If that fails, try parsing as non-enveloped document
 	d := new(doc.VeriFactu)
 	if err := xml.Unmarshal(data, d); err != nil {
 		return nil, err
