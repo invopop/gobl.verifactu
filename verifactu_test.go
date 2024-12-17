@@ -22,18 +22,18 @@ func TestParseDocument(t *testing.T) {
 		{
 			name: "valid document",
 			data: []byte(`<?xml version="1.0" encoding="UTF-8"?>
-<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sum="https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/tike/cont/ws/SuministroLR.xsd" xmlns:sum1="https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/tike/cont/ws/SuministroInformacion.xsd">
-  <soapenv:Body>
-    <sum:RegFactuSistemaFacturacion>
-      <sum:Cabecera>
-        <sum1:ObligadoEmision>
-          <sum1:NombreRazon>Test Company</sum1:NombreRazon>
-          <sum1:NIF>B12345678</sum1:NIF>
-        </sum1:ObligadoEmision>
-      </sum:Cabecera>
-    </sum:RegFactuSistemaFacturacion>
-  </soapenv:Body>
-</soapenv:Envelope>`),
+			<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sum="https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/tike/cont/ws/SuministroLR.xsd" xmlns:sum1="https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/tike/cont/ws/SuministroInformacion.xsd">
+			<soapenv:Body>
+				<sum:RegFactuSistemaFacturacion>
+				<sum:Cabecera>
+					<sum1:ObligadoEmision>
+					<sum1:NombreRazon>Test Company</sum1:NombreRazon>
+					<sum1:NIF>B12345678</sum1:NIF>
+					</sum1:ObligadoEmision>
+				</sum:Cabecera>
+				</sum:RegFactuSistemaFacturacion>
+			</soapenv:Body>
+			</soapenv:Envelope>`),
 			want: &doc.Envelope{
 				XMLNs: doc.EnvNamespace,
 				SUM:   doc.SUM,
@@ -78,10 +78,8 @@ func TestParseDocument(t *testing.T) {
 		})
 	}
 
-	t.Run("should preserve RegistroAlta when parsing complete document", func(t *testing.T) {
-		// Load and generate the reference XML
+	t.Run("should preserve parse whole doc", func(t *testing.T) {
 		inv := test.LoadInvoice("inv-base.json")
-		ts := time.Date(2024, 11, 26, 4, 0, 0, 0, time.UTC)
 		sw := &doc.Software{
 			CompanyName:        "My Software",
 			TaxID:              "12345678A",
@@ -90,7 +88,7 @@ func TestParseDocument(t *testing.T) {
 			Version:            "1.0",
 			InstallationNumber: "12345678A",
 		}
-		want, err := doc.NewVerifactu(inv, ts, doc.IssuerRoleSupplier, sw, false)
+		want, err := doc.NewVerifactu(inv, time.Now(), doc.IssuerRoleSupplier, sw, false)
 		require.NoError(t, err)
 
 		// Get the XML bytes from the reference document
@@ -106,5 +104,6 @@ func TestParseDocument(t *testing.T) {
 		require.NotNil(t, got.Body.VeriFactu.RegistroFactura.RegistroAlta)
 		assert.Equal(t, want.Body.VeriFactu.RegistroFactura.RegistroAlta.IDVersion,
 			got.Body.VeriFactu.RegistroFactura.RegistroAlta.IDVersion)
+
 	})
 }
