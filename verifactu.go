@@ -113,8 +113,8 @@ func InSandbox() Option {
 }
 
 // Post will send the document to the VeriFactu gateway.
-func (c *Client) Post(ctx context.Context, d *doc.Envelope) error {
-	if err := c.gw.Post(ctx, *d); err != nil {
+func (c *Client) Post(ctx context.Context, d []byte) error {
+	if err := c.gw.Post(ctx, d); err != nil {
 		return doc.NewErrorFrom(err)
 	}
 	return nil

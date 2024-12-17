@@ -55,11 +55,11 @@ func New(env Environment, cert *xmldsig.Certificate) (*Connection, error) {
 }
 
 // Post sends the VeriFactu document to the gateway
-func (c *Connection) Post(ctx context.Context, doc doc.Envelope) error {
-	pyl, err := doc.Bytes()
-	if err != nil {
-		return fmt.Errorf("generating payload: %w", err)
-	}
+func (c *Connection) Post(ctx context.Context, pyl []byte) error {
+	// pyl, err := doc.Bytes()
+	// if err != nil {
+	// 	return fmt.Errorf("generating payload: %w", err)
+	// }
 	return c.post(ctx, TestingBaseURL, pyl)
 }
 

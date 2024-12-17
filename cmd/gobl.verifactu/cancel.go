@@ -93,7 +93,12 @@ func (c *cancelOpts) runE(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	err = tc.Post(cmd.Context(), td)
+	tdBytes, err := td.Bytes()
+	if err != nil {
+		return err
+	}
+
+	err = tc.Post(cmd.Context(), tdBytes)
 	if err != nil {
 		return err
 	}
