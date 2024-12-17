@@ -144,29 +144,6 @@ func (d *Envelope) BytesIndent() ([]byte, error) {
 	return toBytesIndent(d)
 }
 
-// Envelop wraps the VeriFactu document in a SOAP envelope and includes the expected namespaces
-// func (d *VeriFactu) Envelop() ([]byte, error) {
-// 	// Create and set the envelope with namespaces
-// 	env := Envelope{
-// 		XMLNs: EnvNamespace,
-// 		SUM:   SUM,
-// 		SUM1:  SUM1,
-// 	}
-// 	env.Body.VeriFactu = d
-
-// 	// Marshal the SOAP envelope into an XML byte slice
-// 	var result bytes.Buffer
-// 	enc := xml.NewEncoder(&result)
-// 	enc.Indent("", "  ")
-// 	err := enc.Encode(env)
-// 	if err != nil {
-// 		return nil, err
-// 	}
-
-// 	// Return the enveloped XML document
-// 	return result.Bytes(), nil
-// }
-
 func toBytes(doc any) ([]byte, error) {
 	buf, err := buffer(doc, xml.Header, false)
 	if err != nil {

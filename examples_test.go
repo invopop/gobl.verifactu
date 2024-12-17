@@ -8,15 +8,10 @@ import (
 	"testing"
 	"time"
 
-	// "github.com/nbio/xml"
-
 	verifactu "github.com/invopop/gobl.verifactu"
 	"github.com/invopop/gobl.verifactu/doc"
 	"github.com/invopop/gobl.verifactu/test"
 
-	// "github.com/lestrrat-go/libxml2"
-	// "github.com/lestrrat-go/libxml2/xsd"
-	// "github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
@@ -61,18 +56,6 @@ func TestXMLGeneration(t *testing.T) {
 			valData, err := td.BytesIndent()
 			require.NoError(t, err)
 
-			// valData, err = addNamespaces(valData)
-			// require.NoError(t, err)
-
-			// errs := validateDoc(schema, valData)
-			// for _, e := range errs {
-			// 	assert.NoError(t, e)
-			// }
-			// if len(errs) > 0 {
-			// 	assert.Fail(t, "Invalid XML:\n"+string(valData))
-			// 	return
-			// }
-
 			if *test.UpdateOut {
 				data, err := td.Bytes()
 				require.NoError(t, err)
@@ -91,16 +74,6 @@ func TestXMLGeneration(t *testing.T) {
 		})
 	}
 }
-
-// func loadSchema() (*xsd.Schema, error) {
-// 	schemaPath := test.Path("test", "schema", "SuministroLR.xsd")
-// 	schema, err := xsd.ParseFromFile(schemaPath)
-// 	if err != nil {
-// 		return nil, err
-// 	}
-
-// 	return schema, nil
-// }
 
 func loadClient() (*verifactu.Client, error) {
 	ts, err := time.Parse(time.RFC3339, "2024-11-26T04:00:00Z")
@@ -136,61 +109,3 @@ func lookupExamples() ([]string, error) {
 
 	return examples, nil
 }
-
-// func validateDoc(schema *xsd.Schema, doc []byte) []error {
-// 	vf, err := Unenvelop(doc)
-// 	if err != nil {
-// 		return []error{err}
-// 	}
-
-// 	ns, err := addNamespaces(vf)
-// 	if err != nil {
-// 		return []error{err}
-// 	}
-
-// 	xmlDoc, err := libxml2.ParseString(string(ns))
-// 	if err != nil {
-// 		return []error{err}
-// 	}
-
-// 	err = schema.Validate(xmlDoc)
-// 	if err != nil {
-// 		return err.(xsd.SchemaValidationError).Errors()
-// 	}
-
-// 	return nil
-// }
-
-// Helper function to inject namespaces into XML without using Envelop()
-// Just for xsd validation purposes
-// func addNamespaces(data []byte) ([]byte, error) {
-// 	xmlString := string(data)
-// 	xmlNamespaces := ` xmlns:sum="https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/tike/cont/ws/SuministroLR.xsd" xmlns:sum1="https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/tike/cont/ws/SuministroInformacion.xsd"`
-// 	if !strings.Contains(xmlString, "<sum:RegFactuSistemaFacturacion>") {
-// 		return nil, fmt.Errorf("could not find RegFactuSistemaFacturacion tag in XML")
-// 	}
-// 	xmlString = strings.Replace(xmlString, "<sum:RegFactuSistemaFacturacion>", "<sum:RegFactuSistemaFacturacion"+xmlNamespaces+">", 1)
-// 	finalXMLBytes := []byte(xmlString)
-// 	return finalXMLBytes, nil
-// }
-
-// Unenvelop extracts the VeriFactu document from a SOAP envelope
-// func Unenvelop(data []byte) ([]byte, error) {
-// 	var env doc.Envelope
-// 	if err := xml.Unmarshal(data, &env); err != nil {
-// 		return nil, err
-// 	}
-
-// 	// Check if the VeriFactu document is present
-// 	if env.Body.VeriFactu == nil {
-// 		return nil, fmt.Errorf("missing RegFactuSistemaFacturacion in envelope")
-// 	}
-
-// 	// Marshal the VeriFactu back to XML
-// 	xmlData, err := xml.Marshal(env.Body.VeriFactu)
-// 	if err != nil {
-// 		return nil, err
-// 	}
-
-// 	return xmlData, nil
-// }
