@@ -81,12 +81,12 @@ func TestParseDocument(t *testing.T) {
 	t.Run("should preserve parse whole doc", func(t *testing.T) {
 		inv := test.LoadInvoice("inv-base.json")
 		sw := &doc.Software{
-			CompanyName:        "My Software",
-			TaxID:              "12345678A",
-			SoftwareName:       "My Software",
-			SoftwareID:         "A1",
-			Version:            "1.0",
-			InstallationNumber: "12345678A",
+			NombreRazon:              "My Software",
+			NIF:                      "12345678A",
+			NombreSistemaInformatico: "My Software",
+			IdSistemaInformatico:     "A1",
+			Version:                  "1.0",
+			NumeroInstalacion:        "12345678A",
 		}
 		want, err := doc.NewVerifactu(inv, time.Now(), doc.IssuerRoleSupplier, sw, false)
 		require.NoError(t, err)
