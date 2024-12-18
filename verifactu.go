@@ -5,8 +5,6 @@ import (
 	"context"
 	"time"
 
-	"github.com/nbio/xml"
-
 	"github.com/invopop/gobl.verifactu/doc"
 	"github.com/invopop/gobl.verifactu/internal/gateways"
 	"github.com/invopop/xmldsig"
@@ -118,15 +116,6 @@ func (c *Client) Post(ctx context.Context, d []byte) error {
 		return doc.NewErrorFrom(err)
 	}
 	return nil
-}
-
-// ParseDocument will parse the XML data into a VeriFactu document.
-func ParseDocument(data []byte) (*doc.Envelope, error) {
-	d := new(doc.Envelope)
-	if err := xml.Unmarshal(data, d); err != nil {
-		return nil, err
-	}
-	return d, nil
 }
 
 // CurrentTime returns the current time to use when generating
