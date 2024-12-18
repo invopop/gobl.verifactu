@@ -12,6 +12,13 @@ var (
 	ErrDuplicate  = newError("duplicate")
 )
 
+// Standard error responses.
+var (
+	ErrNotSpanish       = ErrValidation.WithMessage("only spanish invoices are supported")
+	ErrAlreadyProcessed = ErrValidation.WithMessage("already processed")
+	ErrOnlyInvoices     = ErrValidation.WithMessage("only invoices are supported")
+)
+
 // Error allows for structured responses from the gateway to be able to
 // response codes and messages.
 type Error struct {

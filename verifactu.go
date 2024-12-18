@@ -10,13 +10,6 @@ import (
 	"github.com/invopop/xmldsig"
 )
 
-// Standard error responses.
-var (
-	ErrNotSpanish       = doc.ErrValidation.WithMessage("only spanish invoices are supported")
-	ErrAlreadyProcessed = doc.ErrValidation.WithMessage("already processed")
-	ErrOnlyInvoices     = doc.ErrValidation.WithMessage("only invoices are supported")
-)
-
 // Client provides the main interface to the VeriFactu package.
 type Client struct {
 	software   *doc.Software
