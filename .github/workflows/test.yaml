@@ -1,0 +1,27 @@
+name: Test Go
+on: [push]
+jobs:
+  lint-test-build:
+    name: Test, Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: "go.mod"
+        id: go
+
+      - name: Install Dependencies
+        env:
+          GOPROXY: https://proxy.golang.org,direct
+        run: go mod download
+
+      - name: Test
+        run: go test -tags unit -race ./...
+
+      - name: Build
+        run: go build -v ./...
