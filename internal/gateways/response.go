@@ -19,7 +19,7 @@ type Body struct {
 	Respuesta *Response `xml:"RespuestaRegFactuSistemaFacturacion,omitempty"`
 }
 
-// Faults are issued by the SOAP server when something goes wrong.
+// Fault is issued by the SOAP server when something goes wrong.
 type Fault struct {
 	Code    string `xml:"faultcode"`
 	Message string `xml:"faultstring"`
