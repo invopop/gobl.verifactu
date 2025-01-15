@@ -13,9 +13,16 @@ type Envelope struct {
 
 // Body represents the body of the SOAP envelope.
 type Body struct {
-	XMLName   xml.Name `xml:"Body"`
-	ID        string   `xml:"Id,attr,omitempty"`
-	Respuesta Response `xml:"RespuestaRegFactuSistemaFacturacion"`
+	XMLName   xml.Name  `xml:"Body"`
+	ID        string    `xml:"Id,attr,omitempty"`
+	Fault     *Fault    `xml:"Fault,omitempty"`
+	Respuesta *Response `xml:"RespuestaRegFactuSistemaFacturacion,omitempty"`
+}
+
+// Faults are issued by the SOAP server when something goes wrong.
+type Fault struct {
+	Code    string `xml:"faultcode"`
+	Message string `xml:"faultstring"`
 }
 
 // Response defines the response fields from the VeriFactu gateway.
