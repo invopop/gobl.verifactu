@@ -68,7 +68,7 @@ func main() {
 	opts := []verifactu.Option{
 		verifactu.WithCertificate(cert),
 		verifactu.WithSupplierIssuer(), // The issuer can be either the supplier, the customer or a third party
-		verifactu.InTesting(),          // Use the testing environment, as the production endpoint is not yet published 
+		verifactu.InTesting(),          // Use the testing environment, as the production endpoint is not yet published
 	}
 
 	tc, err := verifactu.New(software, opts...)
@@ -138,15 +138,17 @@ SOFTWARE_NAME=gobl.verifactu
 SOFTWARE_VERSION=1.0
 SOFTWARE_ID_SISTEMA_INFORMATICO=A1
 SOFTWARE_NUMERO_INSTALACION=00001
-
+DEBUG=true
 CERTIFICATE_PATH=xxxxxxxxx
 CERTIFICATE_PASSWORD=xxxxxxxxx
 ```
+
 To convert a document to XML, run:
 
 ```bash
 gobl.verifactu convert ./test/data/sample-invoice.json
 ```
+
 This function will output the XML to the terminal, or to a file if a second argument is provided. The output file will not include a fingerprint, and therefore will not be able to be submitted to the tax agency.
 
 To submit to the tax agency testing environment:
@@ -154,14 +156,15 @@ To submit to the tax agency testing environment:
 ```bash
 gobl.verifactu send ./test/data/sample-invoice.json ./test/data/previous-invoice-info.json
 ```
+
 Now, the output file will include a fingerprint, linked to the previous document, and will be submitted to the tax agency. An example for a previous file would look like this:
 
 ```json
 {
-	"emisor": "B12345678",
-	"serie": "SAMPLE-001",
-	"fecha": "2024-11-28",
-	"huella": "0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF"
+  "emisor": "B12345678",
+  "serie": "SAMPLE-001",
+  "fecha": "2024-11-28",
+  "huella": "0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF"
 }
 ```
 
@@ -180,6 +183,7 @@ Invoice tax tags can be added to invoice documents in order to reflect a special
 The following extensions must be included in the document. Note that the GOBL addon will automatically add these extensions when processing invoices:
 
 - `es-verifactu-doc-type` – defines the type of invoice being sent. In most cases this will be set automatically by GOBL, but it must be present. It is taken from list L2 of the VeriFactu Ministerial Order. These are the valid values:
+
   - `F1` - Standard invoice.
   - `F2` - Simplified invoice.
   - `F3` - Invoice in substitution of simplified invoices.
@@ -189,14 +193,15 @@ The following extensions must be included in the document. Note that the GOBL ad
   - `R4` - Rectified invoice based on law and other reasons.
   - `R5` - Rectified invoice based on simplified invoices.
 
-
 - `es-verifactu-op-class` - Operation classification code used to identify if taxes should be applied to the line. It is taken from list L9 of the VeriFactu Ministerial Order. These are the valid values:
+
   - `S1` - Subject and not exempt - Without reverse charge
   - `S2` - Subject and not exempt - With reverse charge. Known as `Inversión del Sujeto Pasivo` in Spanish VAT Law
   - `N1` - Not subject - Articles 7, 14, others
   - `N2` - Not subject - Due to location rules
 
 - `es-verifactu-exempt` - Exemption code used to identify if the line item is exempt from taxes. It is taken from list L10 of the VeriFactu Ministerial Order. These are the valid values:
+
   - `E1` - Exempt pursuant to Article 20 of the VAT Law
   - `E2` - Exempt pursuant to Article 21 of the VAT Law
   - `E3` - Exempt pursuant to Article 22 of the VAT Law
@@ -204,10 +209,10 @@ The following extensions must be included in the document. Note that the GOBL ad
   - `E5` - Exempt pursuant to Article 25 of the VAT Law
   - `E6` - Exempt for other reasons
 
-- `es-verifactu-correction-type` - Differentiates between the correction method. Corrective invoices in VeriFactu can be *Facturas Rectificativas por Diferencias* or *Facturas Rectificativas por Sustitución*. It is taken from list L3 of the VeriFactu Ministerial Order. These are the valid values:
+- `es-verifactu-correction-type` - Differentiates between the correction method. Corrective invoices in VeriFactu can be _Facturas Rectificativas por Diferencias_ or _Facturas Rectificativas por Sustitución_. It is taken from list L3 of the VeriFactu Ministerial Order. These are the valid values:
+
   - `I` - Differences. Used for credit and debit notes. In case of credit notes the values of the invoice are inverted to reflect the amount being a credit instead of a debit.
   - `S` - Substitution. Used for corrective invoices.
-
 
 - `es-verifactu-regime` - Regime code used to identify the type of VAT/IGIC regime to be applied to the invoice. It combines the values of lists L8A and L8B of the VeriFactu Ministerial Order. These are the valid values:
   - `01` - General regime operation
@@ -227,7 +232,6 @@ The following extensions must be included in the document. Note that the GOBL ad
   - `18` - Equivalence surcharge (VAT) / Special regime for small traders or retailers (IGIC)
   - `19` - Operations included in the Special Regime for Agriculture, Livestock and Fisheries
   - `20` - Simplified regime (VAT only)
-  
 
 ## Limitations
 
@@ -242,7 +246,7 @@ The following extensions must be included in the document. Note that the GOBL ad
 This library includes a set of tests that can be used to validate the conversion and submission process. To run the tests, use the following command:
 
 ```bash
-go test
+go test ./...
 ```
 
 Some sample test data is available in the `./test` directory. To update the JSON documents and regenerate the XML files for testing, use the following command:

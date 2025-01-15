@@ -63,7 +63,6 @@ func (c *Connection) post(ctx context.Context, path string, payload []byte) erro
 	out := new(Envelope)
 	req := c.client.R().
 		SetContext(ctx).
-		SetDebug(true).
 		SetHeader("Content-Type", "application/xml").
 		SetContentLength(true).
 		SetBody(payload).
@@ -74,15 +73,20 @@ func (c *Connection) post(ctx context.Context, path string, payload []byte) erro
 		return err
 	}
 	if res.StatusCode() != http.StatusOK {
-		return doc.ErrValidation.WithCode(strconv.Itoa(res.StatusCode()))
+		return doc.ErrValidation.WithCode(strconv.Itoa(res.StatusCode())).WithMessage(res.String())
 	}
-	if out.Body.Respuesta.EstadoEnvio != correctStatus {
-		err := doc.ErrValidation.WithCode(strconv.Itoa(res.StatusCode()))
-		if len(out.Body.Respuesta.RespuestaLinea) > 0 {
-			e1 := out.Body.Respuesta.RespuestaLinea[0]
-			err = err.WithMessage(e1.DescripcionErrorRegistro).WithCode(e1.CodigoErrorRegistro)
+	if out.Body.Fault != nil {
+		return doc.ErrValidation.WithMessage(out.Body.Fault.Message).WithCode(out.Body.Fault.Code)
+	}
+	if out.Body.Respuesta != nil {
+		if out.Body.Respuesta.EstadoEnvio != correctStatus {
+			err := doc.ErrValidation.WithCode(strconv.Itoa(res.StatusCode()))
+			if len(out.Body.Respuesta.RespuestaLinea) > 0 {
+				e1 := out.Body.Respuesta.RespuestaLinea[0]
+				err = err.WithMessage(e1.DescripcionErrorRegistro).WithCode(e1.CodigoErrorRegistro)
+			}
+			return err
 		}
-		return err
 	}
 
 	return nil
