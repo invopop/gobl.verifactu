@@ -63,7 +63,6 @@ func (c *Connection) post(ctx context.Context, path string, payload []byte) erro
 	out := new(Envelope)
 	req := c.client.R().
 		SetContext(ctx).
-		SetDebug(true).
 		SetHeader("Content-Type", "application/xml").
 		SetContentLength(true).
 		SetBody(payload).
