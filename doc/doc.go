@@ -99,10 +99,7 @@ func newEnvelope(inv *bill.Invoice, opts *Options, cancel bool) (*Envelope, erro
 	}
 
 	if cancel {
-		reg, err := newCancel(inv, opts.Timestamp, opts.Software)
-		if err != nil {
-			return nil, err
-		}
+		reg := newCancel(inv, opts.Timestamp, opts.Software)
 		doc.RegistroFactura.RegistroAnulacion = reg
 	} else {
 		reg, err := newInvoice(inv, opts.Timestamp, opts.IssuerRole, opts.Software)
