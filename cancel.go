@@ -21,8 +21,13 @@ func (c *Client) GenerateCancel(env *gobl.Envelope) (*doc.Envelope, error) {
 		return nil, errors.New("only spanish invoices are supported")
 	}
 
-	// Create the document
-	cd, err := doc.NewVerifactu(inv, c.CurrentTime(), c.issuerRole, c.software, true)
+	opts := &doc.Options{
+		Software:       c.software,
+		IssuerRole:     c.issuerRole,
+		Timestamp:      c.CurrentTime(),
+		Representative: c.rep,
+	}
+	cd, err := doc.NewCancel(inv, opts)
 	if err != nil {
 		return nil, err
 	}

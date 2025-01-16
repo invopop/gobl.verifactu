@@ -15,11 +15,15 @@ import (
 func TestNewParty(t *testing.T) {
 	ts, err := time.Parse(time.RFC3339, "2022-02-01T04:00:00Z")
 	require.NoError(t, err)
-	role := doc.IssuerRoleSupplier
-	sw := &doc.Software{}
+	opts := &doc.Options{
+		Software:   &doc.Software{},
+		IssuerRole: doc.IssuerRoleSupplier,
+		Timestamp:  ts,
+	}
+
 	t.Run("with tax ID", func(t *testing.T) {
 		inv := test.LoadInvoice("inv-base.json")
-		d, err := doc.NewVerifactu(inv, ts, role, sw, false)
+		d, err := doc.NewInvoice(inv, opts)
 		require.NoError(t, err)
 
 		p := d.Body.VeriFactu.RegistroFactura.RegistroAlta.Destinatarios[0].IDDestinatario
@@ -40,7 +44,7 @@ func TestNewParty(t *testing.T) {
 			},
 		}
 
-		d, err := doc.NewVerifactu(inv, ts, role, sw, false)
+		d, err := doc.NewInvoice(inv, opts)
 		require.NoError(t, err)
 
 		p := d.Body.VeriFactu.RegistroFactura.RegistroAlta.Destinatarios[0].IDDestinatario
@@ -61,7 +65,7 @@ func TestNewParty(t *testing.T) {
 			},
 		}
 
-		d, err := doc.NewVerifactu(inv, ts, role, sw, false)
+		d, err := doc.NewInvoice(inv, opts)
 		require.NoError(t, err)
 
 		p := d.Body.VeriFactu.RegistroFactura.RegistroAlta.Destinatarios[0].IDDestinatario
@@ -79,7 +83,7 @@ func TestNewParty(t *testing.T) {
 			Name: "Simple Company",
 		}
 
-		_, err := doc.NewVerifactu(inv, ts, role, sw, false)
+		_, err := doc.NewInvoice(inv, opts)
 		require.Error(t, err)
 	})
 }
