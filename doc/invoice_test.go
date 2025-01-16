@@ -17,12 +17,15 @@ import (
 func TestNewRegistroAlta(t *testing.T) {
 	ts, err := time.Parse(time.RFC3339, "2022-02-01T04:00:00Z")
 	require.NoError(t, err)
-	role := doc.IssuerRoleSupplier
-	sw := &doc.Software{}
+	opts := &doc.Options{
+		Software:   &doc.Software{},
+		IssuerRole: doc.IssuerRoleSupplier,
+		Timestamp:  ts,
+	}
 
 	t.Run("should contain basic document info", func(t *testing.T) {
 		inv := test.LoadInvoice("inv-base.json")
-		d, err := doc.NewVerifactu(inv, ts, role, sw, false)
+		d, err := doc.NewInvoice(inv, opts)
 		require.NoError(t, err)
 
 		reg := d.Body.VeriFactu.RegistroFactura.RegistroAlta
@@ -55,7 +58,7 @@ func TestNewRegistroAlta(t *testing.T) {
 		inv.SetTags(tax.TagSimplified)
 		inv.Customer = nil
 
-		d, err := doc.NewVerifactu(inv, ts, role, sw, false)
+		d, err := doc.NewInvoice(inv, opts)
 		require.NoError(t, err)
 
 		assert.Equal(t, "S", d.Body.VeriFactu.RegistroFactura.RegistroAlta.FacturaSinIdentifDestinatarioArt61d)
@@ -64,7 +67,7 @@ func TestNewRegistroAlta(t *testing.T) {
 	t.Run("should handle rectificative invoices", func(t *testing.T) {
 		inv := test.LoadInvoice("cred-note-base.json")
 
-		d, err := doc.NewVerifactu(inv, ts, role, sw, false)
+		d, err := doc.NewInvoice(inv, opts)
 		require.NoError(t, err)
 
 		reg := d.Body.VeriFactu.RegistroFactura.RegistroAlta
@@ -93,7 +96,7 @@ func TestNewRegistroAlta(t *testing.T) {
 		}
 		inv.Tax.Ext[verifactu.ExtKeyDocType] = "F3"
 
-		d, err := doc.NewVerifactu(inv, ts, role, sw, false)
+		d, err := doc.NewInvoice(inv, opts)
 		require.NoError(t, err)
 
 		reg := d.Body.VeriFactu.RegistroFactura.RegistroAlta
