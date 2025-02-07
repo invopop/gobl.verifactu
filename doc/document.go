@@ -87,8 +87,8 @@ type RegistroAlta struct {
 	Destinatarios                       []*Destinatario       `xml:"sum1:Destinatarios,omitempty"`
 	Cupon                               string                `xml:"sum1:Cupon,omitempty"`
 	Desglose                            *Desglose             `xml:"sum1:Desglose"`
-	CuotaTotal                          float64               `xml:"sum1:CuotaTotal"`
-	ImporteTotal                        float64               `xml:"sum1:ImporteTotal"`
+	CuotaTotal                          string                `xml:"sum1:CuotaTotal"`
+	ImporteTotal                        string                `xml:"sum1:ImporteTotal"`
 	Encadenamiento                      *Encadenamiento       `xml:"sum1:Encadenamiento"`
 	SistemaInformatico                  *Software             `xml:"sum1:SistemaInformatico"`
 	FechaHoraHusoGenRegistro            string                `xml:"sum1:FechaHoraHusoGenRegistro"`
@@ -144,7 +144,7 @@ type FacturaSustituida struct {
 type ImporteRectificacion struct {
 	BaseRectificada         string `xml:"sum1:BaseRectificada"`
 	CuotaRectificada        string `xml:"sum1:CuotaRectificada"`
-	CuotaRecargoRectificado string `xml:"sum1:CuotaRecargoRectificado"`
+	CuotaRecargoRectificado string `xml:"sum1:CuotaRecargoRectificado,omitempty"`
 }
 
 // Party represents a in the document, covering fields Generador, Tercero and IDDestinatario
@@ -173,16 +173,16 @@ type Desglose struct {
 
 // DetalleDesglose contains detailed breakdown information
 type DetalleDesglose struct {
-	Impuesto                      string  `xml:"sum1:Impuesto,omitempty"`
-	ClaveRegimen                  string  `xml:"sum1:ClaveRegimen,omitempty"`
-	CalificacionOperacion         string  `xml:"sum1:CalificacionOperacion,omitempty"`
-	OperacionExenta               string  `xml:"sum1:OperacionExenta,omitempty"`
-	TipoImpositivo                float64 `xml:"sum1:TipoImpositivo,omitempty"`
-	BaseImponibleOImporteNoSujeto float64 `xml:"sum1:BaseImponibleOimporteNoSujeto"`
-	BaseImponibleACoste           float64 `xml:"sum1:BaseImponibleACoste,omitempty"`
-	CuotaRepercutida              float64 `xml:"sum1:CuotaRepercutida,omitempty"`
-	TipoRecargoEquivalencia       float64 `xml:"sum1:TipoRecargoEquivalencia,omitempty"`
-	CuotaRecargoEquivalencia      float64 `xml:"sum1:CuotaRecargoEquivalencia,omitempty"`
+	Impuesto                      string `xml:"sum1:Impuesto,omitempty"`
+	ClaveRegimen                  string `xml:"sum1:ClaveRegimen,omitempty"`
+	CalificacionOperacion         string `xml:"sum1:CalificacionOperacion,omitempty"`
+	OperacionExenta               string `xml:"sum1:OperacionExenta,omitempty"`
+	TipoImpositivo                string `xml:"sum1:TipoImpositivo,omitempty"`
+	BaseImponibleOImporteNoSujeto string `xml:"sum1:BaseImponibleOimporteNoSujeto"`
+	BaseImponibleACoste           string `xml:"sum1:BaseImponibleACoste,omitempty"`
+	CuotaRepercutida              string `xml:"sum1:CuotaRepercutida,omitempty"`
+	TipoRecargoEquivalencia       string `xml:"sum1:TipoRecargoEquivalencia,omitempty"`
+	CuotaRecargoEquivalencia      string `xml:"sum1:CuotaRecargoEquivalencia,omitempty"`
 }
 
 // Encadenamiento contains chaining information between documents

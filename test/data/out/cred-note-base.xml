@@ -26,6 +26,10 @@
               <sum1:FechaExpedicionFactura>10-01-2022</sum1:FechaExpedicionFactura>
             </sum1:IDFacturaRectificada>
           </sum1:FacturasRectificadas>
+          <sum1:ImporteRectificacion>
+            <sum1:BaseRectificada>-1960.20</sum1:BaseRectificada>
+            <sum1:CuotaRectificada>-340.20</sum1:CuotaRectificada>
+          </sum1:ImporteRectificacion>
           <sum1:DescripcionOperacion>This is a credit note with a standard tax</sum1:DescripcionOperacion>
           <sum1:EmitidaPorTerceroODestinatario>T</sum1:EmitidaPorTerceroODestinatario>
           <sum1:Tercero>
@@ -43,13 +47,13 @@
               <sum1:Impuesto>01</sum1:Impuesto>
               <sum1:ClaveRegimen>01</sum1:ClaveRegimen>
               <sum1:CalificacionOperacion>S1</sum1:CalificacionOperacion>
-              <sum1:TipoImpositivo>21</sum1:TipoImpositivo>
-              <sum1:BaseImponibleOimporteNoSujeto>-1620</sum1:BaseImponibleOimporteNoSujeto>
-              <sum1:CuotaRepercutida>-340.2</sum1:CuotaRepercutida>
+              <sum1:TipoImpositivo>21.0</sum1:TipoImpositivo>
+              <sum1:BaseImponibleOimporteNoSujeto>-1620.00</sum1:BaseImponibleOimporteNoSujeto>
+              <sum1:CuotaRepercutida>-340.20</sum1:CuotaRepercutida>
             </sum1:DetalleDesglose>
           </sum1:Desglose>
-          <sum1:CuotaTotal>-340.2</sum1:CuotaTotal>
-          <sum1:ImporteTotal>-1960.2</sum1:ImporteTotal>
+          <sum1:CuotaTotal>-340.20</sum1:CuotaTotal>
+          <sum1:ImporteTotal>-1960.20</sum1:ImporteTotal>
           <sum1:Encadenamiento>
             <sum1:RegistroAnterior>
               <sum1:IDEmisorFactura>B12345678</sum1:IDEmisorFactura>
@@ -71,7 +75,7 @@
           </sum1:SistemaInformatico>
           <sum1:FechaHoraHusoGenRegistro>2024-11-26T05:00:00+01:00</sum1:FechaHoraHusoGenRegistro>
           <sum1:TipoHuella>01</sum1:TipoHuella>
-          <sum1:Huella>B03877764C7C609DE6C81BCDDA862D686F7EB96855EC88EF89FCEDFB6C9008F1</sum1:Huella>
+          <sum1:Huella>B0A61CC81520D1155A4FADEDB0F6973EAAB923B8DF1D8FF53788ACA5FFCA2A04</sum1:Huella>
         </sum1:RegistroAlta>
       </sum:RegistroFactura>
     </sum:RegFactuSistemaFacturacion>

@@ -35,15 +35,15 @@
               <sum1:Impuesto>01</sum1:Impuesto>
               <sum1:ClaveRegimen>01</sum1:ClaveRegimen>
               <sum1:CalificacionOperacion>S1</sum1:CalificacionOperacion>
-              <sum1:TipoImpositivo>21</sum1:TipoImpositivo>
-              <sum1:BaseImponibleOimporteNoSujeto>1800</sum1:BaseImponibleOimporteNoSujeto>
-              <sum1:CuotaRepercutida>378</sum1:CuotaRepercutida>
+              <sum1:TipoImpositivo>21.0</sum1:TipoImpositivo>
+              <sum1:BaseImponibleOimporteNoSujeto>1800.00</sum1:BaseImponibleOimporteNoSujeto>
+              <sum1:CuotaRepercutida>378.00</sum1:CuotaRepercutida>
               <sum1:TipoRecargoEquivalencia>5.2</sum1:TipoRecargoEquivalencia>
-              <sum1:CuotaRecargoEquivalencia>93.6</sum1:CuotaRecargoEquivalencia>
+              <sum1:CuotaRecargoEquivalencia>93.60</sum1:CuotaRecargoEquivalencia>
             </sum1:DetalleDesglose>
           </sum1:Desglose>
-          <sum1:CuotaTotal>378</sum1:CuotaTotal>
-          <sum1:ImporteTotal>2178</sum1:ImporteTotal>
+          <sum1:CuotaTotal>378.00</sum1:CuotaTotal>
+          <sum1:ImporteTotal>2178.00</sum1:ImporteTotal>
           <sum1:Encadenamiento>
             <sum1:RegistroAnterior>
               <sum1:IDEmisorFactura>B12345678</sum1:IDEmisorFactura>
@@ -65,7 +65,7 @@
           </sum1:SistemaInformatico>
           <sum1:FechaHoraHusoGenRegistro>2024-11-26T05:00:00+01:00</sum1:FechaHoraHusoGenRegistro>
           <sum1:TipoHuella>01</sum1:TipoHuella>
-          <sum1:Huella>8C446C65AD424BBFB8A8E7DC8B3DC331B7FFBBDD08C87D8DEAEAB82E6EBA921F</sum1:Huella>
+          <sum1:Huella>1D8655D3243F182BFD85FE21518AFA1B16F6BEA0ED0B09E12A2A0E5211B7C898</sum1:Huella>
         </sum1:RegistroAlta>
       </sum:RegistroFactura>
     </sum:RegFactuSistemaFacturacion>

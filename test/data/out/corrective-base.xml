@@ -14,23 +14,23 @@
           <sum1:IDFactura>
             <sum1:IDEmisorFactura>B85905495</sum1:IDEmisorFactura>
             <sum1:NumSerieFactura>FR-012</sum1:NumSerieFactura>
-            <sum1:FechaExpedicionFactura>01-02-2022</sum1:FechaExpedicionFactura>
+            <sum1:FechaExpedicionFactura>01-02-2025</sum1:FechaExpedicionFactura>
           </sum1:IDFactura>
           <sum1:NombreRazonEmisor>Provide One S.L.</sum1:NombreRazonEmisor>
           <sum1:TipoFactura>R1</sum1:TipoFactura>
-          <sum1:TipoRectificativa>I</sum1:TipoRectificativa>
+          <sum1:TipoRectificativa>S</sum1:TipoRectificativa>
           <sum1:FacturasRectificadas>
             <sum1:IDFacturaRectificada>
               <sum1:IDEmisorFactura>B85905495</sum1:IDEmisorFactura>
               <sum1:NumSerieFactura>SAMPLE-085</sum1:NumSerieFactura>
-              <sum1:FechaExpedicionFactura>10-01-2022</sum1:FechaExpedicionFactura>
+              <sum1:FechaExpedicionFactura>10-01-2025</sum1:FechaExpedicionFactura>
             </sum1:IDFacturaRectificada>
           </sum1:FacturasRectificadas>
           <sum1:ImporteRectificacion>
-            <sum1:BaseRectificada>-1970.20</sum1:BaseRectificada>
-            <sum1:CuotaRectificada>-340.20</sum1:CuotaRectificada>
+            <sum1:BaseRectificada>1960.20</sum1:BaseRectificada>
+            <sum1:CuotaRectificada>340.20</sum1:CuotaRectificada>
           </sum1:ImporteRectificacion>
-          <sum1:DescripcionOperacion>This is a credit note with an exemption</sum1:DescripcionOperacion>
+          <sum1:DescripcionOperacion>This is a credit note with a standard tax</sum1:DescripcionOperacion>
           <sum1:EmitidaPorTerceroODestinatario>T</sum1:EmitidaPorTerceroODestinatario>
           <sum1:Tercero>
             <sum1:NombreRazon>Provide One S.L.</sum1:NombreRazon>
@@ -39,7 +39,7 @@
           <sum1:Destinatarios>
             <sum1:IDDestinatario>
               <sum1:NombreRazon>Sample Customer</sum1:NombreRazon>
-              <sum1:NIF>54387763P</sum1:NIF>
+              <sum1:NIF>B63272603</sum1:NIF>
             </sum1:IDDestinatario>
           </sum1:Destinatarios>
           <sum1:Desglose>
@@ -48,19 +48,12 @@
               <sum1:ClaveRegimen>01</sum1:ClaveRegimen>
               <sum1:CalificacionOperacion>S1</sum1:CalificacionOperacion>
               <sum1:TipoImpositivo>21.0</sum1:TipoImpositivo>
-              <sum1:BaseImponibleOimporteNoSujeto>-1620.00</sum1:BaseImponibleOimporteNoSujeto>
-              <sum1:CuotaRepercutida>-340.20</sum1:CuotaRepercutida>
-            </sum1:DetalleDesglose>
-            <sum1:DetalleDesglose>
-              <sum1:Impuesto>01</sum1:Impuesto>
-              <sum1:ClaveRegimen>01</sum1:ClaveRegimen>
-              <sum1:OperacionExenta>E1</sum1:OperacionExenta>
-              <sum1:BaseImponibleOimporteNoSujeto>-10.00</sum1:BaseImponibleOimporteNoSujeto>
-              <sum1:CuotaRepercutida>0.00</sum1:CuotaRepercutida>
+              <sum1:BaseImponibleOimporteNoSujeto>1620.00</sum1:BaseImponibleOimporteNoSujeto>
+              <sum1:CuotaRepercutida>340.20</sum1:CuotaRepercutida>
             </sum1:DetalleDesglose>
           </sum1:Desglose>
-          <sum1:CuotaTotal>-340.20</sum1:CuotaTotal>
-          <sum1:ImporteTotal>-1970.20</sum1:ImporteTotal>
+          <sum1:CuotaTotal>340.20</sum1:CuotaTotal>
+          <sum1:ImporteTotal>1960.20</sum1:ImporteTotal>
           <sum1:Encadenamiento>
             <sum1:RegistroAnterior>
               <sum1:IDEmisorFactura>B12345678</sum1:IDEmisorFactura>
@@ -82,7 +75,7 @@
           </sum1:SistemaInformatico>
           <sum1:FechaHoraHusoGenRegistro>2024-11-26T05:00:00+01:00</sum1:FechaHoraHusoGenRegistro>
           <sum1:TipoHuella>01</sum1:TipoHuella>
-          <sum1:Huella>CD81AB4ECCBFC0E5EC14DFB6C351430AE9BE72C233BE9F0D402120DE93B9F129</sum1:Huella>
+          <sum1:Huella>25BF3E08E97C640B6DBFDBFD76A0E03B41C6E433EE30B95D01A2D000ADD25DE4</sum1:Huella>
         </sum1:RegistroAlta>
       </sum:RegistroFactura>
     </sum:RegFactuSistemaFacturacion>

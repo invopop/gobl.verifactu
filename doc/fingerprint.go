@@ -41,8 +41,8 @@ func (d *Envelope) fingerprintAlta(inv *RegistroAlta) error {
 		formatField("NumSerieFactura", inv.IDFactura.NumSerieFactura),
 		formatField("FechaExpedicionFactura", inv.IDFactura.FechaExpedicionFactura),
 		formatField("TipoFactura", inv.TipoFactura),
-		formatField("CuotaTotal", fmt.Sprintf("%g", inv.CuotaTotal)),
-		formatField("ImporteTotal", fmt.Sprintf("%g", inv.ImporteTotal)),
+		formatField("CuotaTotal", inv.CuotaTotal),
+		formatField("ImporteTotal", inv.ImporteTotal),
 		formatField("Huella", h),
 		formatField("FechaHoraHusoGenRegistro", inv.FechaHoraHusoGenRegistro),
 	}

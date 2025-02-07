@@ -12,13 +12,13 @@ import (
 	"github.com/invopop/validation"
 )
 
-var rectificative = []cbc.Code{ // Credit or Debit notes
+var correctiveCodes = []cbc.Code{ // Credit or Debit notes
 	"R1", "R2", "R3", "R4", "R5",
 }
 
 // NewInvoice creates a new VeriFactu registration for an invoice.
 func NewInvoice(inv *bill.Invoice, ts time.Time, r IssuerRole, s *Software) (*RegistroAlta, error) {
-	tf, err := getTaxKey(inv, verifactu.ExtKeyDocType)
+	tf, err := getTaxExtKey(inv, verifactu.ExtKeyDocType)
 	if err != nil {
 		return nil, err
 	}
@@ -44,8 +44,8 @@ func NewInvoice(inv *bill.Invoice, ts time.Time, r IssuerRole, s *Software) (*Re
 		TipoFactura:              tf,
 		DescripcionOperacion:     desc,
 		Desglose:                 dg,
-		CuotaTotal:               newTotalTaxes(inv),
-		ImporteTotal:             newImporteTotal(inv),
+		CuotaTotal:               newTotalTaxes(inv).String(),
+		ImporteTotal:             newImporteTotal(inv).String(),
 		SistemaInformatico:       s,
 		FechaHoraHusoGenRegistro: formatDateTimeZone(ts),
 		TipoHuella:               TipoHuella,
@@ -64,28 +64,34 @@ func NewInvoice(inv *bill.Invoice, ts time.Time, r IssuerRole, s *Software) (*Re
 		reg.FacturaSinIdentifDestinatarioArt61d = "S"
 	}
 
-	if inv.Tax.Ext[verifactu.ExtKeyDocType].In(rectificative...) {
-		// GOBL does not currently have explicit support for Facturas Rectificativas por Sustitución
-		k, err := getTaxKey(inv, verifactu.ExtKeyCorrectionType)
+	if inv.Tax.Ext[verifactu.ExtKeyDocType].In(correctiveCodes...) {
+		k, err := getTaxExtKey(inv, verifactu.ExtKeyCorrectionType)
 		if err != nil {
 			return nil, err
 		}
 		reg.TipoRectificativa = k
-		if inv.Preceding != nil {
-			rs := make([]*FacturaRectificada, 0, len(inv.Preceding))
-			for _, ref := range inv.Preceding {
-				rs = append(rs, &FacturaRectificada{
-					IDFactura: IDFactura{
-						IDEmisorFactura:        inv.Supplier.TaxID.Code.String(),
-						NumSerieFactura:        invoiceNumber(ref.Series, ref.Code),
-						FechaExpedicionFactura: ref.IssueDate.Time().Format("02-01-2006"),
-					},
-				})
+
+		list := make([]*FacturaRectificada, len(inv.Preceding))
+		for i, ref := range inv.Preceding {
+			list[i] = &FacturaRectificada{
+				IDFactura: IDFactura{
+					IDEmisorFactura:        inv.Supplier.TaxID.Code.String(),
+					NumSerieFactura:        invoiceNumber(ref.Series, ref.Code),
+					FechaExpedicionFactura: ref.IssueDate.Time().Format("02-01-2006"),
+				},
 			}
-			reg.FacturasRectificadas = rs
+		}
+		reg.FacturasRectificadas = list
+		reg.ImporteRectificacion = &ImporteRectificacion{
+			BaseRectificada:         inv.Totals.TotalWithTax.String(),
+			CuotaRectificada:        newTotalTaxes(inv).String(),
+			CuotaRecargoRectificado: newTotalSurchargeTaxesString(inv),
 		}
 	}
 
+	// F3 covers the special use-case of full invoices that replace a
+	// previous simplified document. This is the only time the "FacturaSustituida"
+	// field is used.
 	if reg.TipoFactura == "F3" {
 		if inv.Preceding != nil {
 			subs := make([]*FacturaSustituida, 0, len(inv.Preceding))
@@ -135,7 +141,7 @@ func newDescription(notes []*cbc.Note) (string, error) {
 	return "", ErrValidation.WithMessage(fmt.Sprintf("notes: missing note with key '%s'", cbc.NoteKeyGeneral))
 }
 
-func newImporteTotal(inv *bill.Invoice) float64 {
+func newImporteTotal(inv *bill.Invoice) num.Amount {
 	totalWithDiscounts := inv.Totals.Total
 
 	totalTaxes := num.MakeAmount(0, 2)
@@ -145,21 +151,33 @@ func newImporteTotal(inv *bill.Invoice) float64 {
 		}
 	}
 
-	return totalWithDiscounts.Add(totalTaxes).Float64()
+	return totalWithDiscounts.Add(totalTaxes)
 }
 
-func newTotalTaxes(inv *bill.Invoice) float64 {
+func newTotalTaxes(inv *bill.Invoice) num.Amount {
 	totalTaxes := num.MakeAmount(0, 2)
 	for _, category := range inv.Totals.Taxes.Categories {
 		if !category.Retained {
 			totalTaxes = totalTaxes.Add(category.Amount)
 		}
 	}
-
-	return totalTaxes.Float64()
+	return totalTaxes
 }
 
-func getTaxKey(inv *bill.Invoice, k cbc.Key) (string, error) {
+func newTotalSurchargeTaxesString(inv *bill.Invoice) string {
+	t := num.MakeAmount(0, 2)
+	for _, category := range inv.Totals.Taxes.Categories {
+		if !category.Retained && category.Surcharge != nil {
+			t = t.Add(*category.Surcharge)
+		}
+	}
+	if t.IsZero() {
+		return ""
+	}
+	return t.String()
+}
+
+func getTaxExtKey(inv *bill.Invoice, k cbc.Key) (string, error) {
 	if inv.Tax == nil || inv.Tax.Ext == nil || inv.Tax.Ext[k].String() == "" {
 		return "", validation.Errors{
 			"tax": validation.Errors{

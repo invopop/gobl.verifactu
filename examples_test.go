@@ -57,10 +57,7 @@ func TestXMLGeneration(t *testing.T) {
 			require.NoError(t, err)
 
 			if *test.UpdateOut {
-				data, err := td.Bytes()
-				require.NoError(t, err)
-
-				err = os.WriteFile(outPath, data, 0644)
+				err = os.WriteFile(outPath, valData, 0644)
 				require.NoError(t, err)
 
 				return

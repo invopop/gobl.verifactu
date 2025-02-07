@@ -15,7 +15,7 @@ func (doc *Envelope) generateURL(production bool) string {
 	nif := url.QueryEscape(doc.Body.VeriFactu.RegistroFactura.RegistroAlta.IDFactura.IDEmisorFactura)
 	numSerie := url.QueryEscape(doc.Body.VeriFactu.RegistroFactura.RegistroAlta.IDFactura.NumSerieFactura)
 	fecha := url.QueryEscape(doc.Body.VeriFactu.RegistroFactura.RegistroAlta.IDFactura.FechaExpedicionFactura)
-	importe := url.QueryEscape(fmt.Sprintf("%g", doc.Body.VeriFactu.RegistroFactura.RegistroAlta.ImporteTotal))
+	importe := url.QueryEscape(doc.Body.VeriFactu.RegistroFactura.RegistroAlta.ImporteTotal)
 
 	if production {
 		return fmt.Sprintf("%s&nif=%s&numserie=%s&fecha=%s&importe=%s", prodURL, nif, numSerie, fecha, importe)
