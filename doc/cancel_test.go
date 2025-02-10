@@ -13,8 +13,12 @@ import (
 func TestNewRegistroAnulacion(t *testing.T) {
 	t.Run("basic", func(t *testing.T) {
 		inv := test.LoadInvoice("cred-note-base.json")
-
-		d, err := doc.NewVerifactu(inv, time.Now(), doc.IssuerRoleSupplier, nil, true)
+		opts := &doc.Options{
+			Software:   nil,
+			IssuerRole: doc.IssuerRoleSupplier,
+			Timestamp:  time.Now(),
+		}
+		d, err := doc.NewCancel(inv, opts)
 		require.NoError(t, err)
 
 		ra := d.Body.VeriFactu.RegistroFactura.RegistroAnulacion

@@ -36,9 +36,35 @@ func init() {
 	}
 }
 
-// NewVerifactu creates a new VeriFactu document
-func NewVerifactu(inv *bill.Invoice, ts time.Time, r IssuerRole, s *Software, c bool) (*Envelope, error) {
+// Options defines the set of options to be used when building
+// a new VeriFactu document.
+type Options struct {
+	// Software defines the software used to generate the document.
+	Software *Software
 
+	// IssuerRole defines the role of the issuer in the document.
+	IssuerRole IssuerRole
+
+	// Representative defines the legal representative of the entity
+	// legally obliged to issue the invoice, usually the supplier.
+	Representative *Obligado
+
+	// Timestamp defines the current time to use when signing the
+	// document.
+	Timestamp time.Time
+}
+
+// NewInvoice creates a new VeriFactu invoice document from the provided GOBL Invoice.
+func NewInvoice(inv *bill.Invoice, opts *Options) (*Envelope, error) {
+	return newEnvelope(inv, opts, false)
+}
+
+// NewCancel creates a new VeriFactu cancellation document from the provided GOBL Invoice.
+func NewCancel(inv *bill.Invoice, opts *Options) (*Envelope, error) {
+	return newEnvelope(inv, opts, true)
+}
+
+func newEnvelope(inv *bill.Invoice, opts *Options, cancel bool) (*Envelope, error) {
 	env := &Envelope{
 		XMLNs: EnvNamespace,
 		SUM:   SUM,
@@ -57,6 +83,9 @@ func NewVerifactu(inv *bill.Invoice, ts time.Time, r IssuerRole, s *Software, c 
 		},
 		RegistroFactura: &RegistroFactura{},
 	}
+	if opts.Representative != nil {
+		doc.Cabecera.Representante = opts.Representative
+	}
 
 	if inv.Type == bill.InvoiceTypeCreditNote {
 		// GOBL credit and debit notes' amounts represent the amounts to be credited to the customer,
@@ -69,14 +98,11 @@ func NewVerifactu(inv *bill.Invoice, ts time.Time, r IssuerRole, s *Software, c 
 		}
 	}
 
-	if c {
-		reg, err := NewCancel(inv, ts, s)
-		if err != nil {
-			return nil, err
-		}
+	if cancel {
+		reg := newCancel(inv, opts.Timestamp, opts.Software)
 		doc.RegistroFactura.RegistroAnulacion = reg
 	} else {
-		reg, err := NewInvoice(inv, ts, r, s)
+		reg, err := newInvoice(inv, opts.Timestamp, opts.IssuerRole, opts.Software)
 		if err != nil {
 			return nil, err
 		}

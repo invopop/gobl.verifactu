@@ -16,8 +16,8 @@ var correctiveCodes = []cbc.Code{ // Credit or Debit notes
 	"R1", "R2", "R3", "R4", "R5",
 }
 
-// NewInvoice creates a new VeriFactu registration for an invoice.
-func NewInvoice(inv *bill.Invoice, ts time.Time, r IssuerRole, s *Software) (*RegistroAlta, error) {
+// newInvoice creates a new VeriFactu registration for an invoice.
+func newInvoice(inv *bill.Invoice, ts time.Time, r IssuerRole, s *Software) (*RegistroAlta, error) {
 	tf, err := getTaxExtKey(inv, verifactu.ExtKeyDocType)
 	if err != nil {
 		return nil, err

@@ -28,7 +28,13 @@ func (c *Client) Convert(env *gobl.Envelope) (*doc.Envelope, error) {
 		return nil, errors.New("only spanish invoices are supported")
 	}
 
-	out, err := doc.NewVerifactu(inv, c.CurrentTime(), c.issuerRole, c.software, false)
+	opts := &doc.Options{
+		Software:       c.software,
+		IssuerRole:     c.issuerRole,
+		Timestamp:      c.CurrentTime(),
+		Representative: c.rep,
+	}
+	out, err := doc.NewInvoice(inv, opts)
 	if err != nil {
 		return nil, err
 	}
