@@ -15,6 +15,7 @@ type Client struct {
 	software   *doc.Software
 	env        gateways.Environment
 	issuerRole doc.IssuerRole
+	rep        *doc.Obligado
 	curTime    time.Time
 	cert       *xmldsig.Certificate
 	gw         *gateways.Connection
@@ -32,10 +33,58 @@ func WithCertificate(cert *xmldsig.Certificate) Option {
 }
 
 // WithCurrentTime defines the current time to use when generating the VeriFactu
-// document. Useful for testing.
+// document. Only useful for testing.
 func WithCurrentTime(curTime time.Time) Option {
 	return func(c *Client) {
 		c.curTime = curTime
+	}
+}
+
+// WithSupplierIssuer set the issuer type to supplier.
+func WithSupplierIssuer() Option {
+	return func(c *Client) {
+		c.issuerRole = doc.IssuerRoleSupplier
+	}
+}
+
+// WithRepresentative can be used to define a legal representative
+// of the entity legally obliged to issue the invoice, usually the
+// supplier. This may be required when the supplier's digital
+// certificate is not available.
+func WithRepresentative(name, nif string) Option {
+	return func(c *Client) {
+		c.rep = &doc.Obligado{
+			NombreRazon: name,
+			NIF:         nif,
+		}
+	}
+}
+
+// WithCustomerIssuer set the issuer type to customer.
+func WithCustomerIssuer() Option {
+	return func(c *Client) {
+		c.issuerRole = doc.IssuerRoleCustomer
+	}
+}
+
+// WithThirdPartyIssuer set the issuer type to third party.
+func WithThirdPartyIssuer() Option {
+	return func(c *Client) {
+		c.issuerRole = doc.IssuerRoleThirdParty
+	}
+}
+
+// InProduction defines the connection to use the production environment.
+func InProduction() Option {
+	return func(c *Client) {
+		c.env = gateways.EnvironmentProduction
+	}
+}
+
+// InSandbox defines the connection to use the testing environment.
+func InSandbox() Option {
+	return func(c *Client) {
+		c.env = gateways.EnvironmentSandbox
 	}
 }
 
@@ -66,41 +115,6 @@ func New(software *doc.Software, opts ...Option) (*Client, error) {
 	}
 
 	return c, nil
-}
-
-// WithSupplierIssuer set the issuer type to supplier.
-func WithSupplierIssuer() Option {
-	return func(c *Client) {
-		c.issuerRole = doc.IssuerRoleSupplier
-	}
-}
-
-// WithCustomerIssuer set the issuer type to customer.
-func WithCustomerIssuer() Option {
-	return func(c *Client) {
-		c.issuerRole = doc.IssuerRoleCustomer
-	}
-}
-
-// WithThirdPartyIssuer set the issuer type to third party.
-func WithThirdPartyIssuer() Option {
-	return func(c *Client) {
-		c.issuerRole = doc.IssuerRoleThirdParty
-	}
-}
-
-// InProduction defines the connection to use the production environment.
-func InProduction() Option {
-	return func(c *Client) {
-		c.env = gateways.EnvironmentProduction
-	}
-}
-
-// InSandbox defines the connection to use the testing environment.
-func InSandbox() Option {
-	return func(c *Client) {
-		c.env = gateways.EnvironmentSandbox
-	}
 }
 
 // Post will send the document to the VeriFactu gateway.

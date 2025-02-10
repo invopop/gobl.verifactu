@@ -2,7 +2,7 @@
 
 Go library to convert [GOBL](https://github.com/invopop/gobl) invoices into VeriFactu declarations and send them to the AEAT (Agencia Estatal de Administración Tributaria) web services. This library assumes that clients will handle a local database of previous invoices in order to comply with the local requirements of chaining all invoices together.
 
-Copyright [Invopop Ltd.](https://invopop.com) 2023. Released publicly under the [GNU Affero General Public License v3.0](LICENSE). For commercial licenses please contact the [dev team at invopop](mailto:dev@invopop.com). For contributions to this library to be accepted, we will require you to accept transferring your copyright to Invopop Ltd.
+Released under the Apache 2.0 [LICENSE](https://github.com/invopop/gobl/blob/main/LICENSE), Copyright 2021-2025 [Invopop S.L.](https://invopop.com).
 
 ## Source
 
