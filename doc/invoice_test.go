@@ -36,8 +36,8 @@ func TestNewRegistroAlta(t *testing.T) {
 		assert.Equal(t, "Invopop S.L.", reg.NombreRazonEmisor)
 		assert.Equal(t, "F1", reg.TipoFactura)
 		assert.Equal(t, "This is a sample invoice with a standard tax", reg.DescripcionOperacion)
-		assert.Equal(t, float64(378), reg.CuotaTotal)
-		assert.Equal(t, float64(2178), reg.ImporteTotal)
+		assert.Equal(t, "378.00", reg.CuotaTotal)
+		assert.Equal(t, "2178.00", reg.ImporteTotal)
 
 		require.Len(t, reg.Destinatarios, 1)
 		dest := reg.Destinatarios[0].IDDestinatario
@@ -49,9 +49,9 @@ func TestNewRegistroAlta(t *testing.T) {
 		assert.Equal(t, "01", desg.Impuesto)
 		assert.Equal(t, "01", desg.ClaveRegimen)
 		assert.Equal(t, "S1", desg.CalificacionOperacion)
-		assert.Equal(t, float64(21), desg.TipoImpositivo)
-		assert.Equal(t, float64(1800), desg.BaseImponibleOImporteNoSujeto)
-		assert.Equal(t, float64(378), desg.CuotaRepercutida)
+		assert.Equal(t, "21.0", desg.TipoImpositivo)
+		assert.Equal(t, "1800.00", desg.BaseImponibleOImporteNoSujeto)
+		assert.Equal(t, "378.00", desg.CuotaRepercutida)
 	})
 	t.Run("should handle simplified invoices", func(t *testing.T) {
 		inv := test.LoadInvoice("inv-base.json")
@@ -79,10 +79,10 @@ func TestNewRegistroAlta(t *testing.T) {
 		assert.Equal(t, "B85905495", rectified.IDFactura.IDEmisorFactura)
 		assert.Equal(t, "SAMPLE-085", rectified.IDFactura.NumSerieFactura)
 		assert.Equal(t, "10-01-2022", rectified.IDFactura.FechaExpedicionFactura)
-		assert.Equal(t, float64(-1620), reg.Desglose.DetalleDesglose[0].BaseImponibleOImporteNoSujeto)
-		assert.Equal(t, float64(-340.2), reg.Desglose.DetalleDesglose[0].CuotaRepercutida)
-		assert.Equal(t, float64(-340.2), reg.CuotaTotal)
-		assert.Equal(t, float64(-1960.2), reg.ImporteTotal)
+		assert.Equal(t, "-1620.00", reg.Desglose.DetalleDesglose[0].BaseImponibleOImporteNoSujeto)
+		assert.Equal(t, "-340.20", reg.Desglose.DetalleDesglose[0].CuotaRepercutida)
+		assert.Equal(t, "-340.20", reg.CuotaTotal)
+		assert.Equal(t, "-1960.20", reg.ImporteTotal)
 	})
 
 	t.Run("should handle substitution invoices", func(t *testing.T) {

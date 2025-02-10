@@ -35,11 +35,12 @@
               <sum1:Impuesto>01</sum1:Impuesto>
               <sum1:ClaveRegimen>01</sum1:ClaveRegimen>
               <sum1:CalificacionOperacion>S2</sum1:CalificacionOperacion>
-              <sum1:BaseImponibleOimporteNoSujeto>1800</sum1:BaseImponibleOimporteNoSujeto>
+              <sum1:BaseImponibleOimporteNoSujeto>1800.00</sum1:BaseImponibleOimporteNoSujeto>
+              <sum1:CuotaRepercutida>0.00</sum1:CuotaRepercutida>
             </sum1:DetalleDesglose>
           </sum1:Desglose>
-          <sum1:CuotaTotal>0</sum1:CuotaTotal>
-          <sum1:ImporteTotal>1800</sum1:ImporteTotal>
+          <sum1:CuotaTotal>0.00</sum1:CuotaTotal>
+          <sum1:ImporteTotal>1800.00</sum1:ImporteTotal>
           <sum1:Encadenamiento>
             <sum1:RegistroAnterior>
               <sum1:IDEmisorFactura>B12345678</sum1:IDEmisorFactura>
@@ -61,7 +62,7 @@
           </sum1:SistemaInformatico>
           <sum1:FechaHoraHusoGenRegistro>2024-11-26T05:00:00+01:00</sum1:FechaHoraHusoGenRegistro>
           <sum1:TipoHuella>01</sum1:TipoHuella>
-          <sum1:Huella>E843054910E72C301EB910265BC4903BBE523F342F93341A8704F830A747F333</sum1:Huella>
+          <sum1:Huella>33EB0226555150EC9112076448949D83E952071A17AB95943FD301B1F761F2B2</sum1:Huella>
         </sum1:RegistroAlta>
       </sum:RegistroFactura>
     </sum:RegFactuSistemaFacturacion>

@@ -36,8 +36,8 @@ func newDesglose(inv *bill.Invoice) (*Desglose, error) {
 // https://www.agenciatributaria.es/static_files/AEAT_Desarrolladores/EEDD/IVA/VERI-FACTU/Validaciones_Errores_Veri-Factu.pdf
 func buildDetalleDesglose(c *tax.CategoryTotal, r *tax.RateTotal) (*DetalleDesglose, error) {
 	detalle := &DetalleDesglose{
-		BaseImponibleOImporteNoSujeto: r.Base.Float64(),
-		CuotaRepercutida:              r.Amount.Float64(),
+		BaseImponibleOImporteNoSujeto: r.Base.String(),
+		CuotaRepercutida:              r.Amount.String(),
 	}
 
 	cat, ok := taxCategoryCodeMap[c.Code]
@@ -62,11 +62,11 @@ func buildDetalleDesglose(c *tax.CategoryTotal, r *tax.RateTotal) (*DetalleDesgl
 	}
 
 	if detalle.Impuesto == "02" || detalle.Impuesto == "05" || detalle.ClaveRegimen == "06" {
-		detalle.BaseImponibleACoste = r.Base.Float64()
+		detalle.BaseImponibleACoste = r.Base.String()
 	}
 
 	if r.Percent != nil {
-		detalle.TipoImpositivo = r.Percent.Amount().Float64()
+		detalle.TipoImpositivo = r.Percent.StringWithoutSymbol()
 	}
 
 	if detalle.OperacionExenta == "" && detalle.CalificacionOperacion == "" {
@@ -74,8 +74,8 @@ func buildDetalleDesglose(c *tax.CategoryTotal, r *tax.RateTotal) (*DetalleDesgl
 	}
 
 	if r.Key.Has(es.TaxRateEquivalence) {
-		detalle.TipoRecargoEquivalencia = r.Surcharge.Percent.Amount().Float64()
-		detalle.CuotaRecargoEquivalencia = r.Surcharge.Amount.Float64()
+		detalle.TipoRecargoEquivalencia = r.Surcharge.Percent.StringWithoutSymbol()
+		detalle.CuotaRecargoEquivalencia = r.Surcharge.Amount.String()
 	}
 
 	return detalle, nil
