@@ -188,19 +188,6 @@ func newTotalTaxes(inv *bill.Invoice) num.Amount {
 	return totalTaxes
 }
 
-func newTotalSurchargeTaxesString(inv *bill.Invoice) string {
-	t := num.MakeAmount(0, 2)
-	for _, category := range inv.Totals.Taxes.Categories {
-		if !category.Retained && category.Surcharge != nil {
-			t = t.Add(*category.Surcharge)
-		}
-	}
-	if t.IsZero() {
-		return ""
-	}
-	return t.String()
-}
-
 func getTaxExtKey(inv *bill.Invoice, k cbc.Key) (string, error) {
 	if inv.Tax == nil || inv.Tax.Ext == nil || inv.Tax.Ext[k].String() == "" {
 		return "", validation.Errors{
