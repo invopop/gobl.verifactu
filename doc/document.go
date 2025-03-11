@@ -2,6 +2,8 @@ package doc
 
 import (
 	"encoding/xml"
+
+	"github.com/invopop/gobl/num"
 )
 
 // SUM is the namespace for the main VeriFactu schema
@@ -142,9 +144,9 @@ type FacturaSustituida struct {
 
 // ImporteRectificacion contains rectification amounts
 type ImporteRectificacion struct {
-	BaseRectificada         string `xml:"sum1:BaseRectificada"`
-	CuotaRectificada        string `xml:"sum1:CuotaRectificada"`
-	CuotaRecargoRectificado string `xml:"sum1:CuotaRecargoRectificado,omitempty"`
+	BaseRectificada         num.Amount `xml:"sum1:BaseRectificada"`
+	CuotaRectificada        num.Amount `xml:"sum1:CuotaRectificada"`
+	CuotaRecargoRectificado num.Amount `xml:"sum1:CuotaRecargoRectificado,omitempty"`
 }
 
 // Party represents a in the document, covering fields Generador, Tercero and IDDestinatario

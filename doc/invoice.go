@@ -8,7 +8,10 @@ import (
 	"github.com/invopop/gobl/addons/es/verifactu"
 	"github.com/invopop/gobl/bill"
 	"github.com/invopop/gobl/cbc"
+	"github.com/invopop/gobl/currency"
 	"github.com/invopop/gobl/num"
+	"github.com/invopop/gobl/org"
+	"github.com/invopop/gobl/tax"
 	"github.com/invopop/validation"
 )
 
@@ -72,7 +75,11 @@ func newInvoice(inv *bill.Invoice, ts time.Time, r IssuerRole, s *Software) (*Re
 		reg.TipoRectificativa = k
 
 		list := make([]*FacturaRectificada, len(inv.Preceding))
+		taxes := new(tax.Total)
 		for i, ref := range inv.Preceding {
+			if ref.Tax != nil {
+				taxes = taxes.Merge(ref.Tax)
+			}
 			list[i] = &FacturaRectificada{
 				IDFactura: IDFactura{
 					IDEmisorFactura:        inv.Supplier.TaxID.Code.String(),
@@ -82,11 +89,7 @@ func newInvoice(inv *bill.Invoice, ts time.Time, r IssuerRole, s *Software) (*Re
 			}
 		}
 		reg.FacturasRectificadas = list
-		reg.ImporteRectificacion = &ImporteRectificacion{
-			BaseRectificada:         inv.Totals.TotalWithTax.String(),
-			CuotaRectificada:        newTotalTaxes(inv).String(),
-			CuotaRecargoRectificado: newTotalSurchargeTaxesString(inv),
-		}
+		reg.ImporteRectificacion = newImporteRectificacion(taxes)
 	}
 
 	// F3 covers the special use-case of full invoices that replace a
@@ -132,13 +135,13 @@ func invoiceNumber(series cbc.Code, code cbc.Code) string {
 	return fmt.Sprintf("%s-%s", series, code)
 }
 
-func newDescription(notes []*cbc.Note) (string, error) {
+func newDescription(notes []*org.Note) (string, error) {
 	for _, note := range notes {
-		if note.Key == cbc.NoteKeyGeneral {
+		if note.Key == org.NoteKeyGeneral {
 			return note.Text, nil
 		}
 	}
-	return "", ErrValidation.WithMessage(fmt.Sprintf("notes: missing note with key '%s'", cbc.NoteKeyGeneral))
+	return "", ErrValidation.WithMessage(fmt.Sprintf("notes: missing note with key '%s'", org.NoteKeyGeneral))
 }
 
 func newImporteTotal(inv *bill.Invoice) num.Amount {
@@ -152,6 +155,27 @@ func newImporteTotal(inv *bill.Invoice) num.Amount {
 	}
 
 	return totalWithDiscounts.Add(totalTaxes)
+}
+
+func newImporteRectificacion(taxes *tax.Total) *ImporteRectificacion {
+	zero := currency.EUR.Def().Zero()
+	ir := &ImporteRectificacion{
+		BaseRectificada:         zero,
+		CuotaRectificada:        zero,
+		CuotaRecargoRectificado: zero,
+	}
+	for _, cat := range taxes.Categories {
+		if cat.Code == tax.CategoryVAT {
+			for _, rate := range cat.Rates {
+				ir.BaseRectificada = ir.BaseRectificada.Add(rate.Base)
+			}
+			ir.CuotaRectificada = ir.CuotaRectificada.Add(cat.Amount)
+			if cat.Surcharge != nil {
+				ir.CuotaRecargoRectificado = ir.CuotaRecargoRectificado.Add(*cat.Surcharge)
+			}
+		}
+	}
+	return ir
 }
 
 func newTotalTaxes(inv *bill.Invoice) num.Amount {
