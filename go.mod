@@ -8,7 +8,7 @@ toolchain go1.22.1
 
 require (
 	github.com/go-resty/resty/v2 v2.15.3
-	github.com/invopop/gobl v0.207.0
+	github.com/invopop/gobl v0.212.1
 	github.com/invopop/validation v0.8.0
 	github.com/invopop/xmldsig v0.10.0
 	github.com/joho/godotenv v1.5.1
@@ -16,7 +16,7 @@ require (
 	github.com/nbio/xml v0.0.0-20241028124227-eac89c735a80
 	github.com/spf13/cobra v1.8.1
 	github.com/spf13/pflag v1.0.5
-	github.com/stretchr/testify v1.8.4
+	github.com/stretchr/testify v1.9.0
 )
 
 require (
@@ -37,7 +37,7 @@ require (
 	github.com/square/go-jose/v3 v3.0.0-20200630053402-0a67ce9b0693 // indirect
 	github.com/wk8/go-ordered-map/v2 v2.1.8 // indirect
 	golang.org/x/crypto v0.31.0 // indirect
-	golang.org/x/net v0.29.0 // indirect
+	golang.org/x/net v0.33.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	software.sslmate.com/src/go-pkcs12 v0.4.0 // indirect
 )

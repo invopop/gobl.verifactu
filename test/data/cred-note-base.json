@@ -4,7 +4,7 @@
 		"uuid": "8a51fd30-2a27-11ee-be56-0242ac120002",
 		"dig": {
 			"alg": "sha256",
-			"val": "9c40da45b9c066e38ce938250b723dd1a443e2ab00508d8cfe74c16827b42e48"
+			"val": "8435475ae9d6c972a6bef14a3006b900895152fe3528eb2bde01a6a26eeb6699"
 		}
 	},
 	"doc": {
@@ -24,7 +24,24 @@
 				"type": "standard",
 				"issue_date": "2022-01-10",
 				"series": "SAMPLE",
-				"code": "085"
+				"code": "085",
+				"tax": {
+					"categories": [
+						{
+							"code": "VAT",
+							"rates": [
+								{
+									"key": "standard",
+									"base": "1620.00",
+									"percent": "21.0%",
+									"amount": "340.20"
+								}
+							],
+							"amount": "340.20"
+						}
+					],
+					"sum": "340.20"
+				}
 			}
 		],
 		"tax": {

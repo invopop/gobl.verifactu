@@ -44,7 +44,7 @@ func TestBreakdownConversion(t *testing.T) {
 			{
 				Quantity: num.MakeAmount(1, 0),
 				Item: &org.Item{
-					Price: num.MakeAmount(100, 0),
+					Price: num.NewAmount(100, 0),
 				},
 				Taxes: tax.Set{
 					&tax.Combo{
@@ -71,7 +71,7 @@ func TestBreakdownConversion(t *testing.T) {
 			{
 				Quantity: num.MakeAmount(1, 0),
 				Item: &org.Item{
-					Price: num.MakeAmount(100, 0),
+					Price: num.NewAmount(100, 0),
 				},
 				Taxes: tax.Set{
 					&tax.Combo{
@@ -87,7 +87,7 @@ func TestBreakdownConversion(t *testing.T) {
 			{
 				Quantity: num.MakeAmount(1, 0),
 				Item: &org.Item{
-					Price: num.MakeAmount(50, 0),
+					Price: num.NewAmount(50, 0),
 				},
 				Taxes: tax.Set{
 					&tax.Combo{
@@ -120,7 +120,7 @@ func TestBreakdownConversion(t *testing.T) {
 			{
 				Quantity: num.MakeAmount(1, 0),
 				Item: &org.Item{
-					Price: num.MakeAmount(100, 0),
+					Price: num.NewAmount(100, 0),
 				},
 				Taxes: tax.Set{
 					&tax.Combo{
@@ -150,7 +150,7 @@ func TestBreakdownConversion(t *testing.T) {
 			{
 				Quantity: num.MakeAmount(1, 0),
 				Item: &org.Item{
-					Price: num.MakeAmount(100, 0),
+					Price: num.NewAmount(100, 0),
 				},
 				Taxes: tax.Set{
 					&tax.Combo{
@@ -182,7 +182,7 @@ func TestBreakdownConversion(t *testing.T) {
 			{
 				Quantity: num.MakeAmount(1, 0),
 				Item: &org.Item{
-					Price: num.MakeAmount(100, 0),
+					Price: num.NewAmount(100, 0),
 				},
 				Taxes: tax.Set{
 					&tax.Combo{
@@ -211,7 +211,7 @@ func TestBreakdownConversion(t *testing.T) {
 			{
 				Quantity: num.MakeAmount(1, 0),
 				Item: &org.Item{
-					Price: num.MakeAmount(1000, 0),
+					Price: num.NewAmount(1000, 0),
 				},
 				Taxes: tax.Set{
 					&tax.Combo{
