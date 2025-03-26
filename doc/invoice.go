@@ -146,14 +146,15 @@ func newDescription(notes []*org.Note) (string, error) {
 
 func newImporteTotal(inv *bill.Invoice) num.Amount {
 	totalWithDiscounts := inv.Totals.Total
-
+	if inv.Totals.Taxes == nil {
+		return totalWithDiscounts
+	}
 	totalTaxes := num.MakeAmount(0, 2)
 	for _, category := range inv.Totals.Taxes.Categories {
 		if !category.Retained {
 			totalTaxes = totalTaxes.Add(category.Amount)
 		}
 	}
-
 	return totalWithDiscounts.Add(totalTaxes)
 }
 
@@ -180,6 +181,9 @@ func newImporteRectificacion(taxes *tax.Total) *ImporteRectificacion {
 
 func newTotalTaxes(inv *bill.Invoice) num.Amount {
 	totalTaxes := num.MakeAmount(0, 2)
+	if inv.Totals.Taxes == nil {
+		return totalTaxes
+	}
 	for _, category := range inv.Totals.Taxes.Categories {
 		if !category.Retained {
 			totalTaxes = totalTaxes.Add(category.Amount)
