@@ -1,14 +1,14 @@
 module github.com/invopop/gobl.verifactu
 
-go 1.22
+go 1.23.0
 
-toolchain go1.22.1
+toolchain go1.23.4
 
 // replace github.com/invopop/gobl => ../gobl
 
 require (
 	github.com/go-resty/resty/v2 v2.15.3
-	github.com/invopop/gobl v0.212.1
+	github.com/invopop/gobl v0.213.2
 	github.com/invopop/validation v0.8.0
 	github.com/invopop/xmldsig v0.10.0
 	github.com/joho/godotenv v1.5.1
@@ -36,8 +36,8 @@ require (
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/square/go-jose/v3 v3.0.0-20200630053402-0a67ce9b0693 // indirect
 	github.com/wk8/go-ordered-map/v2 v2.1.8 // indirect
-	golang.org/x/crypto v0.31.0 // indirect
-	golang.org/x/net v0.33.0 // indirect
+	golang.org/x/crypto v0.36.0 // indirect
+	golang.org/x/net v0.37.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	software.sslmate.com/src/go-pkcs12 v0.4.0 // indirect
 )

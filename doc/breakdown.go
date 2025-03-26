@@ -17,8 +17,11 @@ var taxCategoryCodeMap = map[cbc.Code]string{
 }
 
 func newDesglose(inv *bill.Invoice) (*Desglose, error) {
-	desglose := &Desglose{}
+	if inv.Totals == nil || inv.Totals.Taxes == nil {
+		return nil, nil
+	}
 
+	desglose := &Desglose{}
 	for _, c := range inv.Totals.Taxes.Categories {
 		for _, r := range c.Rates {
 			detalleDesglose, err := buildDetalleDesglose(c, r)
