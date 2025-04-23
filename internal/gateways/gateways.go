@@ -3,6 +3,8 @@ package gateways
 
 import (
 	"context"
+	"crypto/tls"
+	"crypto/x509"
 	"fmt"
 	"net/http"
 	"os"
@@ -34,10 +36,18 @@ type Connection struct {
 
 // New instantiates and configures a new connection to the VeriFactu gateway.
 func New(env Environment, cert *xmldsig.Certificate) (*Connection, error) {
+	// Prepare the tls configuration
 	tlsConf, err := cert.TLSAuthConfig()
 	if err != nil {
 		return nil, doc.ErrValidation.WithMessage(fmt.Errorf("preparing TLS config: %v", err).Error())
 	}
+	certs, err := x509.SystemCertPool()
+	if err != nil {
+		return nil, fmt.Errorf("preparing cert pool: %w", err)
+	}
+	tlsConf.RootCAs = certs
+	tlsConf.Renegotiation = tls.RenegotiateOnceAsClient
+
 	c := new(Connection)
 	c.client = resty.New()
 
