@@ -7,7 +7,7 @@ import (
 
 const (
 	testURL = "https://prewww2.aeat.es/wlpl/TIKE-CONT/ValidarQR?"
-	prodURL = "https://www2.agenciatributaria.gob.es/wlpl/TIKE-CONT/ValidarQR?nif=89890001K&numserie=12345678-G33&fecha=01-09-2024&importe=241.4"
+	prodURL = "https://www2.agenciatributaria.gob.es/wlpl/TIKE-CONT/ValidarQR?"
 )
 
 // generateURL generates the encoded URL code with parameters.
