@@ -10,10 +10,18 @@ import (
 	"github.com/invopop/gobl/tax"
 )
 
+// L1 tax codes
+const (
+	taxCodeVAT   = "01"
+	taxCodeIPSI  = "02"
+	taxCodeIGIC  = "03"
+	taxCodeOther = "05"
+)
+
 var taxCategoryCodeMap = map[cbc.Code]string{
-	tax.CategoryVAT:    "01",
-	es.TaxCategoryIGIC: "02",
-	es.TaxCategoryIPSI: "03",
+	tax.CategoryVAT:    taxCodeVAT,
+	es.TaxCategoryIGIC: taxCodeIGIC,
+	es.TaxCategoryIPSI: taxCodeIPSI,
 }
 
 func newDesglose(inv *bill.Invoice) (*Desglose, error) {
@@ -23,6 +31,9 @@ func newDesglose(inv *bill.Invoice) (*Desglose, error) {
 
 	desglose := &Desglose{}
 	for _, c := range inv.Totals.Taxes.Categories {
+		if c.Retained {
+			continue
+		}
 		for _, r := range c.Rates {
 			detalleDesglose, err := buildDetalleDesglose(c, r)
 			if err != nil {
@@ -45,7 +56,7 @@ func buildDetalleDesglose(c *tax.CategoryTotal, r *tax.RateTotal) (*DetalleDesgl
 
 	cat, ok := taxCategoryCodeMap[c.Code]
 	if !ok {
-		detalle.Impuesto = "05"
+		detalle.Impuesto = taxCodeOther
 	} else {
 		detalle.Impuesto = cat
 	}
@@ -64,7 +75,7 @@ func buildDetalleDesglose(c *tax.CategoryTotal, r *tax.RateTotal) (*DetalleDesgl
 		detalle.CalificacionOperacion = r.Ext.Get(verifactu.ExtKeyOpClass).String()
 	}
 
-	if detalle.Impuesto == "02" || detalle.Impuesto == "05" || detalle.ClaveRegimen == "06" {
+	if detalle.Impuesto == taxCodeIPSI || detalle.Impuesto == taxCodeOther || detalle.ClaveRegimen == "06" {
 		detalle.BaseImponibleACoste = r.Base.String()
 	}
 
