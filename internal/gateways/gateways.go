@@ -43,11 +43,11 @@ func New(env Environment, cert *xmldsig.Certificate) (*Connection, error) {
 
 	switch env {
 	case EnvironmentProduction:
-		return nil, doc.ErrValidation.WithMessage("production environment not available yet")
+		c.client.SetBaseURL(ProductionBaseURL)
 	default:
 		c.client.SetBaseURL(TestingBaseURL)
 	}
-	tlsConf.InsecureSkipVerify = true
+	// tlsConf.InsecureSkipVerify = true
 	c.client.SetTLSClientConfig(tlsConf)
 	c.client.SetDebug(os.Getenv("DEBUG") == "true")
 	return c, nil
