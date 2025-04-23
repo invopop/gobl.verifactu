@@ -200,7 +200,7 @@ func TestBreakdownConversion(t *testing.T) {
 		require.NoError(t, err)
 		assert.Equal(t, "100.00", d.Body.VeriFactu.RegistroFactura.RegistroAlta.Desglose.DetalleDesglose[0].BaseImponibleOImporteNoSujeto)
 		assert.Equal(t, "10.00", d.Body.VeriFactu.RegistroFactura.RegistroAlta.Desglose.DetalleDesglose[0].CuotaRepercutida)
-		assert.Equal(t, "03", d.Body.VeriFactu.RegistroFactura.RegistroAlta.Desglose.DetalleDesglose[0].Impuesto)
+		assert.Equal(t, "02", d.Body.VeriFactu.RegistroFactura.RegistroAlta.Desglose.DetalleDesglose[0].Impuesto)
 		assert.Empty(t, d.Body.VeriFactu.RegistroFactura.RegistroAlta.Desglose.DetalleDesglose[0].ClaveRegimen)
 		assert.Equal(t, "S1", d.Body.VeriFactu.RegistroFactura.RegistroAlta.Desglose.DetalleDesglose[0].CalificacionOperacion)
 	})
