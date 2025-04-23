@@ -20,8 +20,8 @@ const (
 
 var taxCategoryCodeMap = map[cbc.Code]string{
 	tax.CategoryVAT:    taxCodeVAT,
-	es.TaxCategoryIGIC: taxCodeIGIC,
 	es.TaxCategoryIPSI: taxCodeIPSI,
+	es.TaxCategoryIGIC: taxCodeIGIC,
 }
 
 func newDesglose(inv *bill.Invoice) (*Desglose, error) {
