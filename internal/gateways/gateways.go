@@ -21,8 +21,7 @@ const (
 	EnvironmentProduction Environment = "production"
 	EnvironmentSandbox    Environment = "sandbox"
 
-	// Production environment not published yet
-	ProductionBaseURL = "xxxxxxxx"
+	ProductionBaseURL = "https://www1.agenciatributaria.gob.es/wlpl/TIKE-CONT/ws/SistemaFacturacion/VerifactuSOAP"
 	TestingBaseURL    = "https://prewww1.aeat.es/wlpl/TIKE-CONT/ws/SistemaFacturacion/VerifactuSOAP"
 
 	correctStatus = "Correcto"
