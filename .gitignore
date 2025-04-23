@@ -26,11 +26,4 @@ go.work.sum
 *.password
 *.txt
 
-# certs
-*.cer
-*.p12
-*.key
-*.pem
-
-./test/certs
 /gobl.verifactu

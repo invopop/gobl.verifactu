@@ -3,6 +3,8 @@ package gateways
 
 import (
 	"context"
+	"crypto/tls"
+	"crypto/x509"
 	"fmt"
 	"net/http"
 	"os"
@@ -21,8 +23,7 @@ const (
 	EnvironmentProduction Environment = "production"
 	EnvironmentSandbox    Environment = "sandbox"
 
-	// Production environment not published yet
-	ProductionBaseURL = "xxxxxxxx"
+	ProductionBaseURL = "https://www1.agenciatributaria.gob.es/wlpl/TIKE-CONT/ws/SistemaFacturacion/VerifactuSOAP"
 	TestingBaseURL    = "https://prewww1.aeat.es/wlpl/TIKE-CONT/ws/SistemaFacturacion/VerifactuSOAP"
 
 	correctStatus = "Correcto"
@@ -35,20 +36,28 @@ type Connection struct {
 
 // New instantiates and configures a new connection to the VeriFactu gateway.
 func New(env Environment, cert *xmldsig.Certificate) (*Connection, error) {
+	// Prepare the tls configuration
 	tlsConf, err := cert.TLSAuthConfig()
 	if err != nil {
 		return nil, doc.ErrValidation.WithMessage(fmt.Errorf("preparing TLS config: %v", err).Error())
 	}
+	certs, err := x509.SystemCertPool()
+	if err != nil {
+		return nil, fmt.Errorf("preparing cert pool: %w", err)
+	}
+	tlsConf.RootCAs = certs
+	tlsConf.Renegotiation = tls.RenegotiateOnceAsClient
+
 	c := new(Connection)
 	c.client = resty.New()
 
 	switch env {
 	case EnvironmentProduction:
-		return nil, doc.ErrValidation.WithMessage("production environment not available yet")
+		c.client.SetBaseURL(ProductionBaseURL)
 	default:
 		c.client.SetBaseURL(TestingBaseURL)
 	}
-	tlsConf.InsecureSkipVerify = true
+	// tlsConf.InsecureSkipVerify = true
 	c.client.SetTLSClientConfig(tlsConf)
 	c.client.SetDebug(os.Getenv("DEBUG") == "true")
 	return c, nil
