@@ -26,7 +26,10 @@ const (
 	ProductionBaseURL = "https://www1.agenciatributaria.gob.es/wlpl/TIKE-CONT/ws/SistemaFacturacion/VerifactuSOAP"
 	TestingBaseURL    = "https://prewww1.aeat.es/wlpl/TIKE-CONT/ws/SistemaFacturacion/VerifactuSOAP"
 
-	correctStatus = "Correcto"
+	statusCorrect            = "Correcto"
+	statusAcceptedWithErrors = "AceptadoConErrores"
+	statusCancelled          = "Anulada"
+	statusIncorrect          = "Incorrecto"
 )
 
 // Connection defines what is expected from a connection to a gateway.
@@ -87,14 +90,16 @@ func (c *Connection) post(ctx context.Context, path string, payload []byte) erro
 	if out.Body.Fault != nil {
 		return doc.ErrValidation.WithMessage(out.Body.Fault.Message).WithCode(out.Body.Fault.Code)
 	}
-	if out.Body.Respuesta != nil {
-		if out.Body.Respuesta.EstadoEnvio != correctStatus {
-			err := doc.ErrValidation.WithCode(strconv.Itoa(res.StatusCode()))
-			if len(out.Body.Respuesta.RespuestaLinea) > 0 {
-				e1 := out.Body.Respuesta.RespuestaLinea[0]
-				err = err.WithMessage(e1.DescripcionErrorRegistro).WithCode(e1.CodigoErrorRegistro)
-			}
-			return err
+	if r := out.Body.Respuesta; r != nil {
+		switch r.Status() {
+		case statusCorrect, statusCancelled:
+			// All good.
+			return nil
+		case statusAcceptedWithErrors:
+			// Provide a warning message
+			return doc.ErrWarning.WithCode(r.Code()).WithMessage(r.Message())
+		default:
+			return doc.ErrValidation.WithCode(r.Code()).WithMessage(r.Message())
 		}
 	}
 
