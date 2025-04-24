@@ -55,3 +55,27 @@ type Cabecera struct {
 		NIF         string `xml:"NIF"`
 	} `xml:"ObligadoEmision"`
 }
+
+// Status provides the status of the response.
+func (r *Response) Status() string {
+	return r.EstadoEnvio
+}
+
+// Code returns the code provided by the remote service.
+func (r *Response) Code() string {
+	if len(r.RespuestaLinea) > 0 {
+		return r.RespuestaLinea[0].CodigoErrorRegistro
+	}
+	return ""
+}
+
+// Message provides a message body, if any.
+func (r *Response) Message() string {
+	if len(r.RespuestaLinea) > 0 {
+		txt := r.RespuestaLinea[0].DescripcionErrorRegistro
+		if txt != "" {
+			return r.Status() + ": " + txt
+		}
+	}
+	return r.Status()
+}

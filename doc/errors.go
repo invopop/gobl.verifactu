@@ -10,6 +10,7 @@ var (
 	ErrConnection = newError("connection")
 	ErrValidation = newError("validation")
 	ErrDuplicate  = newError("duplicate")
+	ErrWarning    = newError("warning")
 )
 
 // Standard error responses.
