@@ -1,5 +1,11 @@
 name: Test Go
-on: [push]
+on:
+  push:
+    tags:
+      - v*
+    branches:
+      - main
+  pull_request:
 jobs:
   lint-test-build:
     name: Test, Build
