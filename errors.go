@@ -1,4 +1,4 @@
-package doc
+package verifactu
 
 import (
 	"errors"
@@ -29,8 +29,8 @@ type Error struct {
 	cause   error
 }
 
-// NewErrorFrom attempts to wrap the provided error into the Error type.
-func NewErrorFrom(err error) *Error {
+// newErrorFrom attempts to wrap the provided error into the Error type.
+func newErrorFrom(err error) *Error {
 	if err == nil {
 		return nil
 	}
