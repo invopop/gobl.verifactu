@@ -1,10 +1,10 @@
-package doc_test
+package verifactu_test
 
 import (
 	"testing"
 	"time"
 
-	"github.com/invopop/gobl.verifactu/doc"
+	verifactu "github.com/invopop/gobl.verifactu"
 	"github.com/invopop/gobl.verifactu/test"
 	"github.com/invopop/gobl/org"
 	"github.com/invopop/gobl/tax"
@@ -15,25 +15,26 @@ import (
 func TestNewParty(t *testing.T) {
 	ts, err := time.Parse(time.RFC3339, "2022-02-01T04:00:00Z")
 	require.NoError(t, err)
-	opts := &doc.Options{
-		Software:   &doc.Software{},
-		IssuerRole: doc.IssuerRoleSupplier,
-		Timestamp:  ts,
-	}
+	vc, err := verifactu.New(
+		nil, // no software
+		verifactu.WithSupplierIssuer(),
+		verifactu.WithCurrentTime(ts),
+	)
+	require.NoError(t, err)
 
 	t.Run("with tax ID", func(t *testing.T) {
-		inv := test.LoadInvoice("inv-base.json")
-		d, err := doc.NewInvoice(inv, opts)
+		env := test.LoadEnvelope("inv-base.json")
+		req, err := vc.RegisterInvoice(env, nil)
 		require.NoError(t, err)
 
-		p := d.Body.VeriFactu.RegistroFactura.RegistroAlta.Destinatarios[0].IDDestinatario
+		p := req.Destinatarios[0].IDDestinatario
 		assert.Equal(t, "Sample Consumer", p.NombreRazon)
 		assert.Equal(t, "B63272603", p.NIF)
 		assert.Nil(t, p.IDOtro)
 	})
 
 	t.Run("with passport", func(t *testing.T) {
-		inv := test.LoadInvoice("inv-base.json")
+		env, inv := test.LoadInvoice("inv-base.json")
 		inv.Customer = &org.Party{
 			Name: "Mr. Pass Port",
 			Identities: []*org.Identity{
@@ -43,11 +44,10 @@ func TestNewParty(t *testing.T) {
 				},
 			},
 		}
-
-		d, err := doc.NewInvoice(inv, opts)
+		req, err := vc.RegisterInvoice(env, nil)
 		require.NoError(t, err)
 
-		p := d.Body.VeriFactu.RegistroFactura.RegistroAlta.Destinatarios[0].IDDestinatario
+		p := req.Destinatarios[0].IDDestinatario
 		assert.Equal(t, "Mr. Pass Port", p.NombreRazon)
 		assert.Empty(t, p.NIF)
 		assert.NotNil(t, p.IDOtro)
@@ -56,7 +56,7 @@ func TestNewParty(t *testing.T) {
 	})
 
 	t.Run("with foreign identity", func(t *testing.T) {
-		inv := test.LoadInvoice("inv-base.json")
+		env, inv := test.LoadInvoice("inv-base.json")
 		inv.Customer = &org.Party{
 			Name: "Foreign Company",
 			TaxID: &tax.Identity{
@@ -65,10 +65,10 @@ func TestNewParty(t *testing.T) {
 			},
 		}
 
-		d, err := doc.NewInvoice(inv, opts)
+		req, err := vc.RegisterInvoice(env, nil)
 		require.NoError(t, err)
 
-		p := d.Body.VeriFactu.RegistroFactura.RegistroAlta.Destinatarios[0].IDDestinatario
+		p := req.Destinatarios[0].IDDestinatario
 
 		assert.Equal(t, "Foreign Company", p.NombreRazon)
 		assert.Empty(t, p.NIF)
@@ -78,12 +78,12 @@ func TestNewParty(t *testing.T) {
 	})
 
 	t.Run("with no identifiers", func(t *testing.T) {
-		inv := test.LoadInvoice("inv-base.json")
+		env, inv := test.LoadInvoice("inv-base.json")
 		inv.Customer = &org.Party{
 			Name: "Simple Company",
 		}
 
-		_, err := doc.NewInvoice(inv, opts)
-		require.Error(t, err)
+		_, err := vc.RegisterInvoice(env, nil)
+		require.ErrorContains(t, err, "customer with tax ID or other identity is required")
 	})
 }

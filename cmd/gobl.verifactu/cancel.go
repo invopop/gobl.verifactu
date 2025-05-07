@@ -8,7 +8,7 @@ import (
 
 	"github.com/invopop/gobl"
 	verifactu "github.com/invopop/gobl.verifactu"
-	"github.com/invopop/gobl.verifactu/doc"
+	"github.com/invopop/gobl/bill"
 	"github.com/invopop/xmldsig"
 	"github.com/spf13/cobra"
 )
@@ -70,44 +70,48 @@ func (c *cancelOpts) runE(cmd *cobra.Command, args []string) error {
 		opts = append(opts, verifactu.InSandbox())
 	}
 
-	tc, err := verifactu.New(c.software(), opts...)
+	vc, err := verifactu.New(c.software(), opts...)
 	if err != nil {
 		return err
 	}
 
-	td, err := tc.GenerateCancel(env)
-	if err != nil {
-		return err
-	}
-
-	var prev *doc.ChainData
+	var prev *verifactu.ChainData
 	if c.previous != "" {
-		prev = new(doc.ChainData)
+		prev = new(verifactu.ChainData)
 		if err := json.Unmarshal([]byte(c.previous), prev); err != nil {
 			return err
 		}
 	}
 
-	err = tc.FingerprintCancel(td, prev)
+	req, err := vc.CancelInvoice(env, prev)
 	if err != nil {
-		return err
+		return fmt.Errorf("generating invoice cancellation: %w", err)
 	}
 
-	tdBytes, err := td.Bytes()
+	inv := env.Extract().(*bill.Invoice)
+	ir, err := vc.NewInvoiceRequest(inv.Supplier)
 	if err != nil {
-		return err
+		return fmt.Errorf("preparing invoice request: %w", err)
+	}
+	ir.AddCancellation(req)
+
+	res, err := vc.SendInvoiceRequest(cmd.Context(), ir)
+	if err != nil {
+		return fmt.Errorf("sending cancellation: %w", err)
 	}
 
-	err = tc.Post(cmd.Context(), tdBytes)
-	if err != nil {
-		return err
-	}
-
-	data, err := json.Marshal(td.ChainDataCancel())
+	data, err := json.Marshal(ir.Lines[len(ir.Lines)-1].ChainData())
 	if err != nil {
 		return err
 	}
 	fmt.Printf("Generated document with fingerprint: \n%s\n", string(data))
+
+	// Response
+	rd, err := res.Bytes()
+	if err != nil {
+		return fmt.Errorf("failed to marshal response: %w", err)
+	}
+	fmt.Print(string(rd))
 
 	return nil
 }

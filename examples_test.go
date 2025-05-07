@@ -9,7 +9,6 @@ import (
 	"time"
 
 	verifactu "github.com/invopop/gobl.verifactu"
-	"github.com/invopop/gobl.verifactu/doc"
 	"github.com/invopop/gobl.verifactu/test"
 
 	"github.com/stretchr/testify/require"
@@ -35,31 +34,28 @@ func TestXMLGeneration(t *testing.T) {
 
 		t.Run(name, func(t *testing.T) {
 			env := test.LoadEnvelope(example)
-			td, err := c.Convert(env)
-			require.NoError(t, err)
 
 			// Example Data to Test the Fingerprint.
-			prev := &doc.ChainData{
+			prev := &verifactu.ChainData{
 				IDIssuer:    "B12345678",
 				NumSeries:   "SAMPLE-001",
 				IssueDate:   "26-11-2024",
 				Fingerprint: "0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF",
 			}
 
-			err = c.Fingerprint(td, prev)
+			ir, err := c.NewEnvelopeInvoiceRequest(env, prev)
 			require.NoError(t, err)
 
 			outPath := test.Path("test", "data", "out",
 				strings.TrimSuffix(example, ".json")+".xml",
 			)
 
-			valData, err := td.BytesIndent()
+			data, err := ir.Envelop().BytesIndent()
 			require.NoError(t, err)
 
 			if *test.UpdateOut {
-				err = os.WriteFile(outPath, valData, 0644)
+				err = os.WriteFile(outPath, data, 0644)
 				require.NoError(t, err)
-
 				return
 			}
 
@@ -67,7 +63,7 @@ func TestXMLGeneration(t *testing.T) {
 
 			require.False(t, os.IsNotExist(err), msgMissingOutFile, filepath.Base(outPath))
 			require.NoError(t, err)
-			require.Equal(t, string(expected), string(valData), msgUnmatchingOutFile, filepath.Base(outPath))
+			require.Equal(t, string(expected), string(data), msgUnmatchingOutFile, filepath.Base(outPath))
 		})
 	}
 }
@@ -78,7 +74,7 @@ func loadClient() (*verifactu.Client, error) {
 		return nil, err
 	}
 
-	return verifactu.New(&doc.Software{
+	return verifactu.New(&verifactu.Software{
 		NombreRazon:                 "My Software",
 		NIF:                         "12345678A",
 		NombreSistemaInformatico:    "My Software",

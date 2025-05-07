@@ -4,7 +4,7 @@ import (
 	"io"
 	"os"
 
-	"github.com/invopop/gobl.verifactu/doc"
+	verifactu "github.com/invopop/gobl.verifactu"
 	_ "github.com/joho/godotenv/autoload"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
@@ -53,8 +53,8 @@ func (o *rootOpts) prepareFlags(f *pflag.FlagSet) {
 	f.BoolVarP(&o.production, "production", "p", false, "Production environment")
 }
 
-func (o *rootOpts) software() *doc.Software {
-	return &doc.Software{
+func (o *rootOpts) software() *verifactu.Software {
+	return &verifactu.Software{
 		NIF:                         o.swNIF,
 		NombreRazon:                 o.swNombreRazon,
 		Version:                     o.swVersion,
