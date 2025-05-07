@@ -61,20 +61,10 @@ func (req *InvoiceRequest) addRow(rf *InvoiceRequestLine) {
 // invoice request.
 func (line *InvoiceRequestLine) ChainData() *ChainData {
 	if r := line.Registration; r != nil {
-		return &ChainData{
-			IDIssuer:    r.IDFactura.IDEmisorFactura,
-			NumSeries:   r.IDFactura.NumSerieFactura,
-			IssueDate:   r.IDFactura.FechaExpedicionFactura,
-			Fingerprint: r.Huella,
-		}
+		return r.ChainData()
 	}
 	if r := line.Cancellation; r != nil {
-		return &ChainData{
-			IDIssuer:    r.IDFactura.IDEmisorFactura,
-			NumSeries:   r.IDFactura.NumSerieFactura,
-			IssueDate:   r.IDFactura.FechaExpedicionFactura,
-			Fingerprint: r.Huella,
-		}
+		return r.ChainData()
 	}
 	return nil
 }

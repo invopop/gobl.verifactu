@@ -68,6 +68,23 @@ type InvoiceResponseLineDuplicated struct {
 	Description string `xml:"DescripcionErrorRegistro,omitempty"`
 }
 
+// Error provides a specific error repsonse for the individual line so that it
+// can be handled correctly by the consumer.
+func (r *InvoiceResponseLine) Error() error {
+	switch r.Status {
+	case StatusCorrect, StatusCancelled:
+		// This is the response with want
+		return nil
+	case StatusAcceptedWithErrors:
+		return ErrWarning.WithCode(r.Code).WithMessage(r.Message())
+	default:
+		if r.Duplicated != nil {
+			return ErrDuplicate
+		}
+		return ErrValidation.WithCode(r.Code).WithMessage(r.Message())
+	}
+}
+
 // Message provides a message body, if any.
 func (r *InvoiceResponseLine) Message() string {
 	txt := r.Description
@@ -75,24 +92,6 @@ func (r *InvoiceResponseLine) Message() string {
 		return r.Status + ": " + txt
 	}
 	return r.Status
-}
-
-// Accepted will return true if the line was accepted.
-func (r *InvoiceResponseLine) Accepted() bool {
-	switch r.Status {
-	case StatusCorrect, StatusCancelled, StatusAcceptedWithErrors:
-		return true
-	}
-	return false
-}
-
-// Warning will return a warning error if the line was accepted, but
-// contains additional details that should be investigated.
-func (r *InvoiceResponseLine) Warning() error {
-	if r.Status == StatusAcceptedWithErrors {
-		return ErrWarning.WithCode(r.Code).WithMessage(r.Message())
-	}
-	return nil
 }
 
 // Bytes prepares an indendented XML document suitable for persistence.

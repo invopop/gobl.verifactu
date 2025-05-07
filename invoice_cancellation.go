@@ -82,3 +82,13 @@ func (c *InvoiceCancellation) fingerprint(prev *ChainData) {
 
 	c.Huella = strings.ToUpper(hex.EncodeToString(hash.Sum(nil)))
 }
+
+// ChainData provides the details for this cancellation entry.
+func (r *InvoiceCancellation) ChainData() *ChainData {
+	return &ChainData{
+		IDIssuer:    r.IDFactura.IDEmisorFactura,
+		NumSeries:   r.IDFactura.NumSerieFactura,
+		IssueDate:   r.IDFactura.FechaExpedicionFactura,
+		Fingerprint: r.Huella,
+	}
+}

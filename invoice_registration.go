@@ -346,6 +346,16 @@ func (r *InvoiceRegistration) fingerprint(prev *ChainData) {
 	r.Huella = strings.ToUpper(hex.EncodeToString(hash.Sum(nil)))
 }
 
+// ChainData provides the details for this registration entry.
+func (r *InvoiceRegistration) ChainData() *ChainData {
+	return &ChainData{
+		IDIssuer:    r.IDFactura.IDEmisorFactura,
+		NumSeries:   r.IDFactura.NumSerieFactura,
+		IssueDate:   r.IDFactura.FechaExpedicionFactura,
+		Fingerprint: r.Huella,
+	}
+}
+
 // Bytes prepares an indendented XML document suitable for persistence.
 func (r *InvoiceRegistration) Bytes() ([]byte, error) {
 	return toBytesIndent(r)
