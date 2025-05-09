@@ -36,7 +36,6 @@
               <sum1:ClaveRegimen>01</sum1:ClaveRegimen>
               <sum1:OperacionExenta>E1</sum1:OperacionExenta>
               <sum1:BaseImponibleOimporteNoSujeto>1800.00</sum1:BaseImponibleOimporteNoSujeto>
-              <sum1:CuotaRepercutida>0.00</sum1:CuotaRepercutida>
             </sum1:DetalleDesglose>
           </sum1:Desglose>
           <sum1:CuotaTotal>0.00</sum1:CuotaTotal>

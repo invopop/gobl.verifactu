@@ -63,6 +63,7 @@ func TestBreakdownConversion(t *testing.T) {
 		assert.Equal(t, "100.00", d.Body.VeriFactu.RegistroFactura.RegistroAlta.Desglose.DetalleDesglose[0].BaseImponibleOImporteNoSujeto)
 		assert.Equal(t, "01", d.Body.VeriFactu.RegistroFactura.RegistroAlta.Desglose.DetalleDesglose[0].Impuesto)
 		assert.Equal(t, "E1", d.Body.VeriFactu.RegistroFactura.RegistroAlta.Desglose.DetalleDesglose[0].OperacionExenta)
+		assert.Empty(t, d.Body.VeriFactu.RegistroFactura.RegistroAlta.Desglose.DetalleDesglose[0].CuotaRepercutida)
 	})
 
 	t.Run("multiple-tax-rates", func(t *testing.T) {

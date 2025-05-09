@@ -51,7 +51,6 @@ func newDesglose(inv *bill.Invoice) (*Desglose, error) {
 func buildDetalleDesglose(c *tax.CategoryTotal, r *tax.RateTotal) (*DetalleDesglose, error) {
 	detalle := &DetalleDesglose{
 		BaseImponibleOImporteNoSujeto: r.Base.String(),
-		CuotaRepercutida:              r.Amount.String(),
 	}
 
 	cat, ok := taxCategoryCodeMap[c.Code]
@@ -73,6 +72,7 @@ func buildDetalleDesglose(c *tax.CategoryTotal, r *tax.RateTotal) (*DetalleDesgl
 		detalle.OperacionExenta = r.Ext[verifactu.ExtKeyExempt].String()
 	} else if r.Ext.Has(verifactu.ExtKeyOpClass) {
 		detalle.CalificacionOperacion = r.Ext.Get(verifactu.ExtKeyOpClass).String()
+		detalle.CuotaRepercutida = r.Amount.String()
 	}
 
 	if detalle.Impuesto == taxCodeIPSI || detalle.Impuesto == taxCodeOther || detalle.ClaveRegimen == "06" {
