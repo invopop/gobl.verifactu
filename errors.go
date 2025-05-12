@@ -29,28 +29,6 @@ type Error struct {
 	cause   error
 }
 
-// newErrorFrom attempts to wrap the provided error into the Error type.
-func newErrorFrom(err error) *Error {
-	if err == nil {
-		return nil
-	}
-	if e, ok := err.(*Error); ok {
-		return e
-	} else if e, ok := err.(*Error); ok {
-		return &Error{
-			key:     e.Key(),
-			code:    e.Code(),
-			message: e.Message(),
-			cause:   e,
-		}
-	}
-	return &Error{
-		key:     "internal",
-		message: err.Error(),
-		cause:   err,
-	}
-}
-
 // Error produces a human readable error message.
 func (e *Error) Error() string {
 	out := []string{e.key}

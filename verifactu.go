@@ -309,12 +309,3 @@ func (c *Client) addRegistrationStamps(env *gobl.Envelope, reg *InvoiceRegistrat
 		Value:    reg.Huella,
 	})
 }
-
-func hasExistingStamps(env *gobl.Envelope) bool {
-	for _, stamp := range env.Head.Stamps {
-		if stamp.Provider.In(verifactu.StampQR) {
-			return true
-		}
-	}
-	return false
-}

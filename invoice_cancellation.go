@@ -84,11 +84,11 @@ func (c *InvoiceCancellation) fingerprint(prev *ChainData) {
 }
 
 // ChainData provides the details for this cancellation entry.
-func (r *InvoiceCancellation) ChainData() *ChainData {
+func (c *InvoiceCancellation) ChainData() *ChainData {
 	return &ChainData{
-		IDIssuer:    r.IDFactura.IDEmisorFactura,
-		NumSeries:   r.IDFactura.NumSerieFactura,
-		IssueDate:   r.IDFactura.FechaExpedicionFactura,
-		Fingerprint: r.Huella,
+		IDIssuer:    c.IDFactura.IDEmisorFactura,
+		NumSeries:   c.IDFactura.NumSerieFactura,
+		IssueDate:   c.IDFactura.FechaExpedicionFactura,
+		Fingerprint: c.Huella,
 	}
 }

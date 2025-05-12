@@ -29,7 +29,7 @@ type RemisionVoluntaria struct {
 	Incidencia        string `xml:"sum1:Incidencia,omitempty"`
 }
 
-// InvoiceReuqestLine contains either an invoice registration or cancellation
+// InvoiceRequestLine contains either an invoice registration or cancellation
 type InvoiceRequestLine struct {
 	Registration *InvoiceRegistration `xml:"sum1:RegistroAlta,omitempty"`
 	Cancellation *InvoiceCancellation `xml:"sum1:RegistroAnulacion,omitempty"`
