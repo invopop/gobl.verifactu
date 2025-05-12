@@ -10,7 +10,7 @@ import (
 const TipoHuella = "01"
 
 // ChainData contains the fields of this invoice that will be
-// required for fingerprinting the next invoice. JSON tags are
+// required for fingerprinting the _next_ invoice. JSON tags are
 // provided to help with serialization.
 type ChainData struct {
 	IDIssuer    string `json:"issuer"`

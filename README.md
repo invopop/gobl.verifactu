@@ -6,6 +6,8 @@ Released under the Apache 2.0 [LICENSE](https://github.com/invopop/gobl/blob/mai
 
 ## Source
 
+English is used for the principal actions inside this package, however a large amount of code is still in Spanish. We're working on translating, but this project may still be combersome to use if you do not understand Spanish.
+
 The main resources used in this module include:
 
 - [VeriFactu documentation](https://www.agenciatributaria.es/AEAT.desarrolladores/Desarrolladores/_menu_/Documentacion/Sistemas_Informaticos_de_Facturacion_y_Sistemas_VERI_FACTU/Sistemas_Informaticos_de_Facturacion_y_Sistemas_VERI_FACTU.html)
@@ -31,7 +33,6 @@ import (
 
 	"github.com/invopop/gobl"
 	verifactu "github.com/invopop/gobl.verifactu"
-	"github.com/invopop/gobl.verifactu/doc"
 	"github.com/invopop/xmldsig"
 )
 
@@ -68,51 +69,47 @@ func main() {
 	opts := []verifactu.Option{
 		verifactu.WithCertificate(cert),
 		verifactu.WithSupplierIssuer(), // The issuer can be either the supplier, the customer or a third party
-		verifactu.InTesting(),          // Use the testing environment, as the production endpoint is not yet published
+		verifactu.InTesting(),          // Use the testing environment
 	}
-
-	tc, err := verifactu.New(software, opts...)
+	vc, err := verifactu.New(software, opts...)
 	if err != nil {
 		panic(err)
 	}
 
-	// Convert the GOBL envelope to a VeriFactu document
-	td, err := tc.Convert(env)
+	// Prepare previous chain data. Ideally you want to do this from
+	// your own database.
+	prevData, err := os.ReadFile("./path/to/previous_invoice.json")
+	if err != nil {
+		panic(err)
+	}
+	prev := new(verifactu.ChainData)
+	if err := json.Unmarshal([]byte(prevData), prev); err != nil {
+		panic(err)
+	}
+
+	// Generate a registration document and update the envelope.
+	reg, err := vc.RegisterInvoice(env)
 	if err != nil {
 		panic(err)
 	}
 
-	// Prepare the previous document chain data
-	previous, err := os.ReadFile("./path/to/previous_invoice.json")
+	inv := env.(*bill.Invoice)
+	ir, err := vc.InvoiceRequest(inv.Supplier)
 	if err != nil {
 		panic(err)
 	}
-
-	prev := new(doc.ChainData)
-	if err := json.Unmarshal([]byte(previous), prev); err != nil {
-		panic(err)
-	}
-
-	// Create the document fingerprint based on the previous document chain
-	err = tc.Fingerprint(td, prev)
-	if err != nil {
-		panic(err)
-	}
-
-	// Add the QR code to the document
-	if err := tc.AddQR(td, env); err != nil {
-		panic(err)
-	}
+	inv.AddRegistrattion(reg)
 
 	// Send the document to the tax agency
-	err = tc.Post(ctx, td)
+	out, err = vc.SendInvoiceRequest(ctx, ir)
 	if err != nil {
 		panic(err)
 	}
+	line := out.Lines[0]
 
 	// Print the data to be used as previous document chain for the next invoice
 	// Persist the data somewhere to be used by the next invoice
-	cd, err := json.Marshal(td.ChainData())
+	cd, err := json.Marshal(line.ChainData())
 	if err != nil {
 		panic(err)
 	}

@@ -142,14 +142,54 @@ func (c *Client) Sandbox() bool {
 	return c.env == EnvironmentSandbox
 }
 
-// RegisterInvoice prepares a new registration document from the provided invoice
-// inside the GOBL envelope. It will fingerprint and update the envelope with
-// the chaining hash and QR code. The Registration document can be persisted for
-// sending later.
-func (c *Client) RegisterInvoice(env *gobl.Envelope, prev *ChainData) (*InvoiceRegistration, error) {
-	if hasExistingStamps(env) {
-		return nil, ErrAlreadyProcessed
+// GenerateOption defines what is expected from an option used in generate
+// methods.
+type GenerateOption func(*generateOptions)
+
+type generateOptions struct {
+	amendment          string
+	previouslyRejected string
+	noPriorRecord      string
+}
+
+// Amended indicates that the incoming document is an amendment of a previous
+// document, known in Spanish as "Subsanación". If incorrect data was sent, this
+// will allow the new document to replace the old.
+func Amended() GenerateOption {
+	return func(o *generateOptions) {
+		o.amendment = "S"
 	}
+}
+
+// PreviouslyRejected indicates that an earlier attempt to process the document
+// was rejected and thus never received by the verifactu system. This option
+// automatically implies the Amended option when supported by the document.
+func PreviouslyRejected() GenerateOption {
+	return func(o *generateOptions) {
+		o.amendment = "S"
+		o.previouslyRejected = "X"
+	}
+}
+
+// NoPriorRecord is used with cancellation documents when no previous attempt was
+// made to issue an invoice via Verifactu, or if the document to cancel was rejected.
+func NoPriorRecord() GenerateOption {
+	return func(o *generateOptions) {
+		o.previouslyRejected = ""
+		o.noPriorRecord = "S"
+	}
+}
+
+// RegisterInvoice prepares a new registration document from the provided invoice
+// inside the GOBL envelope. It will fingerprint and update the registration with
+// the chaining hash and QR code. The resulting document can be persisted for
+// sending later.
+func (c *Client) RegisterInvoice(env *gobl.Envelope, prev *ChainData, opts ...GenerateOption) (*InvoiceRegistration, error) {
+	o := new(generateOptions)
+	for _, cb := range opts {
+		cb(o)
+	}
+
 	inv, ok := env.Extract().(*bill.Invoice)
 	if !ok {
 		return nil, ErrOnlyInvoices
@@ -170,6 +210,8 @@ func (c *Client) RegisterInvoice(env *gobl.Envelope, prev *ChainData) (*InvoiceR
 	if err != nil {
 		return nil, err
 	}
+	reg.Subsanacion = o.amendment
+	reg.RechazoPrevio = o.previouslyRejected
 	reg.fingerprint(prev)
 	c.addRegistrationStamps(env, reg)
 
@@ -179,12 +221,20 @@ func (c *Client) RegisterInvoice(env *gobl.Envelope, prev *ChainData) (*InvoiceR
 // CancelInvoice builds a cancellation message from the provided document and previous
 // chain data. Note that the cancellation does not require Hash information of the last,
 // invoice, and instead only requires the previous chain entry.
-func (c *Client) CancelInvoice(env *gobl.Envelope, prev *ChainData) (*InvoiceCancellation, error) {
+func (c *Client) CancelInvoice(env *gobl.Envelope, prev *ChainData, opts ...GenerateOption) (*InvoiceCancellation, error) {
 	inv, ok := env.Extract().(*bill.Invoice)
 	if !ok {
 		return nil, ErrOnlyInvoices
 	}
+
+	o := new(generateOptions)
+	for _, cb := range opts {
+		cb(o)
+	}
+
 	can := newInvoiceCancellation(inv, c.CurrentTime(), c.software)
+	can.RechazoPrevio = o.previouslyRejected
+	can.SinRegistroPrevio = o.noPriorRecord
 	can.fingerprint(prev)
 
 	return can, nil
