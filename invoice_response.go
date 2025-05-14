@@ -10,6 +10,15 @@ const (
 	StatusIncorrect          string = "Incorrecto"
 )
 
+// OpType defines the type of operation that was performed.
+type OpType string
+
+// Operation types.
+const (
+	OpTypeRegistration OpType = "Alta"
+	OpTypeCancellation OpType = "Anulacion"
+)
+
 // InvoiceResponse defines the response fields from the VeriFactu gateway.
 type InvoiceResponse struct {
 	XMLName xml.Name `xml:"RespuestaRegFactuSistemaFacturacion"`
@@ -45,7 +54,7 @@ type InvoiceResponseLine struct {
 		Date   string `xml:"FechaExpedicionFactura"`
 	} `xml:"IDFactura"`
 	Operation struct {
-		Type             string `xml:"TipoOperacion"`
+		Type             OpType `xml:"TipoOperacion"`
 		Correction       string `xml:"Subsanacion,omitempty"`
 		RejectedPrevious string `xml:"RechazoPrevio,omitempty"`
 		NoPrevious       string `xml:"SinRegistroPrevio,omitempty"`
