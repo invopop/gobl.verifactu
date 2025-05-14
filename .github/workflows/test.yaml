@@ -8,7 +8,7 @@ on:
   pull_request:
 jobs:
   lint-test-build:
-    name: Test, Build
+    name: Test
     runs-on: ubuntu-latest
 
     steps:
@@ -28,6 +28,3 @@ jobs:
 
       - name: Test
         run: go test -tags unit -race ./...
-
-      - name: Build
-        run: go build -v ./...

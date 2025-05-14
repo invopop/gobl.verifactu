@@ -69,16 +69,15 @@ func LoadEnvelope(file string) *gobl.Envelope {
 	return env
 }
 
-// LoadInvoice grabs the gobl envelope and attempts to extract the invoice payload
-func LoadInvoice(name string) *bill.Invoice {
+// LoadInvoice will load the GOBL Envelope and extract the invoice, returning
+// both the Envelope and Invoice objects.
+func LoadInvoice(name string) (*gobl.Envelope, *bill.Invoice) {
 	env := LoadEnvelope(name)
-
 	inv, ok := env.Extract().(*bill.Invoice)
 	if !ok {
 		panic("envelope does not contain an invoice")
 	}
-
-	return inv
+	return env, inv
 }
 
 // Path joins the provided elements to the project root

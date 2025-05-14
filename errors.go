@@ -1,4 +1,4 @@
-package doc
+package verifactu
 
 import (
 	"errors"
@@ -27,28 +27,6 @@ type Error struct {
 	code    string
 	message string
 	cause   error
-}
-
-// NewErrorFrom attempts to wrap the provided error into the Error type.
-func NewErrorFrom(err error) *Error {
-	if err == nil {
-		return nil
-	}
-	if e, ok := err.(*Error); ok {
-		return e
-	} else if e, ok := err.(*Error); ok {
-		return &Error{
-			key:     e.Key(),
-			code:    e.Code(),
-			message: e.Message(),
-			cause:   e,
-		}
-	}
-	return &Error{
-		key:     "internal",
-		message: err.Error(),
-		cause:   err,
-	}
 }
 
 // Error produces a human readable error message.

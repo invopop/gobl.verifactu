@@ -8,7 +8,6 @@ import (
 
 	"github.com/invopop/gobl"
 	verifactu "github.com/invopop/gobl.verifactu"
-	"github.com/invopop/gobl.verifactu/doc"
 	"github.com/invopop/xmldsig"
 	"github.com/spf13/cobra"
 )
@@ -71,46 +70,41 @@ func (c *sendOpts) runE(cmd *cobra.Command, args []string) error {
 
 	tc, err := verifactu.New(c.software(), opts...)
 	if err != nil {
-		return err
+		return fmt.Errorf("preparing software: %w", err)
 	}
 
-	td, err := tc.Convert(env)
-	if err != nil {
-		return err
-	}
-
-	var prev *doc.ChainData
+	var prev *verifactu.ChainData
 	if c.previous != "" {
-		prev = new(doc.ChainData)
+		prev = new(verifactu.ChainData)
 		if err := json.Unmarshal([]byte(c.previous), prev); err != nil {
-			return err
+			return fmt.Errorf("chain data: %w", err)
 		}
 	}
 
-	err = tc.Fingerprint(td, prev)
+	ir, err := tc.NewEnvelopeInvoiceRequest(env, prev)
+	if err != nil {
+		return fmt.Errorf("envelope invoice request: %w", err)
+	}
+
+	res, err := tc.SendInvoiceRequest(cmd.Context(), ir)
+	if err != nil {
+		return fmt.Errorf("send invoice request: %w", err)
+	}
+
+	// get last line
+	l := ir.Lines[len(ir.Lines)-1]
+	data, err := json.Marshal(l.ChainData())
 	if err != nil {
 		return err
 	}
+	fmt.Printf("Document sent: \n%s\n", string(data))
 
-	if err := tc.AddQR(td, env); err != nil {
-		return err
-	}
-
-	tdBytes, err := td.Bytes()
+	// Response
+	rd, err := res.Bytes()
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to marshal response: %w", err)
 	}
-
-	err = tc.Post(cmd.Context(), tdBytes)
-	if err != nil {
-		return err
-	}
-
-	data, err := json.Marshal(td.ChainData())
-	if err != nil {
-		return err
-	}
-	fmt.Printf("Generated document with fingerprint: \n%s\n", string(data))
+	fmt.Print(string(rd))
 
 	return nil
 }

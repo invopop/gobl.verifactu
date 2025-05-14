@@ -52,17 +52,17 @@ func (c *convertOpts) runE(cmd *cobra.Command, args []string) error {
 		return fmt.Errorf("unmarshaling gobl envelope: %w", err)
 	}
 
-	vf, err := verifactu.New(c.software())
+	vc, err := verifactu.New(c.software())
 	if err != nil {
 		return fmt.Errorf("creating verifactu client: %w", err)
 	}
 
-	doc, err := vf.Convert(env)
+	reg, err := vc.RegisterInvoice(env, nil)
 	if err != nil {
-		return fmt.Errorf("converting to verifactu xml: %w", err)
+		return fmt.Errorf("generating invoice registration: %w", err)
 	}
 
-	data, err := doc.BytesIndent()
+	data, err := reg.Bytes()
 	if err != nil {
 		return fmt.Errorf("generating verifactu xml: %w", err)
 	}
