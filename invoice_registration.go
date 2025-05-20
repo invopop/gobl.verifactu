@@ -193,7 +193,10 @@ func newInvoiceRegistration(inv *bill.Invoice, ts time.Time, r IssuerRole, s *So
 			}
 		}
 		reg.FacturasRectificadas = list
-		reg.ImporteRectificacion = newImporteRectificacion(taxes)
+		if k == "S" {
+			// only include in substituted documents
+			reg.ImporteRectificacion = newImporteRectificacion(taxes)
+		}
 	}
 
 	// F3 covers the special use-case of full invoices that replace a

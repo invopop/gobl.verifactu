@@ -26,11 +26,6 @@
               <sum1:FechaExpedicionFactura>10-01-2022</sum1:FechaExpedicionFactura>
             </sum1:IDFacturaRectificada>
           </sum1:FacturasRectificadas>
-          <sum1:ImporteRectificacion>
-            <sum1:BaseRectificada>1620.00</sum1:BaseRectificada>
-            <sum1:CuotaRectificada>340.20</sum1:CuotaRectificada>
-            <sum1:CuotaRecargoRectificado>0.00</sum1:CuotaRecargoRectificado>
-          </sum1:ImporteRectificacion>
           <sum1:DescripcionOperacion>This is a credit note with a standard tax</sum1:DescripcionOperacion>
           <sum1:EmitidaPorTerceroODestinatario>T</sum1:EmitidaPorTerceroODestinatario>
           <sum1:Tercero>
