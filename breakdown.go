@@ -73,6 +73,7 @@ func buildDetalleDesglose(c *tax.CategoryTotal, r *tax.RateTotal) (*DetalleDesgl
 	} else if r.Ext.Has(verifactu.ExtKeyOpClass) {
 		detalle.CalificacionOperacion = r.Ext.Get(verifactu.ExtKeyOpClass).String()
 		if r.Percent != nil {
+			// Exempt operations should never show amounts, even if zero
 			detalle.CuotaRepercutida = r.Amount.String()
 		}
 	}

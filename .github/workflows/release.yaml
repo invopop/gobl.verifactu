@@ -3,14 +3,15 @@
 #
 
 name: Release
-
+permissions:
+  contents: write # to create a tag
+  packages: write # to upload the release
 on:
   push:
     branches:
       - main
     paths-ignore:
       - "README.md"
-
 jobs:
   release:
     name: Tag
