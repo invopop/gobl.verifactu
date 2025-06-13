@@ -83,7 +83,8 @@ func TestNewParty(t *testing.T) {
 			Name: "Simple Company",
 		}
 
-		_, err := vc.RegisterInvoice(env, nil)
-		require.ErrorContains(t, err, "customer with tax ID or other identity is required")
+		req, err := vc.RegisterInvoice(env, nil)
+		require.NoError(t, err)
+		assert.Empty(t, req.Destinatarios)
 	})
 }

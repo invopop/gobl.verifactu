@@ -157,7 +157,7 @@ func TestBreakdownConversion(t *testing.T) {
 		require.NoError(t, err)
 		dd0 := req.Desglose.DetalleDesglose[0]
 		assert.Equal(t, "100.00", dd0.BaseImponibleOImporteNoSujeto)
-		assert.Equal(t, "0.00", dd0.CuotaRepercutida)
+		assert.Empty(t, dd0.CuotaRepercutida)
 		assert.Equal(t, "01", dd0.Impuesto)
 		assert.Equal(t, "01", dd0.ClaveRegimen)
 		assert.Equal(t, "N1", dd0.CalificacionOperacion)
@@ -261,5 +261,19 @@ func TestBreakdownConversion(t *testing.T) {
 		assert.Equal(t, "01", dd.Impuesto)
 		assert.Equal(t, "04", dd.ClaveRegimen)
 		assert.Equal(t, "S1", dd.CalificacionOperacion)
+	})
+
+	t.Run("reverse-charge", func(t *testing.T) {
+		env := test.LoadEnvelope("inv-rev-charge.json")
+		require.NoError(t, env.Calculate())
+		vc := defaultBreakdownClient(t)
+		req, err := vc.RegisterInvoice(env, nil)
+		require.NoError(t, err)
+		dd := req.Desglose.DetalleDesglose[0]
+		assert.Equal(t, "1800.00", dd.BaseImponibleOImporteNoSujeto)
+		assert.Empty(t, dd.CuotaRepercutida)
+		assert.Equal(t, "01", dd.Impuesto)
+		assert.Equal(t, "01", dd.ClaveRegimen)
+		assert.Equal(t, "S2", dd.CalificacionOperacion)
 	})
 }
