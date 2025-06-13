@@ -157,7 +157,7 @@ func TestBreakdownConversion(t *testing.T) {
 		require.NoError(t, err)
 		dd0 := req.Desglose.DetalleDesglose[0]
 		assert.Equal(t, "100.00", dd0.BaseImponibleOImporteNoSujeto)
-		assert.Equal(t, "0.00", dd0.CuotaRepercutida)
+		assert.Empty(t, dd0.CuotaRepercutida)
 		assert.Equal(t, "01", dd0.Impuesto)
 		assert.Equal(t, "01", dd0.ClaveRegimen)
 		assert.Equal(t, "N1", dd0.CalificacionOperacion)
