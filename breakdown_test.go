@@ -262,4 +262,18 @@ func TestBreakdownConversion(t *testing.T) {
 		assert.Equal(t, "04", dd.ClaveRegimen)
 		assert.Equal(t, "S1", dd.CalificacionOperacion)
 	})
+
+	t.Run("reverse-charge", func(t *testing.T) {
+		env := test.LoadEnvelope("inv-rev-charge.json")
+		require.NoError(t, env.Calculate())
+		vc := defaultBreakdownClient(t)
+		req, err := vc.RegisterInvoice(env, nil)
+		require.NoError(t, err)
+		dd := req.Desglose.DetalleDesglose[0]
+		assert.Equal(t, "1800.00", dd.BaseImponibleOImporteNoSujeto)
+		assert.Empty(t, dd.CuotaRepercutida)
+		assert.Equal(t, "01", dd.Impuesto)
+		assert.Equal(t, "01", dd.ClaveRegimen)
+		assert.Equal(t, "S2", dd.CalificacionOperacion)
+	})
 }

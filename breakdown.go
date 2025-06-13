@@ -72,7 +72,9 @@ func buildDetalleDesglose(c *tax.CategoryTotal, r *tax.RateTotal) (*DetalleDesgl
 		detalle.OperacionExenta = r.Ext[verifactu.ExtKeyExempt].String()
 	} else if r.Ext.Has(verifactu.ExtKeyOpClass) {
 		detalle.CalificacionOperacion = r.Ext.Get(verifactu.ExtKeyOpClass).String()
-		detalle.CuotaRepercutida = r.Amount.String()
+		if r.Percent != nil {
+			detalle.CuotaRepercutida = r.Amount.String()
+		}
 	}
 
 	if detalle.Impuesto == taxCodeIPSI || detalle.Impuesto == taxCodeOther || detalle.ClaveRegimen == "06" {
