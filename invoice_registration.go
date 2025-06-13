@@ -158,15 +158,14 @@ func newInvoiceRegistration(inv *bill.Invoice, ts time.Time, r IssuerRole, s *So
 		TipoHuella:               TipoHuella,
 	}
 
-	if inv.Customer != nil {
-		d, err := newParty(inv.Customer)
-		if err != nil {
-			return nil, err
+	// Prepare the customer, but only if there are enough details, otherwise
+	// we consider this to be a simplified or B2C invoice.
+	if p := newParty(inv.Customer); p != nil {
+		reg.Destinatarios = []*Destinatario{
+			{
+				IDDestinatario: p,
+			},
 		}
-		ds := &Destinatario{
-			IDDestinatario: d,
-		}
-		reg.Destinatarios = []*Destinatario{ds}
 	} else {
 		reg.FacturaSinIdentifDestinatarioArt61d = "S"
 	}
@@ -220,11 +219,7 @@ func newInvoiceRegistration(inv *bill.Invoice, ts time.Time, r IssuerRole, s *So
 
 	if r == IssuerRoleThirdParty {
 		reg.EmitidaPorTerceroODestinatario = "T"
-		t, err := newParty(inv.Supplier)
-		if err != nil {
-			return nil, err
-		}
-		reg.Tercero = t
+		reg.Tercero = newParty(inv.Supplier)
 	}
 
 	// Flag for operations with totals over 100,000,000€. Added with optimism.

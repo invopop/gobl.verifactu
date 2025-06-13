@@ -1,8 +1,6 @@
 package verifactu
 
 import (
-	"fmt"
-
 	"github.com/invopop/gobl/cbc"
 	"github.com/invopop/gobl/org"
 )
@@ -14,7 +12,11 @@ var idTypeCodeMap = map[cbc.Key]string{
 	org.IdentityKeyOther:    "06",
 }
 
-func newParty(p *org.Party) (*Party, error) {
+// newParty builds a new party, but only if there are enough tax identification details
+func newParty(p *org.Party) *Party {
+	if p == nil {
+		return nil
+	}
 	pty := &Party{
 		NombreRazon: p.Name,
 	}
@@ -24,9 +26,9 @@ func newParty(p *org.Party) (*Party, error) {
 		pty.IDOtro = otherIdentity(p)
 	}
 	if pty.NIF == "" && pty.IDOtro == nil {
-		return nil, fmt.Errorf("customer with tax ID or other identity is required")
+		return nil
 	}
-	return pty, nil
+	return pty
 }
 
 func otherIdentity(p *org.Party) *IDOtro {
