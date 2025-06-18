@@ -247,17 +247,22 @@ func newDescription(notes []*org.Note) (string, error) {
 }
 
 func newImporteTotal(inv *bill.Invoice) num.Amount {
-	totalWithDiscounts := inv.Totals.Total
 	if inv.Totals.Taxes == nil {
-		return totalWithDiscounts
+		// This is likely to be wrong as all Spanish invoices need to account
+		// for tax, even if exempt.
+		return inv.Totals.Total
 	}
-	totalTaxes := num.MakeAmount(0, 2)
+	t := num.MakeAmount(0, 2)
 	for _, category := range inv.Totals.Taxes.Categories {
 		if !category.Retained {
-			totalTaxes = totalTaxes.Add(category.Amount)
+			// We need to recalculate the total based on the taxable bases
+			for _, rate := range category.Rates {
+				t = t.Add(rate.Base)
+			}
+			t = t.Add(category.Amount)
 		}
 	}
-	return totalWithDiscounts.Add(totalTaxes)
+	return t
 }
 
 func newImporteRectificacion(taxes *tax.Total) *ImporteRectificacion {
