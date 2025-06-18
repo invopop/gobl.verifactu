@@ -248,8 +248,8 @@ func newDescription(notes []*org.Note) (string, error) {
 
 func newImporteTotal(inv *bill.Invoice) num.Amount {
 	if inv.Totals.Taxes == nil {
-		// This is likely to be wrong as all Spanish invoics need to account
-		// for tax, even if excempt.
+		// This is likely to be wrong as all Spanish invoices need to account
+		// for tax, even if exempt.
 		return inv.Totals.Total
 	}
 	t := num.MakeAmount(0, 2)
