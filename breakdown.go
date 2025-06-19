@@ -90,7 +90,7 @@ func buildDetalleDesglose(c *tax.CategoryTotal, r *tax.RateTotal) (*DetalleDesgl
 		return nil, ErrValidation.WithMessage(fmt.Sprintf("missing operation classification for rate %s", r.Key))
 	}
 
-	if r.Key.Has(es.TaxRateEquivalence) {
+	if r.Surcharge != nil {
 		detalle.TipoRecargoEquivalencia = r.Surcharge.Percent.StringWithoutSymbol()
 		detalle.CuotaRecargoEquivalencia = r.Surcharge.Amount.String()
 	}
