@@ -247,7 +247,7 @@ func newDescription(inv *bill.Invoice) string {
 	desc := prefixDescription
 	// Iterate over invoice lines to build a description
 	for i, line := range inv.Lines {
-		// Only
+		// Only add an item name if it exists
 		if line != nil && line.Item != nil && line.Item.Name != "" {
 			// If the description is too long, we need to stop the loop
 			if len(desc)+len(line.Item.Name)+3 > 500 {
