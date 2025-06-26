@@ -19,6 +19,10 @@ import (
 	"github.com/nbio/xml"
 )
 
+const (
+	prefixDescription = "Factura: "
+)
+
 var correctiveCodes = []cbc.Code{ // Credit or Debit notes
 	"R1", "R2", "R3", "R4", "R5",
 }
@@ -240,11 +244,13 @@ func newDescription(inv *bill.Invoice) string {
 		}
 	}
 
-	desc := "Factura: "
+	desc := prefixDescription
 	for i, line := range inv.Lines {
 		if line != nil && line.Item != nil && line.Item.Name != "" {
-			if len(desc)+len(line.Item.Name)+1 >= 500 {
-				desc = desc[:len(desc)-2] + "..."
+			if len(desc)+len(line.Item.Name)+3 > 500 {
+				if desc != prefixDescription {
+					desc = desc[:len(desc)-2] + "..."
+				}
 				break
 			}
 			desc += line.Item.Name
@@ -254,7 +260,10 @@ func newDescription(inv *bill.Invoice) string {
 				desc += "."
 			}
 		}
+	}
 
+	if desc == prefixDescription {
+		desc += "Sin descripción"
 	}
 
 	return desc
