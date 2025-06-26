@@ -129,11 +129,7 @@ func newInvoiceRegistration(inv *bill.Invoice, ts time.Time, r IssuerRole, s *So
 		return nil, err
 	}
 
-	desc, err := newDescription(inv.Notes)
-	if err != nil {
-		return nil, err
-	}
-
+	desc := newDescription(inv)
 	dg, err := newDesglose(inv)
 	if err != nil {
 		return nil, err
@@ -237,13 +233,31 @@ func invoiceNumber(series cbc.Code, code cbc.Code) string {
 	return fmt.Sprintf("%s-%s", series, code)
 }
 
-func newDescription(notes []*org.Note) (string, error) {
-	for _, note := range notes {
+func newDescription(inv *bill.Invoice) string {
+	for _, note := range inv.Notes {
 		if note.Key == org.NoteKeyGeneral {
-			return note.Text, nil
+			return note.Text
 		}
 	}
-	return "", ErrValidation.WithMessage(fmt.Sprintf("notes: missing note with key '%s'", org.NoteKeyGeneral))
+
+	desc := "Factura: "
+	for i, line := range inv.Lines {
+		if line != nil && line.Item != nil && line.Item.Name != "" {
+			if len(desc)+len(line.Item.Name)+1 >= 500 {
+				desc = desc[:len(desc)-2] + "..."
+				break
+			}
+			desc += line.Item.Name
+			if i < len(inv.Lines)-1 {
+				desc += ", "
+			} else {
+				desc += "."
+			}
+		}
+
+	}
+
+	return desc
 }
 
 func newImporteTotal(inv *bill.Invoice) num.Amount {
