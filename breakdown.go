@@ -72,8 +72,9 @@ func buildDetalleDesglose(c *tax.CategoryTotal, r *tax.RateTotal) (*DetalleDesgl
 		detalle.OperacionExenta = r.Ext[verifactu.ExtKeyExempt].String()
 	} else if r.Ext.Has(verifactu.ExtKeyOpClass) {
 		detalle.CalificacionOperacion = r.Ext.Get(verifactu.ExtKeyOpClass).String()
-		if r.Percent != nil {
+		if r.Percent != nil || detalle.CalificacionOperacion == "S2" {
 			// Exempt operations should never show amounts, even if zero
+			// S2 implies reverse-charge mechanism, so should be 0.
 			detalle.CuotaRepercutida = r.Amount.String()
 		}
 	}
@@ -84,6 +85,9 @@ func buildDetalleDesglose(c *tax.CategoryTotal, r *tax.RateTotal) (*DetalleDesgl
 
 	if r.Percent != nil {
 		detalle.TipoImpositivo = r.Percent.StringWithoutSymbol()
+	} else if detalle.CalificacionOperacion == "S2" {
+		// Implies reverse-charge with 0 rate
+		detalle.TipoImpositivo = "0"
 	}
 
 	if detalle.OperacionExenta == "" && detalle.CalificacionOperacion == "" {

@@ -271,9 +271,10 @@ func TestBreakdownConversion(t *testing.T) {
 		require.NoError(t, err)
 		dd := req.Desglose.DetalleDesglose[0]
 		assert.Equal(t, "1800.00", dd.BaseImponibleOImporteNoSujeto)
-		assert.Empty(t, dd.CuotaRepercutida)
+		assert.Equal(t, "0.00", dd.CuotaRepercutida)
 		assert.Equal(t, "01", dd.Impuesto)
 		assert.Equal(t, "01", dd.ClaveRegimen)
 		assert.Equal(t, "S2", dd.CalificacionOperacion)
+		assert.Equal(t, "0", dd.TipoImpositivo)
 	})
 }
