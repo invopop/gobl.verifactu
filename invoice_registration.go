@@ -129,11 +129,7 @@ func newInvoiceRegistration(inv *bill.Invoice, ts time.Time, r IssuerRole, s *So
 		return nil, err
 	}
 
-	desc, err := newDescription(inv.Notes)
-	if err != nil {
-		return nil, err
-	}
-
+	desc := newDescription(inv)
 	dg, err := newDesglose(inv)
 	if err != nil {
 		return nil, err
@@ -237,13 +233,42 @@ func invoiceNumber(series cbc.Code, code cbc.Code) string {
 	return fmt.Sprintf("%s-%s", series, code)
 }
 
-func newDescription(notes []*org.Note) (string, error) {
-	for _, note := range notes {
+func newDescription(inv *bill.Invoice) string {
+	for _, note := range inv.Notes {
 		if note.Key == org.NoteKeyGeneral {
-			return note.Text, nil
+			return note.Text
 		}
 	}
-	return "", ErrValidation.WithMessage(fmt.Sprintf("notes: missing note with key '%s'", org.NoteKeyGeneral))
+
+	var desc string
+	// Iterate over invoice lines to build a description
+	for i, line := range inv.Lines {
+		// Only add an item name if it exists
+		if line != nil && line.Item != nil && line.Item.Name != "" {
+			// If the description is too long, we need to stop the loop
+			if len(desc)+len(line.Item.Name)+3 > 500 {
+				// If the description is not empty, add an ellipsis
+				// This could happen if the item name length > 488
+				if desc != "" {
+					desc = desc[:len(desc)-2] + "..."
+				}
+				break
+			}
+			// Add the name and a comma if not the last line
+			desc += line.Item.Name
+			if i < len(inv.Lines)-1 {
+				desc += ", "
+			} else {
+				desc += "."
+			}
+		}
+	}
+
+	if desc == "" {
+		desc += "Sin descripción"
+	}
+
+	return desc
 }
 
 func newImporteTotal(inv *bill.Invoice) num.Amount {
