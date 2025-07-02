@@ -19,10 +19,6 @@ import (
 	"github.com/nbio/xml"
 )
 
-const (
-	prefixDescription = "Factura: "
-)
-
 var correctiveCodes = []cbc.Code{ // Credit or Debit notes
 	"R1", "R2", "R3", "R4", "R5",
 }
@@ -244,7 +240,7 @@ func newDescription(inv *bill.Invoice) string {
 		}
 	}
 
-	desc := prefixDescription
+	var desc string
 	// Iterate over invoice lines to build a description
 	for i, line := range inv.Lines {
 		// Only add an item name if it exists
@@ -253,7 +249,7 @@ func newDescription(inv *bill.Invoice) string {
 			if len(desc)+len(line.Item.Name)+3 > 500 {
 				// If the description is not empty, add an ellipsis
 				// This could happen if the item name length > 488
-				if desc != prefixDescription {
+				if desc != "" {
 					desc = desc[:len(desc)-2] + "..."
 				}
 				break
@@ -268,7 +264,7 @@ func newDescription(inv *bill.Invoice) string {
 		}
 	}
 
-	if desc == prefixDescription {
+	if desc == "" {
 		desc += "Sin descripción"
 	}
 
