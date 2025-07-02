@@ -116,7 +116,7 @@ func TestNewRegistroAlta(t *testing.T) {
 		assert.Equal(t, "SAMPLE-004", ra.IDFactura.NumSerieFactura)
 		assert.Equal(t, "13-11-2024", ra.IDFactura.FechaExpedicionFactura)
 		assert.Equal(t, "Invopop S.L.", ra.NombreRazonEmisor)
-		assert.Equal(t, "Factura: Development services.", ra.DescripcionOperacion)
+		assert.Equal(t, "Development services.", ra.DescripcionOperacion)
 	})
 
 	t.Run("should handle an empty note with multiple items", func(t *testing.T) {
