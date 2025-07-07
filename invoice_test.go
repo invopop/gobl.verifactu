@@ -104,4 +104,36 @@ func TestNewRegistroAlta(t *testing.T) {
 		assert.Equal(t, "SAMPLE-002", substituted.IDFactura.NumSerieFactura)
 		assert.Equal(t, "15-01-2024", substituted.IDFactura.FechaExpedicionFactura)
 	})
+
+	t.Run("should handle an empty note", func(t *testing.T) {
+		env, inv := test.LoadInvoice("inv-base.json")
+		inv.Notes = nil
+		ra, err := vc.RegisterInvoice(env, nil)
+		require.NoError(t, err)
+
+		assert.Equal(t, "1.0", ra.IDVersion)
+		assert.Equal(t, "B85905495", ra.IDFactura.IDEmisorFactura)
+		assert.Equal(t, "SAMPLE-004", ra.IDFactura.NumSerieFactura)
+		assert.Equal(t, "13-11-2024", ra.IDFactura.FechaExpedicionFactura)
+		assert.Equal(t, "Invopop S.L.", ra.NombreRazonEmisor)
+		assert.Equal(t, "Development services.", ra.DescripcionOperacion)
+	})
+
+	t.Run("should handle an empty note with multiple items", func(t *testing.T) {
+		env, inv := test.LoadInvoice("inv-base.json")
+		inv.Notes = nil
+		inv.Lines[0].Item.Name = "a"
+		for range int(100) {
+			inv.Lines = append(inv.Lines, inv.Lines[0])
+		}
+		ra, err := vc.RegisterInvoice(env, nil)
+		require.NoError(t, err)
+
+		assert.Equal(t, "1.0", ra.IDVersion)
+		assert.Equal(t, "B85905495", ra.IDFactura.IDEmisorFactura)
+		assert.Equal(t, "SAMPLE-004", ra.IDFactura.NumSerieFactura)
+		assert.Equal(t, "13-11-2024", ra.IDFactura.FechaExpedicionFactura)
+		assert.Equal(t, "Invopop S.L.", ra.NombreRazonEmisor)
+		assert.True(t, len(ra.DescripcionOperacion) <= 500)
+	})
 }
