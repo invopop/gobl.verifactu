@@ -1,10 +1,10 @@
 {
 	"$schema": "https://gobl.org/draft-0/envelope",
 	"head": {
-		"uuid": "8a51fd30-2a27-11ee-be56-0242ac120728",
+		"uuid": "8a51fd30-2a27-11ee-be56-0242ac120002",
 		"dig": {
 			"alg": "sha256",
-			"val": "c42197ee05d5a9698fcc8637284ea0917c35bd4f7f87102d5c88fe148b67f0b9"
+			"val": "8ce11970c9a7b2a4e61ad6e3b06774db28703d0c1efc7b89c33165e1610e317c"
 		}
 	},
 	"doc": {
@@ -16,12 +16,13 @@
 		"uuid": "3aea7b56-59d8-4beb-90bd-f8f280d852a0",
 		"type": "standard",
 		"series": "SAMPLE",
-		"code": "432",
-		"issue_date": "2024-11-11",
+		"code": "004",
+		"issue_date": "2024-11-13",
 		"currency": "EUR",
 		"tax": {
 			"ext": {
-				"es-verifactu-doc-type": "F1"
+				"es-verifactu-doc-type": "F1",
+				"es-verifactu-issuer-type": "T"
 			}
 		},
 		"supplier": {
@@ -46,6 +47,13 @@
 				}
 			]
 		},
+		"customer": {
+			"name": "Sample Consumer",
+			"tax_id": {
+				"country": "ES",
+				"code": "B63272603"
+			}
+		},
 		"lines": [
 			{
 				"i": 1,
@@ -59,9 +67,8 @@
 				"taxes": [
 					{
 						"cat": "VAT",
-						"rate": "standard+eqs",
+						"rate": "standard",
 						"percent": "21.0%",
-						"surcharge": "5.2%",
 						"ext": {
 							"es-verifactu-op-class": "S1",
 							"es-verifactu-regime": "01"
@@ -71,6 +78,15 @@
 				"total": "1800.00"
 			}
 		],
+		"ordering": {
+			"issuer": {
+				"name": "Amazon",
+				"tax_id": {
+					"country": "ES",
+					"code": "B63272603"
+				}
+			}
+		},
 		"totals": {
 			"sum": "1800.00",
 			"total": "1800.00",
@@ -80,34 +96,29 @@
 						"code": "VAT",
 						"rates": [
 							{
-								"key": "standard+eqs",
+								"key": "standard",
 								"ext": {
 									"es-verifactu-op-class": "S1",
 									"es-verifactu-regime": "01"
 								},
 								"base": "1800.00",
 								"percent": "21.0%",
-								"surcharge": {
-									"percent": "5.2%",
-									"amount": "93.60"
-								},
 								"amount": "378.00"
 							}
 						],
-						"amount": "378.00",
-						"surcharge": "93.60"
+						"amount": "378.00"
 					}
 				],
-				"sum": "471.60"
+				"sum": "378.00"
 			},
-			"tax": "471.60",
-			"total_with_tax": "2271.60",
-			"payable": "2271.60"
+			"tax": "378.00",
+			"total_with_tax": "2178.00",
+			"payable": "2178.00"
 		},
 		"notes": [
 			{
 				"key": "general",
-				"text": "This is a sample B2C invoice with a standard tax and an equivalence surcharge"
+				"text": "This is a sample invoice with a standard tax"
 			}
 		]
 	}

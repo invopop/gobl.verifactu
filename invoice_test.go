@@ -19,7 +19,6 @@ func TestNewRegistroAlta(t *testing.T) {
 	require.NoError(t, err)
 	vc, err := verifactu.New(
 		nil, // no software
-		verifactu.WithSupplierIssuer(),
 		verifactu.WithCurrentTime(ts),
 	)
 	require.NoError(t, err)
@@ -57,6 +56,7 @@ func TestNewRegistroAlta(t *testing.T) {
 		env, inv := test.LoadInvoice("inv-base.json")
 		inv.SetTags(tax.TagSimplified)
 		inv.Customer = nil
+		require.NoError(t, inv.Calculate())
 
 		ra, err := vc.RegisterInvoice(env, nil)
 		require.NoError(t, err)

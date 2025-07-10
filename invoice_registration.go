@@ -123,7 +123,7 @@ type DetalleDesglose struct {
 }
 
 // newInvoiceRegistration creates a new VeriFactu registration for an invoice.
-func newInvoiceRegistration(inv *bill.Invoice, ts time.Time, r IssuerRole, s *Software) (*InvoiceRegistration, error) {
+func newInvoiceRegistration(inv *bill.Invoice, ts time.Time, s *Software) (*InvoiceRegistration, error) {
 	tf, err := getTaxExtKey(inv, verifactu.ExtKeyDocType)
 	if err != nil {
 		return nil, err
@@ -135,6 +135,11 @@ func newInvoiceRegistration(inv *bill.Invoice, ts time.Time, r IssuerRole, s *So
 		return nil, err
 	}
 
+	itax := inv.Tax
+	if itax == nil {
+		itax = &bill.Tax{}
+	}
+
 	reg := &InvoiceRegistration{
 		NS:        SUM1, // to remove during sending
 		IDVersion: CurrentVersion,
@@ -143,27 +148,36 @@ func newInvoiceRegistration(inv *bill.Invoice, ts time.Time, r IssuerRole, s *So
 			NumSerieFactura:        invoiceNumber(inv.Series, inv.Code),
 			FechaExpedicionFactura: inv.IssueDate.Time().Format("02-01-2006"),
 		},
-		NombreRazonEmisor:        inv.Supplier.Name,
-		TipoFactura:              tf,
-		DescripcionOperacion:     desc,
-		Desglose:                 dg,
-		CuotaTotal:               newTotalTaxes(inv).String(),
-		ImporteTotal:             newImporteTotal(inv).String(),
-		SistemaInformatico:       s,
-		FechaHoraHusoGenRegistro: formatDateTimeZone(ts),
-		TipoHuella:               TipoHuella,
+		NombreRazonEmisor:              inv.Supplier.Name,
+		TipoFactura:                    tf,
+		DescripcionOperacion:           desc,
+		Desglose:                       dg,
+		CuotaTotal:                     newTotalTaxes(inv).String(),
+		ImporteTotal:                   newImporteTotal(inv).String(),
+		SistemaInformatico:             s,
+		FechaHoraHusoGenRegistro:       formatDateTimeZone(ts),
+		TipoHuella:                     TipoHuella,
+		FacturaSimplificadaArt7273:     itax.Ext.Get(verifactu.ExtKeySimplifiedArt7273).String(),
+		EmitidaPorTerceroODestinatario: itax.Ext.Get(verifactu.ExtKeyIssuerType).String(),
 	}
 
-	// Prepare the customer, but only if there are enough details, otherwise
-	// we consider this to be a simplified or B2C invoice.
 	if p := newParty(inv.Customer); p != nil {
 		reg.Destinatarios = []*Destinatario{
 			{
 				IDDestinatario: p,
 			},
 		}
-	} else {
-		reg.FacturaSinIdentifDestinatarioArt61d = "S"
+	}
+
+	if itax.Ext.Get(verifactu.ExtKeyDocType).In("F2", "R5") {
+		// The FacturaSinIdentifDestinatarioArt61d field can only be set
+		// if the Document Type is either F2 or R5. Simplified invoices
+		// over a value of 3000€ must have a customer identified.
+		if inv.Customer == nil {
+			reg.FacturaSinIdentifDestinatarioArt61d = "S"
+		} else {
+			reg.FacturaSinIdentifDestinatarioArt61d = "N"
+		}
 	}
 
 	if inv.Tax.Ext[verifactu.ExtKeyDocType].In(correctiveCodes...) {
@@ -213,9 +227,8 @@ func newInvoiceRegistration(inv *bill.Invoice, ts time.Time, r IssuerRole, s *So
 		}
 	}
 
-	if r == IssuerRoleThirdParty {
-		reg.EmitidaPorTerceroODestinatario = "T"
-		reg.Tercero = newParty(inv.Supplier)
+	if inv.Ordering != nil && inv.Ordering.Issuer != nil {
+		reg.Tercero = newParty(inv.Ordering.Issuer)
 	}
 
 	// Flag for operations with totals over 100,000,000€. Added with optimism.
