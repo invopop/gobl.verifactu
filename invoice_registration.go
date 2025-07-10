@@ -54,7 +54,7 @@ type InvoiceRegistration struct {
 	SistemaInformatico                  *Software             `xml:"sum1:SistemaInformatico"`
 	FechaHoraHusoGenRegistro            string                `xml:"sum1:FechaHoraHusoGenRegistro"`
 	NumRegistroAcuerdoFacturacion       string                `xml:"sum1:NumRegistroAcuerdoFacturacion,omitempty"`
-	IdAcuerdoSistemaInformatico         string                `xml:"sum1:IdAcuerdoSistemaInformatico,omitempty"` //nolint:revive
+	IdAcuerdoSistemaInformatico         string                `xml:"sum1:IdAcuerdoSistemaInformatico,omitempty"` //nolint:revive,staticcheck
 	TipoHuella                          string                `xml:"sum1:TipoHuella"`
 	Huella                              string                `xml:"sum1:Huella"`
 	// Signature                           *xmldsig.Signature   `xml:"sum1:Signature,omitempty"`
@@ -290,25 +290,6 @@ func newDescription(inv *bill.Invoice) string {
 	}
 
 	return desc
-}
-
-func newImporteTotal(inv *bill.Invoice) num.Amount {
-	if inv.Totals.Taxes == nil {
-		// This is likely to be wrong as all Spanish invoices need to account
-		// for tax, even if exempt.
-		return inv.Totals.Total
-	}
-	t := num.MakeAmount(0, 2)
-	for _, category := range inv.Totals.Taxes.Categories {
-		if !category.Retained {
-			// We need to recalculate the total based on the taxable bases
-			for _, rate := range category.Rates {
-				t = t.Add(rate.Base)
-			}
-			t = t.Add(category.Amount)
-		}
-	}
-	return t
 }
 
 func newImporteRectificacion(taxes *tax.Total) *ImporteRectificacion {

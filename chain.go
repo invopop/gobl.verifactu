@@ -40,7 +40,7 @@ type Software struct {
 	NombreRazon                 string `xml:"sum1:NombreRazon"`
 	NIF                         string `xml:"sum1:NIF"`
 	NombreSistemaInformatico    string `xml:"sum1:NombreSistemaInformatico"`
-	IdSistemaInformatico        string `xml:"sum1:IdSistemaInformatico"` //nolint:revive
+	IdSistemaInformatico        string `xml:"sum1:IdSistemaInformatico"` //nolint:revive,staticcheck
 	Version                     string `xml:"sum1:Version"`
 	NumeroInstalacion           string `xml:"sum1:NumeroInstalacion"`
 	TipoUsoPosibleSoloVerifactu string `xml:"sum1:TipoUsoPosibleSoloVerifactu,omitempty"`
