@@ -48,8 +48,8 @@ type InvoiceRegistration struct {
 	Destinatarios                       []*Destinatario       `xml:"sum1:Destinatarios,omitempty"`
 	Cupon                               string                `xml:"sum1:Cupon,omitempty"`
 	Desglose                            *Desglose             `xml:"sum1:Desglose"`
-	CuotaTotal                          string                `xml:"sum1:CuotaTotal"`
-	ImporteTotal                        string                `xml:"sum1:ImporteTotal"`
+	CuotaTotal                          num.Amount            `xml:"sum1:CuotaTotal"`
+	ImporteTotal                        num.Amount            `xml:"sum1:ImporteTotal"`
 	Encadenamiento                      *Encadenamiento       `xml:"sum1:Encadenamiento"`
 	SistemaInformatico                  *Software             `xml:"sum1:SistemaInformatico"`
 	FechaHoraHusoGenRegistro            string                `xml:"sum1:FechaHoraHusoGenRegistro"`
@@ -152,13 +152,21 @@ func newInvoiceRegistration(inv *bill.Invoice, ts time.Time, s *Software) (*Invo
 		TipoFactura:                    tf,
 		DescripcionOperacion:           desc,
 		Desglose:                       dg,
-		CuotaTotal:                     newTotalTaxes(inv).String(),
-		ImporteTotal:                   newImporteTotal(inv).String(),
+		CuotaTotal:                     inv.Totals.Tax,
+		ImporteTotal:                   inv.Totals.TotalWithTax, // no retained taxes here
 		SistemaInformatico:             s,
 		FechaHoraHusoGenRegistro:       formatDateTimeZone(ts),
 		TipoHuella:                     TipoHuella,
 		FacturaSimplificadaArt7273:     itax.Ext.Get(verifactu.ExtKeySimplifiedArt7273).String(),
 		EmitidaPorTerceroODestinatario: itax.Ext.Get(verifactu.ExtKeyIssuerType).String(),
+	}
+
+	// Remove any charges that do not have taxes from the total, these are
+	// likely to be related to payments or other non-taxable items.
+	for _, charge := range inv.Charges {
+		if len(charge.Taxes) == 0 {
+			reg.ImporteTotal = reg.ImporteTotal.Sub(charge.Amount)
+		}
 	}
 
 	if p := newParty(inv.Customer); p != nil {
@@ -324,19 +332,6 @@ func newImporteRectificacion(taxes *tax.Total) *ImporteRectificacion {
 	return ir
 }
 
-func newTotalTaxes(inv *bill.Invoice) num.Amount {
-	totalTaxes := num.MakeAmount(0, 2)
-	if inv.Totals.Taxes == nil {
-		return totalTaxes
-	}
-	for _, category := range inv.Totals.Taxes.Categories {
-		if !category.Retained {
-			totalTaxes = totalTaxes.Add(category.Amount)
-		}
-	}
-	return totalTaxes
-}
-
 func getTaxExtKey(inv *bill.Invoice, k cbc.Key) (string, error) {
 	if inv.Tax == nil || inv.Tax.Ext == nil || inv.Tax.Ext[k].String() == "" {
 		return "", validation.Errors{
@@ -375,8 +370,8 @@ func (r *InvoiceRegistration) fingerprint(prev *ChainData) {
 		formatChainField("NumSerieFactura", r.IDFactura.NumSerieFactura),
 		formatChainField("FechaExpedicionFactura", r.IDFactura.FechaExpedicionFactura),
 		formatChainField("TipoFactura", r.TipoFactura),
-		formatChainField("CuotaTotal", r.CuotaTotal),
-		formatChainField("ImporteTotal", r.ImporteTotal),
+		formatChainField("CuotaTotal", r.CuotaTotal.String()),
+		formatChainField("ImporteTotal", r.ImporteTotal.String()),
 		formatChainField("Huella", h),
 		formatChainField("FechaHoraHusoGenRegistro", r.FechaHoraHusoGenRegistro),
 	}

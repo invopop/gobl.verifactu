@@ -13,12 +13,12 @@
           <sum1:IDVersion>1.0</sum1:IDVersion>
           <sum1:IDFactura>
             <sum1:IDEmisorFactura>B85905495</sum1:IDEmisorFactura>
-            <sum1:NumSerieFactura>SAMPLE-432</sum1:NumSerieFactura>
-            <sum1:FechaExpedicionFactura>11-11-2024</sum1:FechaExpedicionFactura>
+            <sum1:NumSerieFactura>SAMPLE-003</sum1:NumSerieFactura>
+            <sum1:FechaExpedicionFactura>15-11-2024</sum1:FechaExpedicionFactura>
           </sum1:IDFactura>
           <sum1:NombreRazonEmisor>Invopop S.L.</sum1:NombreRazonEmisor>
           <sum1:TipoFactura>F1</sum1:TipoFactura>
-          <sum1:DescripcionOperacion>This is a sample invoice with a standard tax and an equivalence surcharge</sum1:DescripcionOperacion>
+          <sum1:DescripcionOperacion>Beer (test product), Water (test product).</sum1:DescripcionOperacion>
           <sum1:Destinatarios>
             <sum1:IDDestinatario>
               <sum1:NombreRazon>Sample Consumer</sum1:NombreRazon>
@@ -31,14 +31,20 @@
               <sum1:ClaveRegimen>01</sum1:ClaveRegimen>
               <sum1:CalificacionOperacion>S1</sum1:CalificacionOperacion>
               <sum1:TipoImpositivo>21.0</sum1:TipoImpositivo>
-              <sum1:BaseImponibleOimporteNoSujeto>1800.00</sum1:BaseImponibleOimporteNoSujeto>
-              <sum1:CuotaRepercutida>378.00</sum1:CuotaRepercutida>
-              <sum1:TipoRecargoEquivalencia>5.2</sum1:TipoRecargoEquivalencia>
-              <sum1:CuotaRecargoEquivalencia>93.60</sum1:CuotaRecargoEquivalencia>
+              <sum1:BaseImponibleOimporteNoSujeto>0.41</sum1:BaseImponibleOimporteNoSujeto>
+              <sum1:CuotaRepercutida>0.09</sum1:CuotaRepercutida>
+            </sum1:DetalleDesglose>
+            <sum1:DetalleDesglose>
+              <sum1:Impuesto>01</sum1:Impuesto>
+              <sum1:ClaveRegimen>01</sum1:ClaveRegimen>
+              <sum1:CalificacionOperacion>S1</sum1:CalificacionOperacion>
+              <sum1:TipoImpositivo>10.0</sum1:TipoImpositivo>
+              <sum1:BaseImponibleOimporteNoSujeto>0.45</sum1:BaseImponibleOimporteNoSujeto>
+              <sum1:CuotaRepercutida>0.05</sum1:CuotaRepercutida>
             </sum1:DetalleDesglose>
           </sum1:Desglose>
-          <sum1:CuotaTotal>471.60</sum1:CuotaTotal>
-          <sum1:ImporteTotal>2271.60</sum1:ImporteTotal>
+          <sum1:CuotaTotal>0.13</sum1:CuotaTotal>
+          <sum1:ImporteTotal>1.00</sum1:ImporteTotal>
           <sum1:Encadenamiento>
             <sum1:RegistroAnterior>
               <sum1:IDEmisorFactura>B12345678</sum1:IDEmisorFactura>
@@ -60,7 +66,7 @@
           </sum1:SistemaInformatico>
           <sum1:FechaHoraHusoGenRegistro>2024-11-26T05:00:00+01:00</sum1:FechaHoraHusoGenRegistro>
           <sum1:TipoHuella>01</sum1:TipoHuella>
-          <sum1:Huella>660E9056537A7DDEE0BB4C2A4A6CB8DC741B61EB604526BE3BEB8FC035693B97</sum1:Huella>
+          <sum1:Huella>82E09045C57DCB43522673E6777919862EC9111F49C3DA4FBB8F9FB7FA729E64</sum1:Huella>
         </sum1:RegistroAlta>
       </sum:RegistroFactura>
     </sum:RegFactuSistemaFacturacion>

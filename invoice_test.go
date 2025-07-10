@@ -35,8 +35,8 @@ func TestNewRegistroAlta(t *testing.T) {
 		assert.Equal(t, "Invopop S.L.", ra.NombreRazonEmisor)
 		assert.Equal(t, "F1", ra.TipoFactura)
 		assert.Equal(t, "This is a sample invoice with a standard tax", ra.DescripcionOperacion)
-		assert.Equal(t, "378.00", ra.CuotaTotal)
-		assert.Equal(t, "2178.00", ra.ImporteTotal)
+		assert.Equal(t, "378.00", ra.CuotaTotal.String())
+		assert.Equal(t, "2178.00", ra.ImporteTotal.String())
 
 		require.Len(t, ra.Destinatarios, 1)
 		dest := ra.Destinatarios[0].IDDestinatario
@@ -80,8 +80,8 @@ func TestNewRegistroAlta(t *testing.T) {
 		assert.Equal(t, "10-01-2022", rectified.IDFactura.FechaExpedicionFactura)
 		assert.Equal(t, "-1620.00", ra.Desglose.DetalleDesglose[0].BaseImponibleOImporteNoSujeto)
 		assert.Equal(t, "-340.20", ra.Desglose.DetalleDesglose[0].CuotaRepercutida)
-		assert.Equal(t, "-340.20", ra.CuotaTotal)
-		assert.Equal(t, "-1960.20", ra.ImporteTotal)
+		assert.Equal(t, "-340.20", ra.CuotaTotal.String())
+		assert.Equal(t, "-1960.20", ra.ImporteTotal.String())
 	})
 
 	t.Run("should handle substitution invoices", func(t *testing.T) {
