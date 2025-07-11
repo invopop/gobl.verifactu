@@ -32,11 +32,6 @@
             <sum1:CuotaRecargoRectificado>0.00</sum1:CuotaRecargoRectificado>
           </sum1:ImporteRectificacion>
           <sum1:DescripcionOperacion>This is a credit note with a standard tax</sum1:DescripcionOperacion>
-          <sum1:EmitidaPorTerceroODestinatario>T</sum1:EmitidaPorTerceroODestinatario>
-          <sum1:Tercero>
-            <sum1:NombreRazon>Provide One S.L.</sum1:NombreRazon>
-            <sum1:NIF>B85905495</sum1:NIF>
-          </sum1:Tercero>
           <sum1:Destinatarios>
             <sum1:IDDestinatario>
               <sum1:NombreRazon>Sample Customer</sum1:NombreRazon>

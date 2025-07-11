@@ -86,7 +86,6 @@ func loadClient() (*verifactu.Client, error) {
 		IndicadorMultiplesOT:        "N",
 	},
 		verifactu.WithCurrentTime(ts),
-		verifactu.WithThirdPartyIssuer(),
 	)
 }
 

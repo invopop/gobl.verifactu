@@ -8,7 +8,7 @@ toolchain go1.23.4
 
 require (
 	github.com/go-resty/resty/v2 v2.15.3
-	github.com/invopop/gobl v0.218.0
+	github.com/invopop/gobl v0.220.2-0.20250710164401-2e886b99de82
 	github.com/invopop/validation v0.8.0
 	github.com/invopop/xmldsig v0.10.0
 	github.com/joho/godotenv v1.5.1

@@ -12,7 +12,6 @@ import (
 func TestNewRegistroAnulacion(t *testing.T) {
 	vc, err := New(
 		nil, // no software
-		WithSupplierIssuer(),
 		WithCurrentTime(time.Now()),
 	)
 	require.NoError(t, err)

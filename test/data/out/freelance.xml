@@ -19,11 +19,6 @@
           <sum1:NombreRazonEmisor>MªF. Services</sum1:NombreRazonEmisor>
           <sum1:TipoFactura>F1</sum1:TipoFactura>
           <sum1:DescripcionOperacion>Freelance invoice with IRPF</sum1:DescripcionOperacion>
-          <sum1:EmitidaPorTerceroODestinatario>T</sum1:EmitidaPorTerceroODestinatario>
-          <sum1:Tercero>
-            <sum1:NombreRazon>MªF. Services</sum1:NombreRazon>
-            <sum1:NIF>58384285G</sum1:NIF>
-          </sum1:Tercero>
           <sum1:Destinatarios>
             <sum1:IDDestinatario>
               <sum1:NombreRazon>Sample Consumer</sum1:NombreRazon>

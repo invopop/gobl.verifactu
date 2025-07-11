@@ -21,7 +21,6 @@ func defaultBreakdownClient(t *testing.T) *verifactu.Client {
 	t.Helper()
 	vc, err := verifactu.New(
 		nil, // no software
-		verifactu.WithSupplierIssuer(),
 		verifactu.WithCurrentTime(time.Now()),
 	)
 	require.NoError(t, err)

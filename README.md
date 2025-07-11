@@ -48,7 +48,7 @@ func main() {
 
 	// VeriFactu requires a software definition to be provided. This is an example
 	software := &verifactu.Software{
-		NombreRazon:              "Company LTD",    // Company Name
+		NombreRazon:              "Company S.L.",    // Company Name
 		NIF:                      "B123456789",     // Software company's tax code
 		NombreSistemaInformatico: "Software Name",  // Name of application
 		IdSistemaInformatico:     "A1",             // Software ID
@@ -68,7 +68,6 @@ func main() {
 	// Create the client with the software and certificate
 	opts := []verifactu.Option{
 		verifactu.WithCertificate(cert),
-		verifactu.WithSupplierIssuer(), // The issuer can be either the supplier, the customer or a third party
 		verifactu.InTesting(),          // Use the testing environment
 	}
 	vc, err := verifactu.New(software, opts...)
@@ -98,7 +97,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	inv.AddRegistrattion(reg)
+	inv.AddRegistration(reg)
 
 	// Send the document to the tax agency
 	out, err = vc.SendInvoiceRequest(ctx, ir)
@@ -165,17 +164,7 @@ Now, the output file will include a fingerprint, linked to the previous document
 }
 ```
 
-## Tags and Extensions
-
-In order to provide the supplier specific data required by VeriFactu, invoices need to include a bit of extra data. We've managed to simplify these into specific cases.
-
-### Invoice Tags
-
-Invoice tax tags can be added to invoice documents in order to reflect a special situation. The following schemes are supported:
-
-- `simplified` - a retailer operating under a simplified tax regime (regimen simplificado). This implies that all operations in the invoice will have the `FacturaSinIdentifDestinatarioArt61d` tag set to `S` and the `TipoFactura` field set to `F2`. For corrective invoices, and credit and debit notes, the `TipoFactura` should instead be set to `R5` through the `es-verifactu-doc-type` extension.
-
-### Tax Extensions
+## Tax Extensions
 
 The following extensions must be included in the document. Note that the GOBL addon will automatically add these extensions when processing invoices:
 

@@ -15,7 +15,7 @@ func (r *InvoiceRegistration) generateURL(production bool) string {
 	nif := url.QueryEscape(r.IDFactura.IDEmisorFactura)
 	numSerie := url.QueryEscape(r.IDFactura.NumSerieFactura)
 	fecha := url.QueryEscape(r.IDFactura.FechaExpedicionFactura)
-	importe := url.QueryEscape(r.ImporteTotal)
+	importe := url.QueryEscape(r.ImporteTotal.String())
 
 	if production {
 		return fmt.Sprintf("%s&nif=%s&numserie=%s&fecha=%s&importe=%s", prodURL, nif, numSerie, fecha, importe)

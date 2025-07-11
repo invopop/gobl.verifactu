@@ -17,16 +17,6 @@ const (
 // for needed for timezones
 var location *time.Location
 
-// IssuerRole defines the role of the issuer in the invoice.
-type IssuerRole string
-
-// IssuerRole constants
-const (
-	IssuerRoleSupplier   IssuerRole = "E"
-	IssuerRoleCustomer   IssuerRole = "D"
-	IssuerRoleThirdParty IssuerRole = "T"
-)
-
 const (
 	// CurrentVersion is the current version of the VeriFactu document
 	CurrentVersion = "1.0"

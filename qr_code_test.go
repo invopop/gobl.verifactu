@@ -2,6 +2,8 @@ package verifactu
 
 import (
 	"testing"
+
+	"github.com/invopop/gobl/num"
 )
 
 func TestGenerateCodes(t *testing.T) {
@@ -18,7 +20,7 @@ func TestGenerateCodes(t *testing.T) {
 					NumSerieFactura:        "12345678-G33",
 					FechaExpedicionFactura: "01-09-2024",
 				},
-				ImporteTotal: "241.40",
+				ImporteTotal: num.MakeAmount(24140, 2),
 			},
 			expected: "https://prewww2.aeat.es/wlpl/TIKE-CONT/ValidarQR?nif=89890001K&numserie=12345678-G33&fecha=01-09-2024&importe=241.40",
 		},
@@ -30,7 +32,7 @@ func TestGenerateCodes(t *testing.T) {
 					NumSerieFactura:        "",
 					FechaExpedicionFactura: "",
 				},
-				ImporteTotal: "0.00",
+				ImporteTotal: num.MakeAmount(0, 2),
 			},
 			expected: "https://prewww2.aeat.es/wlpl/TIKE-CONT/ValidarQR?nif=&numserie=&fecha=&importe=0.00",
 		},
@@ -42,7 +44,7 @@ func TestGenerateCodes(t *testing.T) {
 					NumSerieFactura:        "SERIE/2023",
 					FechaExpedicionFactura: "01-09-2024",
 				},
-				ImporteTotal: "1234.56",
+				ImporteTotal: num.MakeAmount(123456, 2),
 			},
 			expected: "https://prewww2.aeat.es/wlpl/TIKE-CONT/ValidarQR?nif=A12+345%2667&numserie=SERIE%2F2023&fecha=01-09-2024&importe=1234.56",
 		},

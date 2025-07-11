@@ -13,18 +13,13 @@
           <sum1:IDVersion>1.0</sum1:IDVersion>
           <sum1:IDFactura>
             <sum1:IDEmisorFactura>B85905495</sum1:IDEmisorFactura>
-            <sum1:NumSerieFactura>SAMPLE-432</sum1:NumSerieFactura>
-            <sum1:FechaExpedicionFactura>11-11-2024</sum1:FechaExpedicionFactura>
+            <sum1:NumSerieFactura>SAMPLE-004</sum1:NumSerieFactura>
+            <sum1:FechaExpedicionFactura>13-11-2024</sum1:FechaExpedicionFactura>
           </sum1:IDFactura>
           <sum1:NombreRazonEmisor>Invopop S.L.</sum1:NombreRazonEmisor>
-          <sum1:TipoFactura>F1</sum1:TipoFactura>
-          <sum1:DescripcionOperacion>This is a sample B2C invoice with a standard tax and an equivalence surcharge</sum1:DescripcionOperacion>
+          <sum1:TipoFactura>F2</sum1:TipoFactura>
+          <sum1:DescripcionOperacion>This is a sample invoice with a standard tax</sum1:DescripcionOperacion>
           <sum1:FacturaSinIdentifDestinatarioArt61d>S</sum1:FacturaSinIdentifDestinatarioArt61d>
-          <sum1:EmitidaPorTerceroODestinatario>T</sum1:EmitidaPorTerceroODestinatario>
-          <sum1:Tercero>
-            <sum1:NombreRazon>Invopop S.L.</sum1:NombreRazon>
-            <sum1:NIF>B85905495</sum1:NIF>
-          </sum1:Tercero>
           <sum1:Desglose>
             <sum1:DetalleDesglose>
               <sum1:Impuesto>01</sum1:Impuesto>
@@ -33,8 +28,6 @@
               <sum1:TipoImpositivo>21.0</sum1:TipoImpositivo>
               <sum1:BaseImponibleOimporteNoSujeto>1800.00</sum1:BaseImponibleOimporteNoSujeto>
               <sum1:CuotaRepercutida>378.00</sum1:CuotaRepercutida>
-              <sum1:TipoRecargoEquivalencia>5.2</sum1:TipoRecargoEquivalencia>
-              <sum1:CuotaRecargoEquivalencia>93.60</sum1:CuotaRecargoEquivalencia>
             </sum1:DetalleDesglose>
           </sum1:Desglose>
           <sum1:CuotaTotal>378.00</sum1:CuotaTotal>
@@ -60,7 +53,7 @@
           </sum1:SistemaInformatico>
           <sum1:FechaHoraHusoGenRegistro>2024-11-26T05:00:00+01:00</sum1:FechaHoraHusoGenRegistro>
           <sum1:TipoHuella>01</sum1:TipoHuella>
-          <sum1:Huella>1D8655D3243F182BFD85FE21518AFA1B16F6BEA0ED0B09E12A2A0E5211B7C898</sum1:Huella>
+          <sum1:Huella>27BBB123549C80583CC8C7F7DA3F7B5C7051BC5F56D3D1DE48F92B574848AFE3</sum1:Huella>
         </sum1:RegistroAlta>
       </sum:RegistroFactura>
     </sum:RegFactuSistemaFacturacion>

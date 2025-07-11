@@ -1,11 +1,12 @@
 package verifactu
 
 import (
+	"github.com/invopop/gobl/addons/es/verifactu"
 	"github.com/invopop/gobl/cbc"
 	"github.com/invopop/gobl/org"
 )
 
-var idTypeCodeMap = map[cbc.Key]string{
+var idTypeCodeMap = map[cbc.Key]cbc.Code{
 	org.IdentityKeyPassport: "03",
 	org.IdentityKeyForeign:  "04",
 	org.IdentityKeyResident: "05",
@@ -20,7 +21,7 @@ func newParty(p *org.Party) *Party {
 	pty := &Party{
 		NombreRazon: p.Name,
 	}
-	if p.TaxID != nil && p.TaxID.Code.String() != "" && p.TaxID.Country.String() == "ES" {
+	if p.TaxID != nil && !p.TaxID.Code.IsEmpty() && p.TaxID.Country.In("ES") {
 		pty.NIF = p.TaxID.Code.String()
 	} else {
 		pty.IDOtro = otherIdentity(p)
@@ -33,23 +34,37 @@ func newParty(p *org.Party) *Party {
 
 func otherIdentity(p *org.Party) *IDOtro {
 	oid := new(IDOtro)
-	if p.TaxID != nil && p.TaxID.Code != "" {
-		oid.IDType = idTypeCodeMap[org.IdentityKeyForeign]
-		oid.ID = p.TaxID.Code.String()
-		if p.TaxID.Country != "" {
-			oid.CodigoPais = p.TaxID.Country.String()
+	if p.TaxID != nil {
+		oid.CodigoPais = p.TaxID.Country.String()
+		if p.TaxID.Code != "" {
+			oid.IDType = "02" // NIF-VAT
+			oid.ID = p.TaxID.Code.String()
+		} else {
+			// For usage with a US company for example with no
+			// tax ID.
+			oid.IDType = "07" // not documented (no censado)
 		}
 		return oid
 	}
 
 	for _, id := range p.Identities {
-		it, ok := idTypeCodeMap[id.Key]
-		if !ok {
+		code := id.Ext.Get(verifactu.ExtKeyIdentityType)
+
+		// Fallback to matching the key, this should no longer be needed
+		if code.IsEmpty() {
+			if it, ok := idTypeCodeMap[id.Key]; ok {
+				code = it
+			}
+		}
+		if code.IsEmpty() {
+			// Nothing to do here as there is no useful identity type
 			continue
 		}
 
-		oid.IDType = it
+		oid.CodigoPais = id.Country.String()
+		oid.IDType = code.String()
 		oid.ID = id.Code.String()
+
 		return oid
 	}
 	return nil

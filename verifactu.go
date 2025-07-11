@@ -23,13 +23,12 @@ const (
 
 // Client provides the main interface to the VeriFactu package.
 type Client struct {
-	software   *Software
-	env        Environment
-	issuerRole IssuerRole
-	rep        *Issuer
-	curTime    time.Time
-	cert       *xmldsig.Certificate
-	conn       *connection
+	software *Software
+	env      Environment
+	rep      *Issuer
+	curTime  time.Time
+	cert     *xmldsig.Certificate
+	conn     *connection
 }
 
 // Option is used to configure the client.
@@ -51,13 +50,6 @@ func WithCurrentTime(curTime time.Time) Option {
 	}
 }
 
-// WithSupplierIssuer set the issuer type to supplier.
-func WithSupplierIssuer() Option {
-	return func(c *Client) {
-		c.issuerRole = IssuerRoleSupplier
-	}
-}
-
 // WithRepresentative can be used to define a legal representative
 // of the entity legally obliged to issue the invoice, usually the
 // supplier. This may be required when the supplier's digital
@@ -68,20 +60,6 @@ func WithRepresentative(name, nif string) Option {
 			NombreRazon: name,
 			NIF:         nif,
 		}
-	}
-}
-
-// WithCustomerIssuer set the issuer type to customer.
-func WithCustomerIssuer() Option {
-	return func(c *Client) {
-		c.issuerRole = IssuerRoleCustomer
-	}
-}
-
-// WithThirdPartyIssuer set the issuer type to third party.
-func WithThirdPartyIssuer() Option {
-	return func(c *Client) {
-		c.issuerRole = IssuerRoleThirdParty
 	}
 }
 
@@ -107,7 +85,6 @@ func New(software *Software, opts ...Option) (*Client, error) {
 
 	// Set default values that can be overwritten by the options
 	c.env = EnvironmentSandbox
-	c.issuerRole = IssuerRoleSupplier
 
 	for _, opt := range opts {
 		opt(c)
@@ -206,7 +183,7 @@ func (c *Client) RegisterInvoice(env *gobl.Envelope, prev *ChainData, opts ...Ge
 		}
 	}
 
-	reg, err := newInvoiceRegistration(inv, c.CurrentTime(), c.issuerRole, c.software)
+	reg, err := newInvoiceRegistration(inv, c.CurrentTime(), c.software)
 	if err != nil {
 		return nil, err
 	}
