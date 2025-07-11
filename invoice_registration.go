@@ -100,7 +100,7 @@ type Destinatario struct {
 type IDOtro struct {
 	CodigoPais string `xml:"sum1:CodigoPais"`
 	IDType     string `xml:"sum1:IDType"`
-	ID         string `xml:"sum1:ID"`
+	ID         string `xml:"sum1:ID,omitempty"`
 }
 
 // Desglose contains the breakdown details
