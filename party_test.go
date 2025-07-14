@@ -17,7 +17,6 @@ func TestNewParty(t *testing.T) {
 	require.NoError(t, err)
 	vc, err := verifactu.New(
 		nil, // no software
-		verifactu.WithSupplierIssuer(),
 		verifactu.WithCurrentTime(ts),
 	)
 	require.NoError(t, err)
@@ -72,8 +71,8 @@ func TestNewParty(t *testing.T) {
 
 		assert.Equal(t, "Foreign Company", p.NombreRazon)
 		assert.Empty(t, p.NIF)
-		assert.NotNil(t, p.IDOtro)
-		assert.Equal(t, "04", p.IDOtro.IDType)
+		require.NotNil(t, p.IDOtro)
+		assert.Equal(t, "02", p.IDOtro.IDType)
 		assert.Equal(t, "111111125", p.IDOtro.ID)
 	})
 

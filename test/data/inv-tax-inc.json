@@ -1,10 +1,10 @@
 {
 	"$schema": "https://gobl.org/draft-0/envelope",
 	"head": {
-		"uuid": "8a51fd30-2a27-11ee-be56-0242ac120728",
+		"uuid": "8a51fd30-2a27-11ee-be56-0242ac120002",
 		"dig": {
 			"alg": "sha256",
-			"val": "c42197ee05d5a9698fcc8637284ea0917c35bd4f7f87102d5c88fe148b67f0b9"
+			"val": "bdbf4bf5781268c2373ced5607b9859f6860e0751bba2026597b16db037f1c04"
 		}
 	},
 	"doc": {
@@ -16,10 +16,11 @@
 		"uuid": "3aea7b56-59d8-4beb-90bd-f8f280d852a0",
 		"type": "standard",
 		"series": "SAMPLE",
-		"code": "432",
-		"issue_date": "2024-11-11",
+		"code": "003",
+		"issue_date": "2024-11-15",
 		"currency": "EUR",
 		"tax": {
+			"prices_include": "VAT",
 			"ext": {
 				"es-verifactu-doc-type": "F1"
 			}
@@ -46,69 +47,95 @@
 				}
 			]
 		},
+		"customer": {
+			"name": "Sample Consumer",
+			"tax_id": {
+				"country": "ES",
+				"code": "B63272603"
+			}
+		},
 		"lines": [
 			{
 				"i": 1,
-				"quantity": "20",
+				"quantity": "5",
 				"item": {
-					"name": "Development services",
-					"price": "90.00",
-					"unit": "h"
+					"name": "Beer (test product)",
+					"price": "0.10"
 				},
-				"sum": "1800.00",
+				"sum": "0.50",
 				"taxes": [
 					{
 						"cat": "VAT",
-						"rate": "standard+eqs",
+						"rate": "standard",
 						"percent": "21.0%",
-						"surcharge": "5.2%",
 						"ext": {
 							"es-verifactu-op-class": "S1",
 							"es-verifactu-regime": "01"
 						}
 					}
 				],
-				"total": "1800.00"
+				"total": "0.50"
+			},
+			{
+				"i": 2,
+				"quantity": "5",
+				"item": {
+					"name": "Water (test product)",
+					"price": "0.10"
+				},
+				"sum": "0.50",
+				"taxes": [
+					{
+						"cat": "VAT",
+						"rate": "reduced",
+						"percent": "10.0%",
+						"ext": {
+							"es-verifactu-op-class": "S1",
+							"es-verifactu-regime": "01"
+						}
+					}
+				],
+				"total": "0.50"
 			}
 		],
 		"totals": {
-			"sum": "1800.00",
-			"total": "1800.00",
+			"sum": "1.00",
+			"tax_included": "0.13",
+			"total": "0.87",
 			"taxes": {
 				"categories": [
 					{
 						"code": "VAT",
 						"rates": [
 							{
-								"key": "standard+eqs",
+								"key": "standard",
 								"ext": {
 									"es-verifactu-op-class": "S1",
 									"es-verifactu-regime": "01"
 								},
-								"base": "1800.00",
+								"base": "0.41",
 								"percent": "21.0%",
-								"surcharge": {
-									"percent": "5.2%",
-									"amount": "93.60"
+								"amount": "0.09"
+							},
+							{
+								"key": "reduced",
+								"ext": {
+									"es-verifactu-op-class": "S1",
+									"es-verifactu-regime": "01"
 								},
-								"amount": "378.00"
+								"base": "0.45",
+								"percent": "10.0%",
+								"amount": "0.05"
 							}
 						],
-						"amount": "378.00",
-						"surcharge": "93.60"
+						"amount": "0.13"
 					}
 				],
-				"sum": "471.60"
+				"sum": "0.13"
 			},
-			"tax": "471.60",
-			"total_with_tax": "2271.60",
-			"payable": "2271.60"
-		},
-		"notes": [
-			{
-				"key": "general",
-				"text": "This is a sample B2C invoice with a standard tax and an equivalence surcharge"
-			}
-		]
+			"tax": "0.13",
+			"total_with_tax": "1.00",
+			"payable": "1.00"
+		}
 	}
 }

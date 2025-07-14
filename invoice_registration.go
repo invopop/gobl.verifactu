@@ -48,13 +48,13 @@ type InvoiceRegistration struct {
 	Destinatarios                       []*Destinatario       `xml:"sum1:Destinatarios,omitempty"`
 	Cupon                               string                `xml:"sum1:Cupon,omitempty"`
 	Desglose                            *Desglose             `xml:"sum1:Desglose"`
-	CuotaTotal                          string                `xml:"sum1:CuotaTotal"`
-	ImporteTotal                        string                `xml:"sum1:ImporteTotal"`
+	CuotaTotal                          num.Amount            `xml:"sum1:CuotaTotal"`
+	ImporteTotal                        num.Amount            `xml:"sum1:ImporteTotal"`
 	Encadenamiento                      *Encadenamiento       `xml:"sum1:Encadenamiento"`
 	SistemaInformatico                  *Software             `xml:"sum1:SistemaInformatico"`
 	FechaHoraHusoGenRegistro            string                `xml:"sum1:FechaHoraHusoGenRegistro"`
 	NumRegistroAcuerdoFacturacion       string                `xml:"sum1:NumRegistroAcuerdoFacturacion,omitempty"`
-	IdAcuerdoSistemaInformatico         string                `xml:"sum1:IdAcuerdoSistemaInformatico,omitempty"` //nolint:revive
+	IdAcuerdoSistemaInformatico         string                `xml:"sum1:IdAcuerdoSistemaInformatico,omitempty"` //nolint:revive,staticcheck
 	TipoHuella                          string                `xml:"sum1:TipoHuella"`
 	Huella                              string                `xml:"sum1:Huella"`
 	// Signature                           *xmldsig.Signature   `xml:"sum1:Signature,omitempty"`
@@ -123,7 +123,7 @@ type DetalleDesglose struct {
 }
 
 // newInvoiceRegistration creates a new VeriFactu registration for an invoice.
-func newInvoiceRegistration(inv *bill.Invoice, ts time.Time, r IssuerRole, s *Software) (*InvoiceRegistration, error) {
+func newInvoiceRegistration(inv *bill.Invoice, ts time.Time, s *Software) (*InvoiceRegistration, error) {
 	tf, err := getTaxExtKey(inv, verifactu.ExtKeyDocType)
 	if err != nil {
 		return nil, err
@@ -135,6 +135,11 @@ func newInvoiceRegistration(inv *bill.Invoice, ts time.Time, r IssuerRole, s *So
 		return nil, err
 	}
 
+	itax := inv.Tax
+	if itax == nil {
+		itax = &bill.Tax{}
+	}
+
 	reg := &InvoiceRegistration{
 		NS:        SUM1, // to remove during sending
 		IDVersion: CurrentVersion,
@@ -143,27 +148,44 @@ func newInvoiceRegistration(inv *bill.Invoice, ts time.Time, r IssuerRole, s *So
 			NumSerieFactura:        invoiceNumber(inv.Series, inv.Code),
 			FechaExpedicionFactura: inv.IssueDate.Time().Format("02-01-2006"),
 		},
-		NombreRazonEmisor:        inv.Supplier.Name,
-		TipoFactura:              tf,
-		DescripcionOperacion:     desc,
-		Desglose:                 dg,
-		CuotaTotal:               newTotalTaxes(inv).String(),
-		ImporteTotal:             newImporteTotal(inv).String(),
-		SistemaInformatico:       s,
-		FechaHoraHusoGenRegistro: formatDateTimeZone(ts),
-		TipoHuella:               TipoHuella,
+		NombreRazonEmisor:              inv.Supplier.Name,
+		TipoFactura:                    tf,
+		DescripcionOperacion:           desc,
+		Desglose:                       dg,
+		CuotaTotal:                     inv.Totals.Tax,
+		ImporteTotal:                   inv.Totals.TotalWithTax, // no retained taxes here
+		SistemaInformatico:             s,
+		FechaHoraHusoGenRegistro:       formatDateTimeZone(ts),
+		TipoHuella:                     TipoHuella,
+		FacturaSimplificadaArt7273:     itax.Ext.Get(verifactu.ExtKeySimplifiedArt7273).String(),
+		EmitidaPorTerceroODestinatario: itax.Ext.Get(verifactu.ExtKeyIssuerType).String(),
 	}
 
-	// Prepare the customer, but only if there are enough details, otherwise
-	// we consider this to be a simplified or B2C invoice.
+	// Remove any charges that do not have taxes from the total, these are
+	// likely to be related to payments or other non-taxable items.
+	for _, charge := range inv.Charges {
+		if len(charge.Taxes) == 0 {
+			reg.ImporteTotal = reg.ImporteTotal.Sub(charge.Amount)
+		}
+	}
+
 	if p := newParty(inv.Customer); p != nil {
 		reg.Destinatarios = []*Destinatario{
 			{
 				IDDestinatario: p,
 			},
 		}
-	} else {
-		reg.FacturaSinIdentifDestinatarioArt61d = "S"
+	}
+
+	if itax.Ext.Get(verifactu.ExtKeyDocType).In("F2", "R5") {
+		// The FacturaSinIdentifDestinatarioArt61d field can only be set
+		// if the Document Type is either F2 or R5. Simplified invoices
+		// over a value of 3000€ must have a customer identified.
+		if inv.Customer == nil {
+			reg.FacturaSinIdentifDestinatarioArt61d = "S"
+		} else {
+			reg.FacturaSinIdentifDestinatarioArt61d = "N"
+		}
 	}
 
 	if inv.Tax.Ext[verifactu.ExtKeyDocType].In(correctiveCodes...) {
@@ -213,9 +235,8 @@ func newInvoiceRegistration(inv *bill.Invoice, ts time.Time, r IssuerRole, s *So
 		}
 	}
 
-	if r == IssuerRoleThirdParty {
-		reg.EmitidaPorTerceroODestinatario = "T"
-		reg.Tercero = newParty(inv.Supplier)
+	if inv.Ordering != nil && inv.Ordering.Issuer != nil {
+		reg.Tercero = newParty(inv.Ordering.Issuer)
 	}
 
 	// Flag for operations with totals over 100,000,000€. Added with optimism.
@@ -271,25 +292,6 @@ func newDescription(inv *bill.Invoice) string {
 	return desc
 }
 
-func newImporteTotal(inv *bill.Invoice) num.Amount {
-	if inv.Totals.Taxes == nil {
-		// This is likely to be wrong as all Spanish invoices need to account
-		// for tax, even if exempt.
-		return inv.Totals.Total
-	}
-	t := num.MakeAmount(0, 2)
-	for _, category := range inv.Totals.Taxes.Categories {
-		if !category.Retained {
-			// We need to recalculate the total based on the taxable bases
-			for _, rate := range category.Rates {
-				t = t.Add(rate.Base)
-			}
-			t = t.Add(category.Amount)
-		}
-	}
-	return t
-}
-
 func newImporteRectificacion(taxes *tax.Total) *ImporteRectificacion {
 	zero := currency.EUR.Def().Zero()
 	ir := &ImporteRectificacion{
@@ -309,19 +311,6 @@ func newImporteRectificacion(taxes *tax.Total) *ImporteRectificacion {
 		}
 	}
 	return ir
-}
-
-func newTotalTaxes(inv *bill.Invoice) num.Amount {
-	totalTaxes := num.MakeAmount(0, 2)
-	if inv.Totals.Taxes == nil {
-		return totalTaxes
-	}
-	for _, category := range inv.Totals.Taxes.Categories {
-		if !category.Retained {
-			totalTaxes = totalTaxes.Add(category.Amount)
-		}
-	}
-	return totalTaxes
 }
 
 func getTaxExtKey(inv *bill.Invoice, k cbc.Key) (string, error) {
@@ -362,8 +351,8 @@ func (r *InvoiceRegistration) fingerprint(prev *ChainData) {
 		formatChainField("NumSerieFactura", r.IDFactura.NumSerieFactura),
 		formatChainField("FechaExpedicionFactura", r.IDFactura.FechaExpedicionFactura),
 		formatChainField("TipoFactura", r.TipoFactura),
-		formatChainField("CuotaTotal", r.CuotaTotal),
-		formatChainField("ImporteTotal", r.ImporteTotal),
+		formatChainField("CuotaTotal", r.CuotaTotal.String()),
+		formatChainField("ImporteTotal", r.ImporteTotal.String()),
 		formatChainField("Huella", h),
 		formatChainField("FechaHoraHusoGenRegistro", r.FechaHoraHusoGenRegistro),
 	}

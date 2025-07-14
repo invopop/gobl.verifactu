@@ -15,7 +15,6 @@ func TestInvoiceConversion(t *testing.T) {
 	require.NoError(t, err)
 	vc, err := verifactu.New(
 		new(verifactu.Software),
-		verifactu.WithSupplierIssuer(),
 		verifactu.WithCurrentTime(ts),
 	)
 	require.NoError(t, err)
@@ -42,7 +41,6 @@ func TestInvoiceConversionWithRep(t *testing.T) {
 
 	vc, err := verifactu.New(
 		new(verifactu.Software),
-		verifactu.WithThirdPartyIssuer(),
 		verifactu.WithCurrentTime(ts),
 		verifactu.WithRepresentative("Sample Rep", "B63272603"),
 	)

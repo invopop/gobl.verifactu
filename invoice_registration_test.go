@@ -2,6 +2,8 @@ package verifactu
 
 import (
 	"testing"
+
+	"github.com/invopop/gobl/num"
 )
 
 func TestInvoiceRegistrationFingerprint(t *testing.T) {
@@ -21,8 +23,8 @@ func TestInvoiceRegistrationFingerprint(t *testing.T) {
 						FechaExpedicionFactura: "11-11-2024",
 					},
 					TipoFactura:              "F1",
-					CuotaTotal:               "378.00",
-					ImporteTotal:             "2178.00",
+					CuotaTotal:               num.MakeAmount(37800, 2),
+					ImporteTotal:             num.MakeAmount(217800, 2),
 					FechaHoraHusoGenRegistro: "2024-11-20T19:00:55+01:00",
 				},
 				prev: &ChainData{
@@ -42,8 +44,8 @@ func TestInvoiceRegistrationFingerprint(t *testing.T) {
 						FechaExpedicionFactura: "12-11-2024",
 					},
 					TipoFactura:              "R3",
-					CuotaTotal:               "500.50",
-					ImporteTotal:             "2502.55",
+					CuotaTotal:               num.MakeAmount(50050, 2),
+					ImporteTotal:             num.MakeAmount(250255, 2),
 					FechaHoraHusoGenRegistro: "2024-11-20T20:00:55+01:00",
 				},
 				prev: &ChainData{
@@ -63,8 +65,8 @@ func TestInvoiceRegistrationFingerprint(t *testing.T) {
 						FechaExpedicionFactura: "12-11-2024",
 					},
 					TipoFactura:              "F1",
-					CuotaTotal:               "500.00",
-					ImporteTotal:             "2500.00",
+					CuotaTotal:               num.MakeAmount(50000, 2),
+					ImporteTotal:             num.MakeAmount(250000, 2),
 					Encadenamiento:           &Encadenamiento{PrimerRegistro: "S"},
 					FechaHoraHusoGenRegistro: "2024-11-20T20:00:55+01:00",
 				},
@@ -80,8 +82,8 @@ func TestInvoiceRegistrationFingerprint(t *testing.T) {
 						FechaExpedicionFactura: "15-11-2024",
 					},
 					TipoFactura:              "F1",
-					CuotaTotal:               "0.00",
-					ImporteTotal:             "1800.00",
+					CuotaTotal:               num.MakeAmount(0, 2),
+					ImporteTotal:             num.MakeAmount(180000, 2),
 					Encadenamiento:           &Encadenamiento{RegistroAnterior: &RegistroAnterior{Huella: "13EC0696104D1E529667184C6CDFC67D08036BCA4CD1B7887DE9C6F8F7EEC69C"}},
 					FechaHoraHusoGenRegistro: "2024-11-21T17:59:41+01:00",
 				},

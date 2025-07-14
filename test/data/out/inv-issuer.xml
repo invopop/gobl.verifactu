@@ -13,12 +13,17 @@
           <sum1:IDVersion>1.0</sum1:IDVersion>
           <sum1:IDFactura>
             <sum1:IDEmisorFactura>B85905495</sum1:IDEmisorFactura>
-            <sum1:NumSerieFactura>SAMPLE-003</sum1:NumSerieFactura>
-            <sum1:FechaExpedicionFactura>15-11-2024</sum1:FechaExpedicionFactura>
+            <sum1:NumSerieFactura>SAMPLE-004</sum1:NumSerieFactura>
+            <sum1:FechaExpedicionFactura>13-11-2024</sum1:FechaExpedicionFactura>
           </sum1:IDFactura>
           <sum1:NombreRazonEmisor>Invopop S.L.</sum1:NombreRazonEmisor>
           <sum1:TipoFactura>F1</sum1:TipoFactura>
-          <sum1:DescripcionOperacion>This is an invoice exempt from tax</sum1:DescripcionOperacion>
+          <sum1:DescripcionOperacion>This is a sample invoice with a standard tax</sum1:DescripcionOperacion>
+          <sum1:EmitidaPorTerceroODestinatario>T</sum1:EmitidaPorTerceroODestinatario>
+          <sum1:Tercero>
+            <sum1:NombreRazon>Amazon</sum1:NombreRazon>
+            <sum1:NIF>B63272603</sum1:NIF>
+          </sum1:Tercero>
           <sum1:Destinatarios>
             <sum1:IDDestinatario>
               <sum1:NombreRazon>Sample Consumer</sum1:NombreRazon>
@@ -29,12 +34,14 @@
             <sum1:DetalleDesglose>
               <sum1:Impuesto>01</sum1:Impuesto>
               <sum1:ClaveRegimen>01</sum1:ClaveRegimen>
-              <sum1:OperacionExenta>E1</sum1:OperacionExenta>
+              <sum1:CalificacionOperacion>S1</sum1:CalificacionOperacion>
+              <sum1:TipoImpositivo>21.0</sum1:TipoImpositivo>
               <sum1:BaseImponibleOimporteNoSujeto>1800.00</sum1:BaseImponibleOimporteNoSujeto>
+              <sum1:CuotaRepercutida>378.00</sum1:CuotaRepercutida>
             </sum1:DetalleDesglose>
           </sum1:Desglose>
-          <sum1:CuotaTotal>0.00</sum1:CuotaTotal>
-          <sum1:ImporteTotal>1800.00</sum1:ImporteTotal>
+          <sum1:CuotaTotal>378.00</sum1:CuotaTotal>
+          <sum1:ImporteTotal>2178.00</sum1:ImporteTotal>
           <sum1:Encadenamiento>
             <sum1:RegistroAnterior>
               <sum1:IDEmisorFactura>B12345678</sum1:IDEmisorFactura>
@@ -56,7 +63,7 @@
           </sum1:SistemaInformatico>
           <sum1:FechaHoraHusoGenRegistro>2024-11-26T05:00:00+01:00</sum1:FechaHoraHusoGenRegistro>
           <sum1:TipoHuella>01</sum1:TipoHuella>
-          <sum1:Huella>95EC739A3E2012BA269CD05F281CE298D3750F25442A5C0E5635BD83359E4697</sum1:Huella>
+          <sum1:Huella>F5D2E033EEB82E06908BE1F7059D84F1A0DCA49FB7CC383E7F11D119FF36370F</sum1:Huella>
         </sum1:RegistroAlta>
       </sum:RegistroFactura>
     </sum:RegFactuSistemaFacturacion>

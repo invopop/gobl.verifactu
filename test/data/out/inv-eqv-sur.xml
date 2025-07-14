@@ -19,11 +19,6 @@
           <sum1:NombreRazonEmisor>Invopop S.L.</sum1:NombreRazonEmisor>
           <sum1:TipoFactura>F1</sum1:TipoFactura>
           <sum1:DescripcionOperacion>This is a sample invoice with a standard tax and an equivalence surcharge</sum1:DescripcionOperacion>
-          <sum1:EmitidaPorTerceroODestinatario>T</sum1:EmitidaPorTerceroODestinatario>
-          <sum1:Tercero>
-            <sum1:NombreRazon>Invopop S.L.</sum1:NombreRazon>
-            <sum1:NIF>B85905495</sum1:NIF>
-          </sum1:Tercero>
           <sum1:Destinatarios>
             <sum1:IDDestinatario>
               <sum1:NombreRazon>Sample Consumer</sum1:NombreRazon>
@@ -42,8 +37,8 @@
               <sum1:CuotaRecargoEquivalencia>93.60</sum1:CuotaRecargoEquivalencia>
             </sum1:DetalleDesglose>
           </sum1:Desglose>
-          <sum1:CuotaTotal>378.00</sum1:CuotaTotal>
-          <sum1:ImporteTotal>2178.00</sum1:ImporteTotal>
+          <sum1:CuotaTotal>471.60</sum1:CuotaTotal>
+          <sum1:ImporteTotal>2271.60</sum1:ImporteTotal>
           <sum1:Encadenamiento>
             <sum1:RegistroAnterior>
               <sum1:IDEmisorFactura>B12345678</sum1:IDEmisorFactura>
@@ -65,7 +60,7 @@
           </sum1:SistemaInformatico>
           <sum1:FechaHoraHusoGenRegistro>2024-11-26T05:00:00+01:00</sum1:FechaHoraHusoGenRegistro>
           <sum1:TipoHuella>01</sum1:TipoHuella>
-          <sum1:Huella>1D8655D3243F182BFD85FE21518AFA1B16F6BEA0ED0B09E12A2A0E5211B7C898</sum1:Huella>
+          <sum1:Huella>660E9056537A7DDEE0BB4C2A4A6CB8DC741B61EB604526BE3BEB8FC035693B97</sum1:Huella>
         </sum1:RegistroAlta>
       </sum:RegistroFactura>
     </sum:RegFactuSistemaFacturacion>

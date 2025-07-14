@@ -61,7 +61,6 @@ func (c *cancelOpts) runE(cmd *cobra.Command, args []string) error {
 
 	opts := []verifactu.Option{
 		verifactu.WithCertificate(cert),
-		verifactu.WithThirdPartyIssuer(),
 	}
 
 	if c.production {
