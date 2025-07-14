@@ -24,7 +24,8 @@
               <sum1:NombreRazon>Random Company Inc.</sum1:NombreRazon>
               <sum1:IDOtro>
                 <sum1:CodigoPais>US</sum1:CodigoPais>
-                <sum1:IDType>07</sum1:IDType>
+                <sum1:IDType>02</sum1:IDType>
+                <sum1:ID>NA</sum1:ID>
               </sum1:IDOtro>
             </sum1:IDDestinatario>
           </sum1:Destinatarios>

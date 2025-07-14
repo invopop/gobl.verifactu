@@ -4,7 +4,7 @@
 		"uuid": "8a51fd30-2a27-11ee-be56-0242ac120002",
 		"dig": {
 			"alg": "sha256",
-			"val": "fb14490356c0c7bbe14baeac9897169cd59a1ed3424e34fcc089e528ad8716f0"
+			"val": "57d4fc6ee64e63498d30bc52031786666579bfdd5cc5c6719a2ecf0eb56f7eba"
 		}
 	},
 	"doc": {
@@ -49,7 +49,8 @@
 		"customer": {
 			"name": "Random Company Inc.",
 			"tax_id": {
-				"country": "US"
+				"country": "US",
+				"code": "NA"
 			},
 			"addresses": [
 				{
