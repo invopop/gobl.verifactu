@@ -13,28 +13,30 @@
           <sum1:IDVersion>1.0</sum1:IDVersion>
           <sum1:IDFactura>
             <sum1:IDEmisorFactura>B85905495</sum1:IDEmisorFactura>
-            <sum1:NumSerieFactura>SAMPLE-004</sum1:NumSerieFactura>
-            <sum1:FechaExpedicionFactura>13-11-2024</sum1:FechaExpedicionFactura>
+            <sum1:NumSerieFactura>SAMPLE-100</sum1:NumSerieFactura>
+            <sum1:FechaExpedicionFactura>15-07-2025</sum1:FechaExpedicionFactura>
           </sum1:IDFactura>
           <sum1:NombreRazonEmisor>Invopop S.L.</sum1:NombreRazonEmisor>
           <sum1:TipoFactura>F1</sum1:TipoFactura>
           <sum1:DescripcionOperacion>Development services.</sum1:DescripcionOperacion>
           <sum1:Destinatarios>
             <sum1:IDDestinatario>
-              <sum1:NombreRazon>Random Company Inc.</sum1:NombreRazon>
+              <sum1:NombreRazon>Sample Consumer</sum1:NombreRazon>
               <sum1:IDOtro>
-                <sum1:CodigoPais>US</sum1:CodigoPais>
-                <sum1:IDType>04</sum1:IDType>
-                <sum1:ID>NA</sum1:ID>
+                <sum1:CodigoPais>DE</sum1:CodigoPais>
+                <sum1:IDType>02</sum1:IDType>
+                <sum1:ID>DE282741168</sum1:ID>
               </sum1:IDOtro>
             </sum1:IDDestinatario>
           </sum1:Destinatarios>
           <sum1:Desglose>
             <sum1:DetalleDesglose>
               <sum1:Impuesto>01</sum1:Impuesto>
-              <sum1:ClaveRegimen>02</sum1:ClaveRegimen>
-              <sum1:CalificacionOperacion>N2</sum1:CalificacionOperacion>
+              <sum1:ClaveRegimen>01</sum1:ClaveRegimen>
+              <sum1:CalificacionOperacion>S2</sum1:CalificacionOperacion>
+              <sum1:TipoImpositivo>0</sum1:TipoImpositivo>
               <sum1:BaseImponibleOimporteNoSujeto>1800.00</sum1:BaseImponibleOimporteNoSujeto>
+              <sum1:CuotaRepercutida>0.00</sum1:CuotaRepercutida>
             </sum1:DetalleDesglose>
           </sum1:Desglose>
           <sum1:CuotaTotal>0.00</sum1:CuotaTotal>
@@ -60,7 +62,7 @@
           </sum1:SistemaInformatico>
           <sum1:FechaHoraHusoGenRegistro>2024-11-26T05:00:00+01:00</sum1:FechaHoraHusoGenRegistro>
           <sum1:TipoHuella>01</sum1:TipoHuella>
-          <sum1:Huella>F6F2FAFA1CB70D3EA90526021A1867FCAD6140C812C61ADF0A035311E5F37B1A</sum1:Huella>
+          <sum1:Huella>96B52BB9F5806ACE487E9C4005A1A868D890E0738C9E6B676F3BC07E3C5653E5</sum1:Huella>
         </sum1:RegistroAlta>
       </sum:RegistroFactura>
     </sum:RegFactuSistemaFacturacion>

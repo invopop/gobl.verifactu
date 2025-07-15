@@ -169,7 +169,7 @@ func newInvoiceRegistration(inv *bill.Invoice, ts time.Time, s *Software) (*Invo
 		}
 	}
 
-	if p := newParty(inv.Customer); p != nil {
+	if p := newParty(inv.Customer, inv.IssueDate); p != nil {
 		reg.Destinatarios = []*Destinatario{
 			{
 				IDDestinatario: p,
@@ -236,7 +236,7 @@ func newInvoiceRegistration(inv *bill.Invoice, ts time.Time, s *Software) (*Invo
 	}
 
 	if inv.Ordering != nil && inv.Ordering.Issuer != nil {
-		reg.Tercero = newParty(inv.Ordering.Issuer)
+		reg.Tercero = newParty(inv.Ordering.Issuer, inv.IssueDate)
 	}
 
 	// Flag for operations with totals over 100,000,000€. Added with optimism.
