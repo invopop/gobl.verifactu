@@ -37,6 +37,7 @@ func TestNewRegistroAlta(t *testing.T) {
 		assert.Equal(t, "This is a sample invoice with a standard tax", ra.DescripcionOperacion)
 		assert.Equal(t, "378.00", ra.CuotaTotal.String())
 		assert.Equal(t, "2178.00", ra.ImporteTotal.String())
+		assert.Empty(t, ra.FechaOperacion)
 
 		require.Len(t, ra.Destinatarios, 1)
 		dest := ra.Destinatarios[0].IDDestinatario
@@ -135,5 +136,13 @@ func TestNewRegistroAlta(t *testing.T) {
 		assert.Equal(t, "13-11-2024", ra.IDFactura.FechaExpedicionFactura)
 		assert.Equal(t, "Invopop S.L.", ra.NombreRazonEmisor)
 		assert.True(t, len(ra.DescripcionOperacion) <= 500)
+	})
+
+	t.Run("should handle an operation date", func(t *testing.T) {
+		env := test.LoadEnvelope("inv-op-date.json")
+		ra, err := vc.RegisterInvoice(env, nil)
+		require.NoError(t, err)
+
+		assert.Equal(t, "10-11-2024", ra.FechaOperacion)
 	})
 }

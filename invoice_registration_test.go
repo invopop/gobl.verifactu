@@ -2,16 +2,9 @@ package verifactu
 
 import (
 	"testing"
-	"time"
 
-	"github.com/invopop/gobl/bill"
-	"github.com/invopop/gobl/cal"
-	"github.com/invopop/gobl/currency"
 	"github.com/invopop/gobl/num"
-	"github.com/invopop/gobl/org"
-	"github.com/invopop/gobl/tax"
 	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 )
 
 func TestInvoiceRegistrationFingerprint(t *testing.T) {
@@ -111,82 +104,5 @@ func TestInvoiceRegistrationFingerprint(t *testing.T) {
 				assert.Equal(t, tt.expected, tt.alta.Huella)
 			})
 		}
-	})
-}
-
-func TestInvoiceRegistrationOperationDate(t *testing.T) {
-	ts, err := time.Parse(time.RFC3339, "2022-02-01T04:00:00Z")
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	software := &Software{
-		NombreRazon:              "Test Software",
-		NIF:                      "B12345678",
-		NombreSistemaInformatico: "Test System",
-		IdSistemaInformatico:     "TS1",
-		Version:                  "1.0",
-		NumeroInstalacion:        "001",
-	}
-
-	// Create a base invoice for testing
-	createTestInvoice := func(issueDate cal.Date, operationDate *cal.Date) *bill.Invoice {
-		inv := &bill.Invoice{
-			Type:          bill.InvoiceTypeStandard,
-			Series:        "TEST",
-			Code:          "001",
-			IssueDate:     issueDate,
-			OperationDate: operationDate,
-			Currency:      currency.EUR,
-			Supplier: &org.Party{
-				Name: "Test Supplier",
-				TaxID: &tax.Identity{
-					Country: "ES",
-					Code:    "B12345678",
-				},
-			},
-			Totals: &bill.Totals{
-				Tax:          num.MakeAmount(2100, 2),
-				TotalWithTax: num.MakeAmount(12100, 2),
-			},
-			Tax: &bill.Tax{
-				Ext: tax.Extensions{
-					"es-verifactu-doc-type": "F1",
-				},
-			},
-		}
-		return inv
-	}
-
-	t.Run("OperationDate is nil", func(t *testing.T) {
-		issueDate := cal.MakeDate(2024, 11, 15)
-		inv := createTestInvoice(issueDate, nil)
-
-		reg, err := newInvoiceRegistration(inv, ts, software)
-		require.NoError(t, err)
-
-		assert.Empty(t, reg.FechaOperacion)
-	})
-
-	t.Run("OperationDate same as IssueDate", func(t *testing.T) {
-		issueDate := cal.MakeDate(2024, 11, 15)
-		operationDate := cal.NewDate(2024, 11, 15)
-		inv := createTestInvoice(issueDate, operationDate)
-
-		reg, err := newInvoiceRegistration(inv, ts, software)
-		require.NoError(t, err)
-
-		assert.Empty(t, reg.FechaOperacion)
-	})
-
-	t.Run("OperationDate different from IssueDate", func(t *testing.T) {
-		issueDate := cal.MakeDate(2024, 11, 15)
-		operationDate := cal.NewDate(2024, 11, 10)
-		inv := createTestInvoice(issueDate, operationDate)
-
-		reg, err := newInvoiceRegistration(inv, ts, software)
-		require.NoError(t, err)
-
-		assert.Equal(t, "10-11-2024", reg.FechaOperacion)
 	})
 }

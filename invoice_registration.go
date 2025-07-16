@@ -162,7 +162,7 @@ func newInvoiceRegistration(inv *bill.Invoice, ts time.Time, s *Software) (*Invo
 	}
 
 	if inv.OperationDate != nil {
-		if inv.OperationDate.Time().Format("02-01-2006") != inv.IssueDate.Time().Format("02-01-2006") {
+		if !inv.OperationDate.Time().Equal(inv.IssueDate.Time()) {
 			reg.FechaOperacion = inv.OperationDate.Time().Format("02-01-2006")
 		}
 	}
