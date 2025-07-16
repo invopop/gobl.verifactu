@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/invopop/gobl/num"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestInvoiceRegistrationFingerprint(t *testing.T) {
@@ -100,9 +101,7 @@ func TestInvoiceRegistrationFingerprint(t *testing.T) {
 		for _, tt := range tests {
 			t.Run(tt.name, func(t *testing.T) {
 				tt.alta.fingerprint(tt.prev)
-				if got := tt.alta.Huella; got != tt.expected {
-					t.Errorf("fingerprint = %v, want %v", got, tt.expected)
-				}
+				assert.Equal(t, tt.expected, tt.alta.Huella)
 			})
 		}
 	})
