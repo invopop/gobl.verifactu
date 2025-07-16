@@ -2,6 +2,7 @@ package verifactu
 
 import (
 	"github.com/invopop/gobl/addons/es/verifactu"
+	"github.com/invopop/gobl/cal"
 	"github.com/invopop/gobl/cbc"
 	"github.com/invopop/gobl/org"
 )
@@ -14,7 +15,7 @@ var idTypeCodeMap = map[cbc.Key]cbc.Code{
 }
 
 // newParty builds a new party, but only if there are enough tax identification details
-func newParty(p *org.Party) *Party {
+func newParty(p *org.Party, date cal.Date) *Party {
 	if p == nil {
 		return nil
 	}
@@ -24,7 +25,7 @@ func newParty(p *org.Party) *Party {
 	if p.TaxID != nil && !p.TaxID.Code.IsEmpty() && p.TaxID.Country.In("ES") {
 		pty.NIF = p.TaxID.Code.String()
 	} else {
-		pty.IDOtro = otherIdentity(p)
+		pty.IDOtro = otherIdentity(p, date)
 	}
 	if pty.NIF == "" && pty.IDOtro == nil {
 		return nil
@@ -32,17 +33,16 @@ func newParty(p *org.Party) *Party {
 	return pty
 }
 
-func otherIdentity(p *org.Party) *IDOtro {
+func otherIdentity(p *org.Party, date cal.Date) *IDOtro {
 	oid := new(IDOtro)
 	if p.TaxID != nil {
 		oid.CodigoPais = p.TaxID.Country.String()
-		if p.TaxID.Code != "" {
-			oid.IDType = "02" // NIF-VAT
-			oid.ID = p.TaxID.Code.String()
+		if p.TaxID.InEU(date) {
+			oid.IDType = "02"         // NIF-VAT
+			oid.ID = p.TaxID.String() // with country prefix
 		} else {
-			// For usage with a US company for example with no
-			// tax ID.
-			oid.IDType = "07" // not documented (no censado)
+			oid.IDType = "04"              // foreign
+			oid.ID = p.TaxID.Code.String() // just code
 		}
 		return oid
 	}

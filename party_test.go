@@ -54,7 +54,7 @@ func TestNewParty(t *testing.T) {
 		assert.Equal(t, "12345", p.IDOtro.ID)
 	})
 
-	t.Run("with foreign identity", func(t *testing.T) {
+	t.Run("with EU identity", func(t *testing.T) {
 		env, inv := test.LoadInvoice("inv-base.json")
 		inv.Customer = &org.Party{
 			Name: "Foreign Company",
@@ -73,7 +73,29 @@ func TestNewParty(t *testing.T) {
 		assert.Empty(t, p.NIF)
 		require.NotNil(t, p.IDOtro)
 		assert.Equal(t, "02", p.IDOtro.IDType)
-		assert.Equal(t, "111111125", p.IDOtro.ID)
+		assert.Equal(t, "DE111111125", p.IDOtro.ID)
+	})
+
+	t.Run("without EU identity", func(t *testing.T) {
+		env, inv := test.LoadInvoice("inv-base.json")
+		inv.Customer = &org.Party{
+			Name: "Foreign Company",
+			TaxID: &tax.Identity{
+				Country: "GB",
+				Code:    "123456789",
+			},
+		}
+
+		req, err := vc.RegisterInvoice(env, nil)
+		require.NoError(t, err)
+
+		p := req.Destinatarios[0].IDDestinatario
+
+		assert.Equal(t, "Foreign Company", p.NombreRazon)
+		assert.Empty(t, p.NIF)
+		require.NotNil(t, p.IDOtro)
+		assert.Equal(t, "04", p.IDOtro.IDType)
+		assert.Equal(t, "123456789", p.IDOtro.ID)
 	})
 
 	t.Run("with no identifiers", func(t *testing.T) {

@@ -4,7 +4,7 @@
 		"uuid": "8a51fd30-2a27-11ee-be56-0242ac120002",
 		"dig": {
 			"alg": "sha256",
-			"val": "462d6fb5afcf242d2693bc69075e4b0b78a10630a0518cbe9f746754ee3f2204"
+			"val": "e7b3314ceafcebccf81ae08da7f4a083760df7ee09b4248a18b242e80589de83"
 		}
 	},
 	"doc": {
@@ -16,8 +16,8 @@
 		"uuid": "3aea7b56-59d8-4beb-90bd-f8f280d852a0",
 		"type": "standard",
 		"series": "SAMPLE",
-		"code": "004",
-		"issue_date": "2024-11-13",
+		"code": "100",
+		"issue_date": "2025-07-15",
 		"currency": "EUR",
 		"tax": {
 			"ext": {
@@ -47,21 +47,11 @@
 			]
 		},
 		"customer": {
-			"name": "Random Company Inc.",
+			"name": "Sample Consumer",
 			"tax_id": {
-				"country": "US",
-				"code": "NA"
-			},
-			"addresses": [
-				{
-					"num": "123",
-					"street": "Main St",
-					"locality": "Springfield",
-					"region": "IL",
-					"code": "62701",
-					"country": "US"
-				}
-			]
+				"country": "DE",
+				"code": "282741168"
+			}
 		},
 		"lines": [
 			{
@@ -76,10 +66,10 @@
 				"taxes": [
 					{
 						"cat": "VAT",
-						"rate": "exempt+export",
+						"rate": "exempt+reverse-charge",
 						"ext": {
-							"es-verifactu-op-class": "N2",
-							"es-verifactu-regime": "02"
+							"es-verifactu-op-class": "S2",
+							"es-verifactu-regime": "01"
 						}
 					}
 				],
@@ -95,10 +85,10 @@
 						"code": "VAT",
 						"rates": [
 							{
-								"key": "exempt+export",
+								"key": "exempt+reverse-charge",
 								"ext": {
-									"es-verifactu-op-class": "N2",
-									"es-verifactu-regime": "02"
+									"es-verifactu-op-class": "S2",
+									"es-verifactu-regime": "01"
 								},
 								"base": "1800.00",
 								"amount": "0.00"
