@@ -161,6 +161,12 @@ func newInvoiceRegistration(inv *bill.Invoice, ts time.Time, s *Software) (*Invo
 		EmitidaPorTerceroODestinatario: itax.Ext.Get(verifactu.ExtKeyIssuerType).String(),
 	}
 
+	if inv.OperationDate != nil {
+		if inv.OperationDate.Time().Format("02-01-2006") != inv.IssueDate.Time().Format("02-01-2006") {
+			reg.FechaOperacion = inv.OperationDate.Time().Format("02-01-2006")
+		}
+	}
+
 	// Remove any charges that do not have taxes from the total, these are
 	// likely to be related to payments or other non-taxable items.
 	for _, charge := range inv.Charges {
