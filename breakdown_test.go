@@ -143,8 +143,8 @@ func TestBreakdownConversion(t *testing.T) {
 						Category: "VAT",
 						Rate:     "exempt",
 						Ext: tax.Extensions{
-							addon.ExtKeyOpClass: "E1",
-							addon.ExtKeyRegime:  "01",
+							addon.ExtKeyExempt: "E1",
+							addon.ExtKeyRegime: "01",
 						},
 					},
 				},
