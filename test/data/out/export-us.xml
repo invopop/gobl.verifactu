@@ -33,7 +33,7 @@
             <sum1:DetalleDesglose>
               <sum1:Impuesto>01</sum1:Impuesto>
               <sum1:ClaveRegimen>02</sum1:ClaveRegimen>
-              <sum1:CalificacionOperacion>N2</sum1:CalificacionOperacion>
+              <sum1:OperacionExenta>E2</sum1:OperacionExenta>
               <sum1:BaseImponibleOimporteNoSujeto>1800.00</sum1:BaseImponibleOimporteNoSujeto>
             </sum1:DetalleDesglose>
           </sum1:Desglose>

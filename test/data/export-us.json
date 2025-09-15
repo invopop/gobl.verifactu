@@ -4,7 +4,7 @@
 		"uuid": "8a51fd30-2a27-11ee-be56-0242ac120002",
 		"dig": {
 			"alg": "sha256",
-			"val": "462d6fb5afcf242d2693bc69075e4b0b78a10630a0518cbe9f746754ee3f2204"
+			"val": "69a5ef890cf8bcfe114f8e8aec003c9bd7614a6f367ab1fa7012f881f66bfee6"
 		}
 	},
 	"doc": {
@@ -76,9 +76,9 @@
 				"taxes": [
 					{
 						"cat": "VAT",
-						"rate": "exempt+export",
+						"key": "export",
 						"ext": {
-							"es-verifactu-op-class": "N2",
+							"es-verifactu-exempt": "E2",
 							"es-verifactu-regime": "02"
 						}
 					}
@@ -95,9 +95,9 @@
 						"code": "VAT",
 						"rates": [
 							{
-								"key": "exempt+export",
+								"key": "export",
 								"ext": {
-									"es-verifactu-op-class": "N2",
+									"es-verifactu-exempt": "E2",
 									"es-verifactu-regime": "02"
 								},
 								"base": "1800.00",
