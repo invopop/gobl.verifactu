@@ -143,8 +143,8 @@ func TestBreakdownConversion(t *testing.T) {
 						Category: "VAT",
 						Rate:     "exempt",
 						Ext: tax.Extensions{
-							addon.ExtKeyOpClass: "N1",
-							addon.ExtKeyRegime:  "01",
+							addon.ExtKeyExempt: "E1",
+							addon.ExtKeyRegime: "01",
 						},
 					},
 				},
@@ -159,7 +159,7 @@ func TestBreakdownConversion(t *testing.T) {
 		assert.Empty(t, dd0.CuotaRepercutida)
 		assert.Equal(t, "01", dd0.Impuesto)
 		assert.Equal(t, "01", dd0.ClaveRegimen)
-		assert.Equal(t, "N1", dd0.CalificacionOperacion)
+		assert.Equal(t, "E1", dd0.OperacionExenta)
 	})
 
 	t.Run("equivalence-surcharge", func(t *testing.T) {
