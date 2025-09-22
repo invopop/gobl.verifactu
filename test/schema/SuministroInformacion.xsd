@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:sf="https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/tike/cont/ws/SuministroInformacion.xsd" targetNamespace="https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/tike/cont/ws/SuministroInformacion.xsd" elementFormDefault="qualified">
+<schema
+	xmlns="http://www.w3.org/2001/XMLSchema"
+	xmlns:ds="http://www.w3.org/2000/09/xmldsig#"
+	xmlns:sf="https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/tike/cont/ws/SuministroInformacion.xsd" targetNamespace="https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/tike/cont/ws/SuministroInformacion.xsd" elementFormDefault="qualified">
 	<import namespace="http://www.w3.org/2000/09/xmldsig#" schemaLocation="http://www.w3.org/TR/xmldsig-core/xmldsig-core-schema.xsd"/>
 	<complexType name="CabeceraType">
 		<annotation>
@@ -36,8 +39,8 @@
 	</complexType>
 	<element name="RegistroAlta" type="sf:RegistroFacturacionAltaType"/>
 	<element name="RegistroAnulacion" type="sf:RegistroFacturacionAnulacionType"/>
-	<!-- Datos de presentacion en la respuesta
--->
+	<!--  Datos de presentacion en la respuesta
+ -->
 	<complexType name="DatosPresentacionType">
 		<sequence>
 			<element name="NIFPresentador" type="sf:NIFType"/>
@@ -51,22 +54,10 @@
 			<element name="IdPeticion" type="sf:TextMax20Type"/>
 		</sequence>
 	</complexType>
-	<complexType name="RegistroSf">
-		<annotation>
-			<documentation xml:lang="es"> Información básica que contienen los registros del sistema de facturacion </documentation>
-		</annotation>
+	<complexType name="PeriodoImputacionType">
 		<sequence>
-			<element name="PeriodoImputacion">
-				<complexType>
-					<annotation>
-						<documentation xml:lang="es"> Período de la fecha de la operación</documentation>
-					</annotation>
-					<sequence>
-						<element name="Ejercicio" type="sf:YearType"/>
-						<element name="Periodo" type="sf:TipoPeriodoType"/>
-					</sequence>
-				</complexType>
-			</element>
+			<element name="Ejercicio" type="sf:YearType"/>
+			<element name="Periodo" type="sf:TipoPeriodoType"/>
 		</sequence>
 	</complexType>
 	<complexType name="IDFacturaExpedidaBCType">
@@ -116,7 +107,7 @@
 		<sequence>
 			<element name="IDVersion" type="sf:VersionType"/>
 			<element name="IDFactura" type="sf:IDFacturaExpedidaType"/>
-			<element name="RefExterna" type="sf:TextMax70Type" minOccurs="0"/>
+			<element name="RefExterna" type="sf:TextMax60Type" minOccurs="0"/>
 			<element name="NombreRazonEmisor" type="sf:TextMax120Type"/>
 			<element name="Subsanacion" type="sf:SubsanacionType" minOccurs="0"/>
 			<element name="RechazoPrevio" type="sf:RechazoPrevioType" minOccurs="0"/>
@@ -253,6 +244,24 @@
 			<element name="IndicadorMultiplesOT" type="sf:SiNoType"/>
 		</sequence>
 	</complexType>
+	<complexType name="SistemaInformaticoConsultaType">
+		<sequence>
+			<sequence>
+				<element name="NombreRazon" type="sf:TextMax120Type"/>
+				<choice>
+					<element name="NIF" type="sf:NIFType"/>
+					<element name="IDOtro" type="sf:IDOtroType"/>
+				</choice>
+			</sequence>
+			<element name="NombreSistemaInformatico" type="sf:TextMax30Type" minOccurs="0"/>
+			<element name="IdSistemaInformatico" type="sf:TextMax2Type"/>
+			<element name="Version" type="sf:TextMax50Type" minOccurs="0"/>
+			<element name="NumeroInstalacion" type="sf:TextMax100Type"/>
+			<element name="TipoUsoPosibleSoloVerifactu" type="sf:SiNoType" minOccurs="0"/>
+			<element name="TipoUsoPosibleMultiOT" type="sf:SiNoType" minOccurs="0"/>
+			<element name="IndicadorMultiplesOT" type="sf:SiNoType" minOccurs="0"/>
+		</sequence>
+	</complexType>
 	<complexType name="IDFacturaExpedidaType">
 		<annotation>
 			<documentation xml:lang="es"> Datos de identificación de factura </documentation>
@@ -275,7 +284,7 @@
 			</element>
 		</sequence>
 	</complexType>
-	<!--tipo definido para la identificacion de facturas sustituidas o rectificadas-->
+	<!-- tipo definido para la identificacion de facturas sustituidas o rectificadas -->
 	<complexType name="IDFacturaARType">
 		<annotation>
 			<documentation xml:lang="es"> Datos de identificación de factura sustituida o rectificada. El NIF se cogerá del NIF indicado en el bloque IDFactura</documentation>
@@ -324,7 +333,7 @@
 			<element name="CuotaRecargoRectificado" type="sf:ImporteSgn12.2Type" minOccurs="0"/>
 		</sequence>
 	</complexType>
-	<!-- Datos de persona Física o jurídica : Denominación, representación, identificación (NIF) -->
+	<!--  Datos de persona Física o jurídica : Denominación, representación, identificación (NIF)  -->
 	<complexType name="PersonaFisicaJuridicaESType">
 		<annotation>
 			<documentation xml:lang="es">Datos de una persona física o jurídica Española con un NIF asociado</documentation>
@@ -334,7 +343,7 @@
 			<element name="NIF" type="sf:NIFType"/>
 		</sequence>
 	</complexType>
-	<!-- Datos de persona Física o jurídica : Denominación, representación, identificación (NIF/Otro) -->
+	<!--  Datos de persona Física o jurídica : Denominación, representación, identificación (NIF/Otro)  -->
 	<complexType name="PersonaFisicaJuridicaType">
 		<annotation>
 			<documentation xml:lang="es">Datos de una persona física o jurídica Española o Extranjera</documentation>
@@ -347,14 +356,10 @@
 			</choice>
 		</sequence>
 	</complexType>
-	<!-- Datos de persona Física o jurídica : Denominación, representación, identificación (NIF/Otro) -->
+	<!--  Datos de persona Física o jurídica : Denominación, representación, identificación (NIF/Otro)  -->
 	<complexType name="IDOtroType">
 		<annotation>
-			<documentation xml:lang="es">Identificador de persona Física o jurídica distinto del NIF 
-        								 (Código pais, Tipo de Identificador, y hasta 15 caractéres)
-        								 No se permite CodigoPais=ES e IDType=01-NIFContraparte
-        								 para ese caso, debe utilizarse NIF en lugar de IDOtro.
-        	</documentation>
+			<documentation xml:lang="es">Identificador de persona Física o jurídica distinto del NIF (Código pais, Tipo de Identificador, y hasta 15 caractéres) No se permite CodigoPais=ES e IDType=01-NIFContraparte para ese caso, debe utilizarse NIF en lugar de IDOtro. </documentation>
 		</annotation>
 		<sequence>
 			<element name="CodigoPais" type="sf:CountryType2" minOccurs="0"/>
@@ -381,30 +386,22 @@
 		<sequence>
 			<element name="IdPeticionRegistroDuplicado" type="sf:TextMax20Type">
 				<annotation>
-					<documentation xml:lang="es"> 
-						IdPeticion asociado a la factura registrada previamente en el sistema. Solo se suministra si la factura enviada es rechazada por estar duplicada
-					</documentation>
+					<documentation xml:lang="es"> IdPeticion asociado a la factura registrada previamente en el sistema. Solo se suministra si la factura enviada es rechazada por estar duplicada </documentation>
 				</annotation>
 			</element>
 			<element name="EstadoRegistroDuplicado" type="sf:EstadoRegistroSFType">
 				<annotation>
-					<documentation xml:lang="es"> 
-						Estado del registro duplicado almacenado en el sistema. Los estados posibles son: Correcta, AceptadaConErrores y Anulada. Solo se suministra si la factura enviada es rechazada por estar duplicada
-											</documentation>
+					<documentation xml:lang="es"> Estado del registro duplicado almacenado en el sistema. Los estados posibles son: Correcta, AceptadaConErrores y Anulada. Solo se suministra si la factura enviada es rechazada por estar duplicada </documentation>
 				</annotation>
 			</element>
 			<element name="CodigoErrorRegistro" type="sf:ErrorDetalleType" minOccurs="0">
 				<annotation>
-					<documentation xml:lang="es"> 
-						Código del error de registro duplicado almacenado en el sistema, en su caso.
-					</documentation>
+					<documentation xml:lang="es"> Código del error de registro duplicado almacenado en el sistema, en su caso. </documentation>
 				</annotation>
 			</element>
 			<element name="DescripcionErrorRegistro" type="sf:TextMax500Type" minOccurs="0">
 				<annotation>
-					<documentation xml:lang="es"> 
-						Descripción detallada del error de registro duplicado almacenado en el sistema, en su caso.
-					</documentation>
+					<documentation xml:lang="es"> Descripción detallada del error de registro duplicado almacenado en el sistema, en su caso. </documentation>
 				</annotation>
 			</element>
 		</sequence>
@@ -414,8 +411,8 @@
 			<enumeration value="1.0"/>
 		</restriction>
 	</simpleType>
-	<!-- ==== Tipos básicos (Listas de claves y patrones) ============================================= -->
-	<!-- Año en formato YYYY -->
+	<!--  ==== Tipos básicos (Listas de claves y patrones) =============================================  -->
+	<!--  Año en formato YYYY  -->
 	<simpleType name="YearType">
 		<annotation>
 			<documentation xml:lang="es"> Año en formato YYYY </documentation>
@@ -427,7 +424,7 @@
 	</simpleType>
 	<simpleType name="TipoPeriodoType">
 		<annotation>
-			<documentation xml:lang="es"> Período de la factura  </documentation>
+			<documentation xml:lang="es"> Período de la factura </documentation>
 		</annotation>
 		<restriction base="string">
 			<enumeration value="01">
@@ -492,182 +489,182 @@
 			</enumeration>
 		</restriction>
 	</simpleType>
-	<!-- Identificador único de facturas -->
+	<!--  Identificador único de facturas  -->
 	<simpleType name="TextoIDenvioType">
 		<restriction base="string">
 			<maxLength value="20"/>
 		</restriction>
 	</simpleType>
-	<!-- Identificador único de facturas -->
+	<!--  Identificador único de facturas  -->
 	<simpleType name="TextoIDFacturaType">
 		<restriction base="string">
 			<minLength value="1"/>
 			<maxLength value="60"/>
 		</restriction>
 	</simpleType>
-	<!-- Tipo de 10 dígitos -->
+	<!--  Tipo de 10 dígitos  -->
 	<simpleType name="Tipo10Type">
 		<restriction base="string">
 			<pattern value="\d{0,10}"/>
 		</restriction>
 	</simpleType>
-	<!-- Importe de 15 dígitos (12+2) "." como separador decimal -->
+	<!--  Importe de 15 dígitos (12+2) "." como separador decimal  -->
 	<simpleType name="ImporteSgn12.2Type">
 		<restriction base="string">
 			<pattern value="(\+|-)?\d{1,12}(\.\d{0,2})?"/>
 		</restriction>
 	</simpleType>
-	<!-- Importe de 17 dígitos (14+2) "." como separador decimal -->
+	<!--  Importe de 17 dígitos (14+2) "." como separador decimal  -->
 	<simpleType name="ImporteSgn14.2Type">
 		<restriction base="string">
 			<pattern value="(\+|-)?\d{1,14}(\.\d{0,2})?"/>
 		</restriction>
 	</simpleType>
-	<!-- Tipo de 6 dígitos (3+2) "." como separador decimal -->
+	<!--  Tipo de 6 dígitos (3+2) "." como separador decimal  -->
 	<simpleType name="Tipo2.2Type">
 		<restriction base="string">
 			<pattern value="\d{1,3}(\.\d{0,2})?"/>
 		</restriction>
 	</simpleType>
-	<!-- Tipo de 3 dígitos -->
+	<!--  Tipo de 3 dígitos  -->
 	<simpleType name="Tipo3Type">
 		<restriction base="string">
 			<pattern value="\d{0,3}"/>
 		</restriction>
 	</simpleType>
-	<!-- Tipo de 6 dígitos -->
+	<!--  Tipo de 6 dígitos  -->
 	<simpleType name="Tipo6Type">
 		<restriction base="string">
 			<pattern value="\d{0,4}"/>
 		</restriction>
 	</simpleType>
-	<!-- Cadena de 1500 caracteres -->
+	<!--  Cadena de 1500 caracteres  -->
 	<simpleType name="TextMax1500Type">
 		<restriction base="string">
 			<maxLength value="1500"/>
 		</restriction>
 	</simpleType>
-	<!-- Cadena de 500 caracteres -->
+	<!--  Cadena de 500 caracteres  -->
 	<simpleType name="TextMax500Type">
 		<restriction base="string">
 			<maxLength value="500"/>
 		</restriction>
 	</simpleType>
-	<!-- Cadena de 250 caracteres -->
+	<!--  Cadena de 250 caracteres  -->
 	<simpleType name="TextMax250Type">
 		<restriction base="string">
 			<maxLength value="250"/>
 		</restriction>
 	</simpleType>
-	<!-- Cadena de 150 caracteres -->
+	<!--  Cadena de 150 caracteres  -->
 	<simpleType name="TextMax150Type">
 		<restriction base="string">
 			<maxLength value="150"/>
 		</restriction>
 	</simpleType>
-	<!-- Cadena de 120 caracteres -->
+	<!--  Cadena de 120 caracteres  -->
 	<simpleType name="TextMax120Type">
 		<restriction base="string">
 			<maxLength value="120"/>
 		</restriction>
 	</simpleType>
-	<!-- Cadena de 100 caracteres -->
+	<!--  Cadena de 100 caracteres  -->
 	<simpleType name="TextMax100Type">
 		<restriction base="string">
 			<maxLength value="100"/>
 		</restriction>
 	</simpleType>
-	<!-- Cadena de 70 caracteres -->
+	<!--  Cadena de 70 caracteres  -->
 	<simpleType name="TextMax70Type">
 		<restriction base="string">
 			<maxLength value="70"/>
 		</restriction>
 	</simpleType>
-	<!-- Cadena de 65 caracteres -->
+	<!--  Cadena de 65 caracteres  -->
 	<simpleType name="TextMax65Type">
 		<restriction base="string">
 			<maxLength value="65"/>
 		</restriction>
 	</simpleType>
-	<!-- Cadena de 60 caracteres -->
+	<!--  Cadena de 60 caracteres  -->
 	<simpleType name="TextMax60Type">
 		<restriction base="string">
 			<maxLength value="60"/>
 		</restriction>
 	</simpleType>
-	<!-- Cadena de 64 caracteres -->
+	<!--  Cadena de 64 caracteres  -->
 	<simpleType name="TextMax64Type">
 		<restriction base="string">
 			<maxLength value="64"/>
 		</restriction>
 	</simpleType>
-	<!-- Cadena de 40 caracteres -->
+	<!--  Cadena de 40 caracteres  -->
 	<simpleType name="TextMax40Type">
 		<restriction base="string">
 			<maxLength value="40"/>
 		</restriction>
 	</simpleType>
-	<!-- Cadena de 34 caracteres -->
+	<!--  Cadena de 34 caracteres  -->
 	<simpleType name="TextMax34Type">
 		<restriction base="string">
 			<maxLength value="34"/>
 		</restriction>
 	</simpleType>
-	<!-- Cadena de 20 caracteres -->
+	<!--  Cadena de 20 caracteres  -->
 	<simpleType name="TextMax20Type">
 		<restriction base="string">
 			<maxLength value="20"/>
 		</restriction>
 	</simpleType>
-	<!-- Cadena de 18 caracteres -->
+	<!--  Cadena de 18 caracteres  -->
 	<simpleType name="TextMax18Type">
 		<restriction base="string">
 			<maxLength value="18"/>
 		</restriction>
 	</simpleType>
-	<!-- Cadena de 15 caracteres -->
+	<!--  Cadena de 15 caracteres  -->
 	<simpleType name="TextMax15Type">
 		<restriction base="string">
 			<maxLength value="15"/>
 		</restriction>
 	</simpleType>
-	<!-- Cadena de 16 caracteres -->
+	<!--  Cadena de 16 caracteres  -->
 	<simpleType name="TextMax16Type">
 		<restriction base="string">
-			<maxLength value="15"/>
+			<maxLength value="16"/>
 		</restriction>
 	</simpleType>
-	<!-- Cadena de 25 caracteres -->
+	<!--  Cadena de 25 caracteres  -->
 	<simpleType name="TextMax25Type">
 		<restriction base="string">
 			<maxLength value="25"/>
 		</restriction>
 	</simpleType>
-	<!-- Cadena de 30 caracteres -->
+	<!--  Cadena de 30 caracteres  -->
 	<simpleType name="TextMax30Type">
 		<restriction base="string">
 			<maxLength value="30"/>
 		</restriction>
 	</simpleType>
-	<!-- Referencia Catastral -->
+	<!--  Referencia Catastral  -->
 	<simpleType name="ReferenciaCatastralType">
 		<restriction base="string">
 			<maxLength value="25"/>
 		</restriction>
 	</simpleType>
-	<!-- Cadena de 2 caracteres -->
+	<!--  Cadena de 2 caracteres  -->
 	<simpleType name="TextMax2Type">
 		<restriction base="string">
 			<maxLength value="2"/>
 		</restriction>
 	</simpleType>
-	<!-- Cadena de 50 caracteres -->
+	<!--  Cadena de 50 caracteres  -->
 	<simpleType name="TextMax50Type">
 		<restriction base="string">
 			<maxLength value="50"/>
 		</restriction>
 	</simpleType>
-	<!-- NIF -->
+	<!--  NIF  -->
 	<simpleType name="NIFType">
 		<annotation>
 			<documentation xml:lang="es">NIF</documentation>
@@ -690,39 +687,17 @@
 	</simpleType>
 	<simpleType name="OperacionExentaType">
 		<restriction base="string">
-			<enumeration value="E1">
-				<annotation>
-					<documentation xml:lang="es">EXENTA por Art. 20 </documentation>
-				</annotation>
-			</enumeration>
-			<enumeration value="E2">
-				<annotation>
-					<documentation xml:lang="es">EXENTA por Art. 21</documentation>
-				</annotation>
-			</enumeration>
-			<enumeration value="E3">
-				<annotation>
-					<documentation xml:lang="es">EXENTA por Art. 22</documentation>
-				</annotation>
-			</enumeration>
-			<enumeration value="E4">
-				<annotation>
-					<documentation xml:lang="es">EXENTA por Art. 24</documentation>
-				</annotation>
-			</enumeration>
-			<enumeration value="E5">
-				<annotation>
-					<documentation xml:lang="es">EXENTA por Art. 25</documentation>
-				</annotation>
-			</enumeration>
-			<enumeration value="E6">
-				<annotation>
-					<documentation xml:lang="es">EXENTA otros</documentation>
-				</annotation>
-			</enumeration>
+			<enumeration value="E1"/>
+			<enumeration value="E2"/>
+			<enumeration value="E3"/>
+			<enumeration value="E4"/>
+			<enumeration value="E5"/>
+			<enumeration value="E6"/>
+			<enumeration value="E7"/>
+			<enumeration value="E8"/>
 		</restriction>
 	</simpleType>
-	<!-- Códigos de Tipo de factura -->
+	<!--  Códigos de Tipo de factura  -->
 	<simpleType name="ClaveTipoFacturaType">
 		<restriction base="string">
 			<enumeration value="F1">
@@ -737,7 +712,7 @@
 			</enumeration>
 			<enumeration value="R1">
 				<annotation>
-					<documentation xml:lang="es">FACTURA RECTIFICATIVA	(Art 80.1 y 80.2 y error fundado en derecho)</documentation>
+					<documentation xml:lang="es">FACTURA RECTIFICATIVA (Art 80.1 y 80.2 y error fundado en derecho)</documentation>
 				</annotation>
 			</enumeration>
 			<enumeration value="R2">
@@ -747,17 +722,17 @@
 			</enumeration>
 			<enumeration value="R3">
 				<annotation>
-					<documentation xml:lang="es">FACTURA RECTIFICATIVA	(Art. 80.4)</documentation>
+					<documentation xml:lang="es">FACTURA RECTIFICATIVA (Art. 80.4)</documentation>
 				</annotation>
 			</enumeration>
 			<enumeration value="R4">
 				<annotation>
-					<documentation xml:lang="es">FACTURA RECTIFICATIVA	(Resto)</documentation>
+					<documentation xml:lang="es">FACTURA RECTIFICATIVA (Resto)</documentation>
 				</annotation>
 			</enumeration>
 			<enumeration value="R5">
 				<annotation>
-					<documentation xml:lang="es">FACTURA RECTIFICATIVA	EN FACTURAS SIMPLIFICADAS</documentation>
+					<documentation xml:lang="es">FACTURA RECTIFICATIVA EN FACTURAS SIMPLIFICADAS</documentation>
 				</annotation>
 			</enumeration>
 			<enumeration value="F3">
@@ -823,7 +798,7 @@
 			</enumeration>
 		</restriction>
 	</simpleType>
-	<!-- Tercero o Destinatario -->
+	<!--  Tercero o Destinatario  -->
 	<simpleType name="TercerosODestinatarioType">
 		<restriction base="string">
 			<enumeration value="D">
@@ -838,36 +813,50 @@
 			</enumeration>
 		</restriction>
 	</simpleType>
-	<!-- Factura simplificada Articulo 7,2 Y 7,3 RD 1619/2012, -->
+	<!--  Factura simplificada Articulo 7,2 Y 7,3 RD 1619/2012,  -->
 	<simpleType name="SimplificadaCualificadaType">
 		<restriction base="string">
 			<enumeration value="S"/>
 			<enumeration value="N"/>
 		</restriction>
 	</simpleType>
-	<!-- Factura sin identificación destinatario artículo 6,1,d) RD 1619/2012 -->
+	<!--  Factura sin identificación destinatario artículo 6,1,d) RD 1619/2012  -->
 	<simpleType name="CompletaSinDestinatarioType">
 		<restriction base="string">
 			<enumeration value="S"/>
 			<enumeration value="N"/>
 		</restriction>
 	</simpleType>
-	<!-- Permitira identificar aquellas facturas con importe de la factura superior a un umbral -->
+	<!--  Permitira identificar aquellas facturas con importe de la factura superior a un umbral  -->
 	<simpleType name="MacrodatoType">
 		<restriction base="string">
 			<enumeration value="S"/>
 			<enumeration value="N"/>
 		</restriction>
 	</simpleType>
-	<!-- Identificador que especifica si la generación del registro de facturación se ha realizado durante algún tipo de incidencia -->
+	<!--  Identificador que especifica si la generación del registro de facturación se ha realizado durante algún tipo de incidencia  -->
 	<simpleType name="IncidenciaType">
 		<restriction base="string">
 			<enumeration value="S"/>
 			<enumeration value="N"/>
 		</restriction>
 	</simpleType>
-	<!-- Indicador que especifica que se ha finalizado la remisión de registros de facturación tras un requerimiento -->
+	<!--  Indicador que especifica que se ha finalizado la remisión de registros de facturación tras un requerimiento  -->
 	<simpleType name="FinRequerimientoType">
+		<restriction base="string">
+			<enumeration value="S"/>
+			<enumeration value="N"/>
+		</restriction>
+	</simpleType>
+	<!-- Indicador que especifica si se quiere obtener en la respuesta el bloque SistemaInformatico en la información del registro se facturacion. Si el Valor es S aumenta el tiempo de respuesta en la cosulta. Si se consulta por Destinatario el valor del campo MostrarSistemaInformatico debe valer 'N' o no estar cumplimentado  -->
+	<simpleType name="MostrarSistemaInformaticoType">
+		<restriction base="string">
+			<enumeration value="S"/>
+			<enumeration value="N"/>
+		</restriction>
+	</simpleType>
+	<!-- Indicador de la cosulta que especifica si se quiere recibir en la respuesta el campo NombreRazonEmisor en la información registro se facturacion. Si el Valor es S aumenta el tiempo de respuesta en la cosulta por detinatario  -->
+	<simpleType name="MostrarNombreRazonEmisorType">
 		<restriction base="string">
 			<enumeration value="S"/>
 			<enumeration value="N"/>
@@ -892,7 +881,7 @@
 			</enumeration>
 		</restriction>
 	</simpleType>
-	<!-- Tipo de identificador fiscal de persona Física o jurídica -->
+	<!--  Tipo de identificador fiscal de persona Física o jurídica  -->
 	<simpleType name="PersonaFisicaJuridicaIDTypeType">
 		<restriction base="string">
 			<enumeration value="02">
@@ -927,7 +916,7 @@
 			</enumeration>
 		</restriction>
 	</simpleType>
-	<!-- Tipo Hash -->
+	<!--  Tipo Hash  -->
 	<simpleType name="TipoHuellaType">
 		<restriction base="string">
 			<enumeration value="01">
@@ -937,8 +926,8 @@
 			</enumeration>
 		</restriction>
 	</simpleType>
-	<!-- CLAVE QUE IDENTIFICARÁ EL TIPO DE RÉGIMEN DEL IVA/IGIC
-     -->
+	<!--  CLAVE QUE IDENTIFICARÁ EL TIPO DE RÉGIMEN DEL IVA/IGIC
+      -->
 	<simpleType name="IdOperacionesTrascendenciaTributariaType">
 		<restriction base="string">
 			<enumeration value="01"/>
@@ -958,9 +947,10 @@
 			<enumeration value="18"/>
 			<enumeration value="19"/>
 			<enumeration value="20"/>
+			<enumeration value="21"/>
 		</restriction>
 	</simpleType>
-	<!-- ISO 3166-1 alpha-2 codes -->
+	<!--  ISO 3166-1 alpha-2 codes  -->
 	<simpleType name="CountryType2">
 		<restriction base="string">
 			<enumeration value="AF"/>
@@ -1210,7 +1200,7 @@
 			<enumeration value="XN"/>
 		</restriction>
 	</simpleType>
-	<!-- Estado del registro duplicado almacenado en el sistema -->
+	<!--  Estado del registro duplicado almacenado en el sistema  -->
 	<simpleType name="EstadoRegistroSFType">
 		<restriction base="string">
 			<enumeration value="Correcta">
@@ -1257,7 +1247,7 @@
 			</enumeration>
 		</restriction>
 	</simpleType>
-	<!-- Lineas de detalle del desglose -->
+	<!--  Lineas de detalle del desglose  -->
 	<complexType name="DesgloseType">
 		<sequence>
 			<element name="DetalleDesglose" type="sf:DetalleType" maxOccurs="12"/>
@@ -1281,15 +1271,6 @@
 			</choice>
 		</sequence>
 	</complexType>
-	<complexType name="ConsultaInformacion">
-		<annotation>
-			<documentation xml:lang="es"> Compuesto por datos 
-			                              de contexto y una secuencia de 1 o más registros. </documentation>
-		</annotation>
-		<sequence>
-			<element name="Cabecera" type="sf:CabeceraConsultaSf"/>
-		</sequence>
-	</complexType>
 	<complexType name="CabeceraConsultaSf">
 		<annotation>
 			<documentation xml:lang="es"> Cabecera de la Cobnsulta </documentation>
@@ -1310,12 +1291,12 @@
 			</choice>
 			<element name="IndicadorRepresentante" type="sf:IndicadorRepresentanteType" minOccurs="0">
 				<annotation>
-					<documentation xml:lang="es"> Flag opcional que tendrá valor S si la consulta la está realizando el representante/asesor del obligado tributario. A rellenar solo en caso de que los registros de facturación remitidos hayan sido generados por un representante/asesor del obligado tributario. Este flag solo se puede cumplimentar cuando esté informado el obligado tributario en la consulta </documentation>
+					<documentation xml:lang="es"> Flag opcional que tendrá valor S si quien realiza la cosulta es el representante/asesor del obligado tributario. Permite, a quien realiza la cosulta, obtener los registros de facturación en los que figura como representante. Este flag solo se puede cumplimentar cuando esté informado el obligado tributario en la consulta </documentation>
 				</annotation>
 			</element>
 		</sequence>
 	</complexType>
-	<!-- Obligado a la emision consulta -->
+	<!--  Obligado a la emision consulta  -->
 	<complexType name="ObligadoEmisionConsultaType">
 		<annotation>
 			<documentation xml:lang="es">Datos de una persona física o jurídica Española con un NIF asociado</documentation>
@@ -1325,7 +1306,7 @@
 			<element name="NIF" type="sf:NIFType"/>
 		</sequence>
 	</complexType>
-	<!-- Obligado a la gerneracion de la anulacion -->
+	<!--  Obligado a la gerneracion de la anulacion  -->
 	<complexType name="ObligadoGeneracionType">
 		<sequence>
 			<element name="NombreRazon" type="sf:TextMax120Type"/>
@@ -1337,7 +1318,7 @@
 			<pattern value="\d{1,4}"/>
 		</restriction>
 	</simpleType>
-	<!-- Minoración de la base imponible por la concesión de cupones, bonificaciones o descuentos cuando solo se expide el original de la factura -->
+	<!--  Minoración de la base imponible por la concesión de cupones, bonificaciones o descuentos cuando solo se expide el original de la factura  -->
 	<simpleType name="CuponType">
 		<restriction base="string">
 			<enumeration value="S"/>
@@ -1373,7 +1354,7 @@
 			</enumeration>
 		</restriction>
 	</simpleType>
-	<!--Información de la operación realizada que se devuelve como respuesta al envío de un registro de facturación -->
+	<!-- Información de la operación realizada que se devuelve como respuesta al envío de un registro de facturación  -->
 	<complexType name="OperacionType">
 		<sequence>
 			<element name="TipoOperacion" type="sf:TipoOperacionType"/>

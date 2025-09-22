@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- editado con XMLSpy v2019 sp1 (x64) (http://www.altova.com) por AEAT (Agencia Estatal de Administracion Tributaria ((AEAT))) -->
-<!-- edited with XMLSpy v2009 sp1 (http://www.altova.com) by PC Corporativo (AGENCIA TRIBUTARIA) -->
-<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:sf="https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/tike/cont/ws/EventosSIF.xsd" targetNamespace="https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/tike/cont/ws/EventosSIF.xsd" elementFormDefault="qualified">
+<!--  editado con XMLSpy v2019 sp1 (x64) (http://www.altova.com) por AEAT (Agencia Estatal de Administracion Tributaria ((AEAT)))  -->
+<!--  edited with XMLSpy v2009 sp1 (http://www.altova.com) by PC Corporativo (AGENCIA TRIBUTARIA)  -->
+<schema
+	xmlns="http://www.w3.org/2001/XMLSchema"
+	xmlns:ds="http://www.w3.org/2000/09/xmldsig#"
+	xmlns:sf="https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/tike/cont/ws/EventosSIF.xsd" targetNamespace="https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/tike/cont/ws/EventosSIF.xsd" elementFormDefault="qualified">
 	<import namespace="http://www.w3.org/2000/09/xmldsig#" schemaLocation="http://www.w3.org/TR/xmldsig-core/xmldsig-core-schema.xsd"/>
 	<element name="RegistroEvento">
 		<complexType>
@@ -22,7 +25,7 @@
 			<element name="EmitidaPorTerceroODestinatario" type="sf:TercerosODestinatarioType" minOccurs="0"/>
 			<element name="TerceroODestinatario" type="sf:PersonaFisicaJuridicaType" minOccurs="0"/>
 			<element name="FechaHoraHusoGenEvento" type="dateTime">
-			<annotation>
+				<annotation>
 					<documentation xml:lang="es">Formato: YYYY-MM-DDThh:mm:ssTZD (ej: 2024-01-01T19:20:30+01:00) (ISO 8601)</documentation>
 				</annotation>
 			</element>
@@ -116,7 +119,7 @@
 				</annotation>
 			</element>
 			<element name="FechaHoraHusoFinPeriodoExport" type="dateTime">
-			<annotation>
+				<annotation>
 					<documentation xml:lang="es">Formato: YYYY-MM-DDThh:mm:ssTZD (ej: 2024-01-01T19:20:30+01:00) (ISO 8601)</documentation>
 				</annotation>
 			</element>
@@ -132,12 +135,12 @@
 	<complexType name="ExportacionRegEventoPeriodoType">
 		<sequence>
 			<element name="FechaHoraHusoInicioPeriodoExport" type="dateTime">
-			<annotation>
+				<annotation>
 					<documentation xml:lang="es">Formato: YYYY-MM-DDThh:mm:ssTZD (ej: 2024-01-01T19:20:30+01:00) (ISO 8601)</documentation>
 				</annotation>
 			</element>
 			<element name="FechaHoraHusoFinPeriodoExport" type="dateTime">
-			<annotation>
+				<annotation>
 					<documentation xml:lang="es">Formato: YYYY-MM-DDThh:mm:ssTZD (ej: 2024-01-01T19:20:30+01:00) (ISO 8601)</documentation>
 				</annotation>
 			</element>
@@ -162,7 +165,7 @@
 		<sequence>
 			<element name="TipoEvento" type="sf:TipoEventoType"/>
 			<element name="FechaHoraHusoEvento" type="dateTime">
-			<annotation>
+				<annotation>
 					<documentation xml:lang="es">Formato: YYYY-MM-DDThh:mm:ssTZD (ej: 2024-01-01T19:20:30+01:00) (ISO 8601)</documentation>
 				</annotation>
 			</element>
@@ -173,7 +176,7 @@
 		<sequence>
 			<element name="TipoEvento" type="sf:TipoEventoType"/>
 			<element name="FechaHoraHusoGenEvento" type="dateTime">
-			<annotation>
+				<annotation>
 					<documentation xml:lang="es">Formato: YYYY-MM-DDThh:mm:ssTZD (ej: 2024-01-01T19:20:30+01:00) (ISO 8601)</documentation>
 				</annotation>
 			</element>
@@ -186,7 +189,7 @@
 			<element name="NumeroDeEventos" type="sf:DigitosMax4Type"/>
 		</sequence>
 	</complexType>
-	<!-- Datos de persona Física o jurídica : Denominación, representación, identificación (NIF) -->
+	<!--  Datos de persona Física o jurídica : Denominación, representación, identificación (NIF)  -->
 	<complexType name="PersonaFisicaJuridicaESType">
 		<annotation>
 			<documentation xml:lang="es">Datos de una persona física o jurídica Española con un NIF asociado</documentation>
@@ -204,7 +207,7 @@
 			<length value="9"/>
 		</restriction>
 	</simpleType>
-	<!-- Datos de persona Física o jurídica : Denominación, representación, identificación (NIF/Otro) -->
+	<!--  Datos de persona Física o jurídica : Denominación, representación, identificación (NIF/Otro)  -->
 	<complexType name="PersonaFisicaJuridicaType">
 		<annotation>
 			<documentation xml:lang="es">Datos de una persona física o jurídica Española o Extranjera</documentation>
@@ -217,14 +220,10 @@
 			</choice>
 		</sequence>
 	</complexType>
-	<!-- Datos de persona Física o jurídica : Denominación, representación, identificación (NIF/Otro) -->
+	<!--  Datos de persona Física o jurídica : Denominación, representación, identificación (NIF/Otro)  -->
 	<complexType name="IDOtroType">
 		<annotation>
-			<documentation xml:lang="es">Identificador de persona Física o jurídica distinto del NIF 
-        								 (Código pais, Tipo de Identificador, y hasta 15 caractéres)
-        								 No se permite CodigoPais=ES e IDType=01-NIFContraparte
-        								 para ese caso, debe utilizarse NIF en lugar de IDOtro.
-        	</documentation>
+			<documentation xml:lang="es">Identificador de persona Física o jurídica distinto del NIF (Código pais, Tipo de Identificador, y hasta 15 caractéres) No se permite CodigoPais=ES e IDType=01-NIFContraparte para ese caso, debe utilizarse NIF en lugar de IDOtro. </documentation>
 		</annotation>
 		<sequence>
 			<element name="CodigoPais" type="sf:CountryType2" minOccurs="0"/>
@@ -232,7 +231,7 @@
 			<element name="ID" type="sf:TextMax20Type"/>
 		</sequence>
 	</complexType>
-	<!-- Tercero o Destinatario -->
+	<!--  Tercero o Destinatario  -->
 	<simpleType name="TercerosODestinatarioType">
 		<restriction base="string">
 			<enumeration value="D">
@@ -258,109 +257,109 @@
 			<enumeration value="1.0"/>
 		</restriction>
 	</simpleType>
-	<!-- Cadena de 120 caracteres -->
+	<!--  Cadena de 120 caracteres  -->
 	<simpleType name="TextMax120Type">
 		<restriction base="string">
 			<maxLength value="120"/>
 		</restriction>
 	</simpleType>
-	<!-- Cadena de 100 caracteres -->
+	<!--  Cadena de 100 caracteres  -->
 	<simpleType name="TextMax100Type">
 		<restriction base="string">
 			<maxLength value="100"/>
 		</restriction>
 	</simpleType>
-	<!-- Cadena de 64 caracteres -->
+	<!--  Cadena de 64 caracteres  -->
 	<simpleType name="TextMax64Type">
 		<restriction base="string">
 			<maxLength value="64"/>
 		</restriction>
 	</simpleType>
-	<!-- Cadena de 60 caracteres -->
+	<!--  Cadena de 60 caracteres  -->
 	<simpleType name="TextMax60Type">
 		<restriction base="string">
 			<maxLength value="60"/>
 		</restriction>
 	</simpleType>
-	<!-- Cadena de 50 caracteres -->
+	<!--  Cadena de 50 caracteres  -->
 	<simpleType name="TextMax50Type">
 		<restriction base="string">
 			<maxLength value="50"/>
 		</restriction>
 	</simpleType>
-	<!-- Cadena de 30 caracteres -->
+	<!--  Cadena de 30 caracteres  -->
 	<simpleType name="TextMax30Type">
 		<restriction base="string">
 			<maxLength value="30"/>
 		</restriction>
 	</simpleType>
-	<!-- Cadena de 20 caracteres -->
+	<!--  Cadena de 20 caracteres  -->
 	<simpleType name="TextMax20Type">
 		<restriction base="string">
 			<maxLength value="20"/>
 		</restriction>
 	</simpleType>
-	<!-- Cadena de 2 caracteres -->
+	<!--  Cadena de 2 caracteres  -->
 	<simpleType name="TextMax2Type">
 		<restriction base="string">
 			<maxLength value="2"/>
 		</restriction>
 	</simpleType>
-	<!-- Cadena de 1 caracteres -->
+	<!--  Cadena de 1 caracteres  -->
 	<simpleType name="TextMax1Type">
 		<restriction base="string">
 			<maxLength value="1"/>
 		</restriction>
 	</simpleType>
-	<!-- Definición de un tipo simple restringido a 9 dígitos -->
+	<!--  Definición de un tipo simple restringido a 9 dígitos  -->
 	<simpleType name="DigitosMax9Type">
 		<restriction base="string">
 			<maxLength value="9"/>
 			<pattern value="\d{1,9}"/>
 		</restriction>
 	</simpleType>
-	<!-- Definición de un tipo simple restringido a 7 dígitos -->
+	<!--  Definición de un tipo simple restringido a 7 dígitos  -->
 	<simpleType name="DigitosMax7Type">
 		<restriction base="string">
 			<maxLength value="7"/>
 			<pattern value="\d{1,7}"/>
 		</restriction>
 	</simpleType>
-	<!-- Definición de un tipo simple restringido a 6 dígitos -->
+	<!--  Definición de un tipo simple restringido a 6 dígitos  -->
 	<simpleType name="DigitosMax6Type">
 		<restriction base="string">
 			<maxLength value="6"/>
 			<pattern value="\d{1,6}"/>
 		</restriction>
 	</simpleType>
-	<!-- Definición de un tipo simple restringido a 5 dígitos -->
+	<!--  Definición de un tipo simple restringido a 5 dígitos  -->
 	<simpleType name="DigitosMax5Type">
 		<restriction base="string">
 			<maxLength value="5"/>
 			<pattern value="\d{1,5}"/>
 		</restriction>
 	</simpleType>
-	<!-- Definición de un tipo simple restringido a 4 dígitos -->
+	<!--  Definición de un tipo simple restringido a 4 dígitos  -->
 	<simpleType name="DigitosMax4Type">
 		<restriction base="string">
 			<maxLength value="4"/>
 			<pattern value="\d{1,4}"/>
 		</restriction>
 	</simpleType>
-	<!-- Fecha (dd-mm-yyyy) -->
+	<!--  Fecha (dd-mm-yyyy)  -->
 	<simpleType name="fecha">
 		<restriction base="string">
 			<length value="10"/>
 			<pattern value="\d{2,2}-\d{2,2}-\d{4,4}"/>
 		</restriction>
 	</simpleType>
-	<!-- Importe de 15 dígitos (12+2) "." como separador decimal -->
+	<!--  Importe de 15 dígitos (12+2) "." como separador decimal  -->
 	<simpleType name="ImporteSgn12.2Type">
 		<restriction base="string">
 			<pattern value="(\+|-)?\d{1,12}(\.\d{0,2})?"/>
 		</restriction>
 	</simpleType>
-	<!-- Tipo de identificador fiscal de persona Física o jurídica -->
+	<!--  Tipo de identificador fiscal de persona Física o jurídica  -->
 	<simpleType name="PersonaFisicaJuridicaIDTypeType">
 		<restriction base="string">
 			<enumeration value="02">
@@ -395,7 +394,7 @@
 			</enumeration>
 		</restriction>
 	</simpleType>
-	<!-- Tipo Hash -->
+	<!--  Tipo Hash  -->
 	<simpleType name="TipoHuellaType">
 		<restriction base="string">
 			<enumeration value="01">
@@ -459,8 +458,7 @@
 			</enumeration>
 			<enumeration value="90">
 				<annotation>
-					<documentation xml:lang="es">Otros tipos de eventos a registrar voluntariamente por la persona o entidad productora del sistema informático.
-</documentation>
+					<documentation xml:lang="es">Otros tipos de eventos a registrar voluntariamente por la persona o entidad productora del sistema informático. </documentation>
 				</annotation>
 			</enumeration>
 		</restriction>
@@ -570,7 +568,7 @@
 			<element name="Huella" type="sf:TextMax64Type"/>
 		</sequence>
 	</complexType>
-	<!-- ISO 3166-1 alpha-2 codes -->
+	<!--  ISO 3166-1 alpha-2 codes  -->
 	<simpleType name="CountryType2">
 		<restriction base="string">
 			<enumeration value="AF"/>
