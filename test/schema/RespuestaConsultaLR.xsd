@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- editado con XMLSpy v2019 sp1 (x64) (http://www.altova.com) por AEAT (Agencia Estatal de Administracion Tributaria ((AEAT))) -->
 <!-- edited with XMLSpy v2009 sp1 (http://www.altova.com) by PC Corporativo (AGENCIA TRIBUTARIA) -->
-<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:sfLRRC="https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/tike/cont/ws/RespuestaConsultaLR.xsd" xmlns:sf="https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/tike/cont/ws/SuministroInformacion.xsd" targetNamespace="https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/tike/cont/ws/RespuestaConsultaLR.xsd" elementFormDefault="qualified">
+<schema
+	xmlns="http://www.w3.org/2001/XMLSchema"
+	xmlns:sfLRRC="https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/tike/cont/ws/RespuestaConsultaLR.xsd"
+	xmlns:sf="https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/tike/cont/ws/SuministroInformacion.xsd" targetNamespace="https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/tike/cont/ws/RespuestaConsultaLR.xsd" elementFormDefault="qualified">
 	<import namespace="https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/tike/cont/ws/SuministroInformacion.xsd" schemaLocation="SuministroInformacion.xsd"/>
-	<!-- edited with XMLSpy v2009 sp1 (http://www.altova.com) by PC Corporativo (AGENCIA TRIBUTARIA) -->
+	<!--  edited with XMLSpy v2009 sp1 (http://www.altova.com) by PC Corporativo (AGENCIA TRIBUTARIA)  -->
 	<element name="RespuestaConsultaFactuSistemaFacturacion" type="sfLRRC:RespuestaConsultaFactuSistemaFacturacionType">
 		<annotation>
 			<documentation>Servicio de consulta de regIstros de facturacion</documentation>
@@ -24,23 +27,17 @@
 			<element name="TimestampUltimaModificacion" type="dateTime"/>
 			<element name="EstadoRegistro" type="sfLRRC:EstadoRegistroType">
 				<annotation>
-					<documentation xml:lang="es"> 
-						Estado del registro almacenado en el sistema. Los estados posibles son: Correcta, AceptadaConErrores y Anulada
-											</documentation>
+					<documentation xml:lang="es"> Estado del registro almacenado en el sistema. Los estados posibles son: Correcta, AceptadaConErrores y Anulada </documentation>
 				</annotation>
 			</element>
 			<element name="CodigoErrorRegistro" type="sfLRRC:ErrorDetalleType" minOccurs="0">
 				<annotation>
-					<documentation xml:lang="es"> 
-						Código del error de registro, en su caso.
-					</documentation>
+					<documentation xml:lang="es"> Código del error de registro, en su caso. </documentation>
 				</annotation>
 			</element>
 			<element name="DescripcionErrorRegistro" type="sf:TextMax500Type" minOccurs="0">
 				<annotation>
-					<documentation xml:lang="es"> 
-						Descripción detallada del error de registro, en su caso.
-					</documentation>
+					<documentation xml:lang="es"> Descripción detallada del error de registro, en su caso. </documentation>
 				</annotation>
 			</element>
 		</sequence>
@@ -50,7 +47,7 @@
 			<element name="IDFactura" type="sf:IDFacturaExpedidaType"/>
 			<element name="DatosRegistroFacturacion" type="sfLRRC:RespuestaDatosRegistroFacturacionType"/>
 			<element name="DatosPresentacion" type="sf:DatosPresentacion2Type" minOccurs="0"/>
-			<element name="EstadoRegistro" type="sfLRRC:EstadoRegFactuType" />
+			<element name="EstadoRegistro" type="sfLRRC:EstadoRegFactuType"/>
 		</sequence>
 	</complexType>
 	<complexType name="RespuestaConsultaType">
@@ -71,13 +68,18 @@
 			<element name="ResultadoConsulta" type="sfLRRC:ResultadoConsultaType"/>
 		</sequence>
 	</complexType>
-	<!-- Datos del registro de facturacion -->
+	<!--  Datos del registro de facturacion  -->
 	<complexType name="RespuestaDatosRegistroFacturacionType">
 		<annotation>
 			<documentation xml:lang="es"> Apunte correspondiente al libro de facturas expedidas. </documentation>
 		</annotation>
 		<sequence>
-			<element name="RefExterna" type="sf:TextMax70Type" minOccurs="0"/>
+			<element name="NombreRazonEmisor" type="sf:TextMax120Type" minOccurs="0">
+				<annotation>
+					<documentation xml:lang="es"> Solo se informa el campo NombreRazonEmisor si se realiza la consulta con valor S en el campo MostrarNombreRazonEmisor </documentation>
+				</annotation>
+			</element>
+			<element name="RefExterna" type="sf:TextMax60Type" minOccurs="0"/>
 			<element name="Subsanacion" type="sf:SubsanacionType" minOccurs="0"/>
 			<element name="RechazoPrevio" type="sf:RechazoPrevioType" minOccurs="0"/>
 			<element name="SinRegistroPrevio" type="sf:SinRegistroPrevioType" minOccurs="0"/>
@@ -147,6 +149,7 @@
 					</choice>
 				</complexType>
 			</element>
+			<element name="SistemaInformatico" type="sf:SistemaInformaticoType" minOccurs="0"/>
 			<element name="FechaHoraHusoGenRegistro" type="dateTime" minOccurs="0"/>
 			<element name="NumRegistroAcuerdoFacturacion" type="sf:TextMax15Type" minOccurs="0"/>
 			<element name="IdAcuerdoSistemaInformatico" type="sf:TextMax16Type" minOccurs="0"/>
@@ -172,20 +175,20 @@
 	<simpleType name="ErrorDetalleType">
 		<restriction base="integer"/>
 	</simpleType>
-	<!-- Estado del registro almacenado en el sistema -->
+	<!--  Estado del registro almacenado en el sistema  -->
 	<simpleType name="EstadoRegistroType">
 		<restriction base="string">
-			<enumeration value="Correcta">
+			<enumeration value="Correcto">
 				<annotation>
 					<documentation xml:lang="es">El registro se almacenado sin errores</documentation>
 				</annotation>
 			</enumeration>
-			<enumeration value="AceptadaConErrores">
+			<enumeration value="AceptadoConErrores">
 				<annotation>
 					<documentation xml:lang="es">El registro se almacenado tiene algunos errores. Ver detalle del error</documentation>
 				</annotation>
 			</enumeration>
-			<enumeration value="Anulada">
+			<enumeration value="Anulado">
 				<annotation>
 					<documentation xml:lang="es">El registro almacenado ha sido anulado</documentation>
 				</annotation>

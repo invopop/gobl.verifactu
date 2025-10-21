@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- editado con XMLSpy v2019 sp1 (x64) (http://www.altova.com) por Puesto de Trabajo (Agencia Estatal de Administracion Tributaria ((AEAT))) -->
 <!-- edited with XMLSpy v2009 sp1 (http://www.altova.com) by PC Corporativo (AGENCIA TRIBUTARIA) -->
-<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:sfR="https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/tike/cont/ws/RespuestaSuministro.xsd" xmlns:sf="https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/tike/cont/ws/SuministroInformacion.xsd" xmlns:sfLR="https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/tike/cont/ws/SuministroLR.xsd" targetNamespace="https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/tike/cont/ws/RespuestaSuministro.xsd" elementFormDefault="qualified">
+<schema
+	xmlns="http://www.w3.org/2001/XMLSchema"
+	xmlns:sfR="https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/tike/cont/ws/RespuestaSuministro.xsd"
+	xmlns:sf="https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/tike/cont/ws/SuministroInformacion.xsd"
+	xmlns:sfLR="https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/tike/cont/ws/SuministroLR.xsd" targetNamespace="https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/tike/cont/ws/RespuestaSuministro.xsd" elementFormDefault="qualified">
 	<import namespace="https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/tike/cont/ws/SuministroInformacion.xsd" schemaLocation="SuministroInformacion.xsd"/>
 	<import namespace="https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/tike/cont/ws/SuministroLR.xsd" schemaLocation="SuministroLR.xsd"/>
 	<element name="RespuestaRegFactuSistemaFacturacion" type="sfR:RespuestaRegFactuSistemaFacturacionType"/>
@@ -25,12 +29,7 @@
 			<element name="TiempoEsperaEnvio" type="sf:Tipo6Type"/>
 			<element name="EstadoEnvio" type="sfR:EstadoEnvioType">
 				<annotation>
-					<documentation xml:lang="es"> 
-						Estado del envío en conjunto. 
-						Si los datos de cabecera y todos los registros son correctos,el estado es correcto. 
-						En caso de estructura y cabecera correctos donde todos los registros son incorrectos, el estado es incorrecto
-						En caso de estructura y cabecera correctos con al menos un registro incorrecto, el estado global es parcialmente correcto.						
-					</documentation>
+					<documentation xml:lang="es"> Estado del envío en conjunto. Si los datos de cabecera y todos los registros son correctos,el estado es correcto. En caso de estructura y cabecera correctos donde todos los registros son incorrectos, el estado es incorrecto En caso de estructura y cabecera correctos con al menos un registro incorrecto, el estado global es parcialmente correcto. </documentation>
 				</annotation>
 			</element>
 		</sequence>
@@ -44,14 +43,12 @@
 				<sequence>
 					<element name="RespuestaLinea" type="sfR:RespuestaExpedidaType" minOccurs="0" maxOccurs="1000">
 						<annotation>
-							<documentation xml:lang="es"> 
-						Estado detallado de cada línea del suministro.
-					</documentation>
+							<documentation xml:lang="es"> Estado detallado de cada línea del suministro. </documentation>
 						</annotation>
 					</element>
 				</sequence>
 			</extension>
-		</complexContent>     
+		</complexContent>
 	</complexType>
 	<complexType name="RespuestaExpedidaType">
 		<annotation>
@@ -64,33 +61,25 @@
 				</annotation>
 			</element>
 			<element name="Operacion" type="sf:OperacionType"/>
-			<element name="RefExterna" type="sf:TextMax70Type" minOccurs="0"/>
+			<element name="RefExterna" type="sf:TextMax60Type" minOccurs="0"/>
 			<element name="EstadoRegistro" type="sfR:EstadoRegistroType">
 				<annotation>
-					<documentation xml:lang="es"> 
-						Estado del registro. Correcto o Incorrecto
-					</documentation>
+					<documentation xml:lang="es"> Estado del registro. Correcto o Incorrecto </documentation>
 				</annotation>
 			</element>
 			<element name="CodigoErrorRegistro" type="sfR:ErrorDetalleType" minOccurs="0">
 				<annotation>
-					<documentation xml:lang="es"> 
-						Código del error de registro, en su caso.
-					</documentation>
+					<documentation xml:lang="es"> Código del error de registro, en su caso. </documentation>
 				</annotation>
 			</element>
 			<element name="DescripcionErrorRegistro" type="sf:TextMax1500Type" minOccurs="0">
 				<annotation>
-					<documentation xml:lang="es"> 
-						Descripción detallada del error de registro, en su caso.
-					</documentation>
+					<documentation xml:lang="es"> Descripción detallada del error de registro, en su caso. </documentation>
 				</annotation>
 			</element>
 			<element name="RegistroDuplicado" type="sf:RegistroDuplicadoType" minOccurs="0">
 				<annotation>
-					<documentation xml:lang="es"> 
-						Solo en el caso de que se rechace el registro por duplicado se devuelve este nodo con la informacion registrada en el sistema para este registro
-					</documentation>
+					<documentation xml:lang="es"> Solo en el caso de que se rechace el registro por duplicado se devuelve este nodo con la informacion registrada en el sistema para este registro </documentation>
 				</annotation>
 			</element>
 		</sequence>
