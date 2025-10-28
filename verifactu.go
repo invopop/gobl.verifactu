@@ -29,6 +29,7 @@ type Client struct {
 	curTime  time.Time
 	cert     *xmldsig.Certificate
 	conn     *connection
+	withSeal bool
 }
 
 // Option is used to configure the client.
@@ -77,6 +78,13 @@ func InSandbox() Option {
 	}
 }
 
+// WithCorporateSeal uses the specific VERI*FACTU endpoints for communicating with
+// a legal entity's corporate seal instead of a regular certificate issued to
+// individuals. In Spanish these are called "Sello de Entidad".
+var WithCorporateSeal Option = func(c *Client) {
+	c.withSeal = true
+}
+
 // New creates a new VeriFactu client with shared software and configuration
 // options for creating and sending new documents.
 func New(software *Software, opts ...Option) (*Client, error) {
@@ -96,7 +104,7 @@ func New(software *Software, opts ...Option) (*Client, error) {
 
 	if c.conn == nil {
 		var err error
-		c.conn, err = newConnection(c.env, c.cert)
+		c.conn, err = newConnection(c.env, c.cert, c.withSeal)
 		if err != nil {
 			return nil, err
 		}

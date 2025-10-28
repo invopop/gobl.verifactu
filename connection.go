@@ -21,8 +21,10 @@ const (
 	EnvironmentProduction Environment = "production"
 	EnvironmentSandbox    Environment = "sandbox"
 
-	ProductionBaseURL = "https://www1.agenciatributaria.gob.es/wlpl/TIKE-CONT/ws/SistemaFacturacion/VerifactuSOAP"
-	TestingBaseURL    = "https://prewww1.aeat.es/wlpl/TIKE-CONT/ws/SistemaFacturacion/VerifactuSOAP"
+	BaseURLProduction         = "https://www1.agenciatributaria.gob.es/wlpl/TIKE-CONT/ws/SistemaFacturacion/VerifactuSOAP"
+	BaseURLProductionWithSeal = "https://www10.agenciatributaria.gob.es/wlpl/TIKE-CONT/ws/SistemaFacturacion/VerifactuSOAP"
+	BaseURLTesting            = "https://prewww1.aeat.es/wlpl/TIKE-CONT/ws/SistemaFacturacion/VerifactuSOAP"
+	BaseURLTestingWithSeal    = "https://prewww10.aeat.es/wlpl/TIKE-CONT/ws/SistemaFacturacion/VerifactuSOAP"
 )
 
 // connection defines what is expected from a connection to a gateway.
@@ -31,7 +33,7 @@ type connection struct {
 }
 
 // newConnection instantiates and configures a new connection to the VeriFactu gateway.
-func newConnection(env Environment, cert *xmldsig.Certificate) (*connection, error) {
+func newConnection(env Environment, cert *xmldsig.Certificate, withSeal bool) (*connection, error) {
 	// Prepare the tls configuration
 	tlsConf, err := cert.TLSAuthConfig()
 	if err != nil {
@@ -49,9 +51,17 @@ func newConnection(env Environment, cert *xmldsig.Certificate) (*connection, err
 
 	switch env {
 	case EnvironmentProduction:
-		c.client.SetBaseURL(ProductionBaseURL)
+		if withSeal {
+			c.client.SetBaseURL(BaseURLProductionWithSeal)
+		} else {
+			c.client.SetBaseURL(BaseURLProduction)
+		}
 	default:
-		c.client.SetBaseURL(TestingBaseURL)
+		if withSeal {
+			c.client.SetBaseURL(BaseURLTestingWithSeal)
+		} else {
+			c.client.SetBaseURL(BaseURLTesting)
+		}
 	}
 	// tlsConf.InsecureSkipVerify = true
 	c.client.SetTLSClientConfig(tlsConf)
