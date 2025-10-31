@@ -4,6 +4,7 @@ import (
 	"github.com/invopop/gobl/addons/es/verifactu"
 	"github.com/invopop/gobl/cal"
 	"github.com/invopop/gobl/cbc"
+	"github.com/invopop/gobl/l10n"
 	"github.com/invopop/gobl/org"
 )
 
@@ -36,7 +37,7 @@ func newParty(p *org.Party, date cal.Date) *Party {
 func otherIdentity(p *org.Party, date cal.Date) *IDOtro {
 	oid := new(IDOtro)
 	if p.TaxID != nil {
-		oid.CodigoPais = p.TaxID.Country.String()
+		oid.CodigoPais = isoCountryCode(p.TaxID.Country).String()
 		if p.TaxID.InEU(date) {
 			oid.IDType = "02"         // NIF-VAT
 			oid.ID = p.TaxID.String() // with country prefix
@@ -68,4 +69,19 @@ func otherIdentity(p *org.Party, date cal.Date) *IDOtro {
 		return oid
 	}
 	return nil
+}
+
+// isoCountryCode turns the tax country code into an ISO version, this is
+// required in order to map troublesome countries like Greece from EL to GR.
+func isoCountryCode(code l10n.TaxCountryCode) l10n.ISOCountryCode {
+	if code == "" {
+		return ""
+	}
+	if def := l10n.Countries().Code(code.Code()); def != nil {
+		if !def.ISO {
+			return def.AltCode.ISO()
+		}
+		return def.Code.ISO()
+	}
+	return ""
 }
