@@ -108,4 +108,26 @@ func TestNewParty(t *testing.T) {
 		require.NoError(t, err)
 		assert.Empty(t, req.Destinatarios)
 	})
+
+	t.Run("with greek identity", func(t *testing.T) {
+		env, inv := test.LoadInvoice("inv-base.json")
+		inv.Customer = &org.Party{
+			Name: "Foreign Company",
+			TaxID: &tax.Identity{
+				Country: "EL",
+				Code:    "925667500",
+			},
+		}
+
+		req, err := vc.RegisterInvoice(env, nil)
+		require.NoError(t, err)
+
+		p := req.Destinatarios[0].IDDestinatario
+
+		assert.Equal(t, "Foreign Company", p.NombreRazon)
+		assert.Empty(t, p.NIF)
+		require.NotNil(t, p.IDOtro)
+		assert.Equal(t, "GR", p.IDOtro.CodigoPais)
+		assert.Equal(t, "EL925667500", p.IDOtro.ID)
+	})
 }
