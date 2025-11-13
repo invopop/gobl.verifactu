@@ -74,8 +74,8 @@ func buildDetalleDesglose(c *tax.CategoryTotal, r *tax.RateTotal) (*DetalleDesgl
 		detalle.CalificacionOperacion = r.Ext.Get(verifactu.ExtKeyOpClass).String()
 		switch detalle.CalificacionOperacion {
 		case "S1", "S2":
-			// Exempt operations should never show amounts, even if zero
-			// S2 implies reverse-charge mechanism, so should be 0.
+			// S1 represents taxed operations; S2 represents reverse-charge operations.
+			// For S2, the amount should be set (typically 0).
 			detalle.CuotaRepercutida = r.Amount.String()
 		}
 	}
