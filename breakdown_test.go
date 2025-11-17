@@ -276,4 +276,19 @@ func TestBreakdownConversion(t *testing.T) {
 		assert.Equal(t, "S2", dd.CalificacionOperacion)
 		assert.Equal(t, "0", dd.TipoImpositivo)
 	})
+
+	t.Run("foreign VAT rates (OSS)", func(t *testing.T) {
+		env := test.LoadEnvelope("inv-eu-b2c.json")
+		require.NoError(t, env.Calculate())
+		vc := defaultBreakdownClient(t)
+		req, err := vc.RegisterInvoice(env, nil)
+		require.NoError(t, err)
+		dd := req.Desglose.DetalleDesglose[0]
+		assert.Equal(t, "1800.00", dd.BaseImponibleOImporteNoSujeto)
+		assert.Empty(t, dd.CuotaRepercutida)
+		assert.Equal(t, "01", dd.Impuesto)
+		assert.Equal(t, "17", dd.ClaveRegimen)
+		assert.Equal(t, "N2", dd.CalificacionOperacion)
+		assert.Empty(t, dd.TipoImpositivo)
+	})
 }
