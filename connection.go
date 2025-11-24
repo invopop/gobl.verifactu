@@ -82,11 +82,12 @@ func (c *connection) post(ctx context.Context, payload []byte) (*EnvelopeRespons
 	if err != nil {
 		return nil, err
 	}
-	if res.StatusCode() != http.StatusOK {
-		return nil, ErrValidation.WithCode(strconv.Itoa(res.StatusCode())).WithMessage(res.String())
-	}
+
 	if out.Body.Fault != nil {
 		return nil, ErrValidation.WithMessage(out.Body.Fault.Message).WithCode(out.Body.Fault.Code)
+	}
+	if res.StatusCode() != http.StatusOK {
+		return nil, ErrValidation.WithCode(strconv.Itoa(res.StatusCode())).WithMessage(res.String())
 	}
 
 	return out, nil
