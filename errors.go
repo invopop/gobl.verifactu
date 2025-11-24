@@ -8,6 +8,7 @@ import (
 // Standard gateway error responses
 var (
 	ErrConnection = newError("connection")
+	ErrServer     = newError("server-error")
 	ErrValidation = newError("validation")
 	ErrDuplicate  = newError("duplicate")
 	ErrWarning    = newError("warning")

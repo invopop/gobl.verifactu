@@ -84,6 +84,9 @@ func (c *connection) post(ctx context.Context, payload []byte) (*EnvelopeRespons
 	}
 
 	if out.Body.Fault != nil {
+		if out.Body.Fault.Code == "env:Server" {
+			return nil, ErrServer.WithMessage(out.Body.Fault.Message)
+		}
 		return nil, ErrValidation.WithMessage(out.Body.Fault.Message).WithCode(out.Body.Fault.Code)
 	}
 	if res.StatusCode() != http.StatusOK {
