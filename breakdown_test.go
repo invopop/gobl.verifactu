@@ -20,7 +20,7 @@ import (
 func defaultBreakdownClient(t *testing.T) *verifactu.Client {
 	t.Helper()
 	vc, err := verifactu.New(
-		nil, // no software
+		verifactu.Software{},
 		verifactu.WithCurrentTime(time.Now()),
 	)
 	require.NoError(t, err)
