@@ -42,7 +42,7 @@ type Software struct {
 	NombreSistemaInformatico    string `xml:"sum1:NombreSistemaInformatico"`
 	IdSistemaInformatico        string `xml:"sum1:IdSistemaInformatico"` //nolint:revive,staticcheck
 	Version                     string `xml:"sum1:Version"`
-	NumeroInstalacion           string `xml:"sum1:NumeroInstalacion"` // may need to be overidden at run time
+	NumeroInstalacion           string `xml:"sum1:NumeroInstalacion"` // may need to be overridden at run time
 	TipoUsoPosibleSoloVerifactu string `xml:"sum1:TipoUsoPosibleSoloVerifactu,omitempty"`
 	TipoUsoPosibleMultiOT       string `xml:"sum1:TipoUsoPosibleMultiOT,omitempty"`
 	IndicadorMultiplesOT        string `xml:"sum1:IndicadorMultiplesOT,omitempty"`

@@ -166,7 +166,7 @@ func NoPriorRecord() GenerateOption {
 	}
 }
 
-// WithInstallationNumber is used to overrid the instalation number defined in the connection
+// WithInstallationNumber is used to override the installation number defined in the connection
 // configuration while generating the invoice.
 func WithInstallationNumber(code string) GenerateOption {
 	return func(o *generateOptions) {
