@@ -82,11 +82,20 @@ func (c *connection) post(ctx context.Context, payload []byte) (*EnvelopeRespons
 	if err != nil {
 		return nil, err
 	}
+
+	// IMPORTANT: Check for SOAP Fault before HTTP status code validation.
+	// The Spanish Tax Agency (AEAT) VeriFactu service can return SOAP Faults with
+	// non-standard HTTP status codes (e.g., 299 instead of 4xx/5xx). This violates
+	// typical HTTP conventions but is how their service behaves. We must prioritize
+	// SOAP Fault detection over HTTP status validation to properly handle these cases.
+	if out.Body.Fault != nil {
+		if out.Body.Fault.Code == "env:Server" {
+			return nil, ErrConnection.WithMessage(out.Body.Fault.Message)
+		}
+		return nil, ErrValidation.WithMessage(out.Body.Fault.Message).WithCode(out.Body.Fault.Code)
+	}
 	if res.StatusCode() != http.StatusOK {
 		return nil, ErrValidation.WithCode(strconv.Itoa(res.StatusCode())).WithMessage(res.String())
-	}
-	if out.Body.Fault != nil {
-		return nil, ErrValidation.WithMessage(out.Body.Fault.Message).WithCode(out.Body.Fault.Code)
 	}
 
 	return out, nil
