@@ -18,7 +18,7 @@ func TestNewRegistroAlta(t *testing.T) {
 	ts, err := time.Parse(time.RFC3339, "2022-02-01T04:00:00Z")
 	require.NoError(t, err)
 	vc, err := verifactu.New(
-		nil, // no software
+		verifactu.Software{},
 		verifactu.WithCurrentTime(ts),
 	)
 	require.NoError(t, err)

@@ -53,8 +53,8 @@ func (o *rootOpts) prepareFlags(f *pflag.FlagSet) {
 	f.BoolVarP(&o.production, "production", "p", false, "Production environment")
 }
 
-func (o *rootOpts) software() *verifactu.Software {
-	return &verifactu.Software{
+func (o *rootOpts) software() verifactu.Software {
+	return verifactu.Software{
 		NIF:                         o.swNIF,
 		NombreRazon:                 o.swNombreRazon,
 		Version:                     o.swVersion,

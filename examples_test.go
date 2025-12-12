@@ -74,7 +74,7 @@ func loadClient() (*verifactu.Client, error) {
 		return nil, err
 	}
 
-	return verifactu.New(&verifactu.Software{
+	return verifactu.New(verifactu.Software{
 		NombreRazon:                 "My Software",
 		NIF:                         "12345678A",
 		NombreSistemaInformatico:    "My Software",

@@ -23,7 +23,7 @@ const (
 
 // Client provides the main interface to the VeriFactu package.
 type Client struct {
-	software *Software
+	software Software
 	env      Environment
 	rep      *Issuer
 	curTime  time.Time
@@ -87,7 +87,7 @@ var WithCorporateSeal Option = func(c *Client) {
 
 // New creates a new VeriFactu client with shared software and configuration
 // options for creating and sending new documents.
-func New(software *Software, opts ...Option) (*Client, error) {
+func New(software Software, opts ...Option) (*Client, error) {
 	c := new(Client)
 	c.software = software
 
@@ -135,6 +135,7 @@ type generateOptions struct {
 	amendment          string
 	previouslyRejected string
 	noPriorRecord      string
+	installNumber      string
 }
 
 // Amended indicates that the incoming document is an amendment of a previous
@@ -165,6 +166,14 @@ func NoPriorRecord() GenerateOption {
 	}
 }
 
+// WithInstallationNumber is used to overrid the instalation number defined in the connection
+// configuration while generating the invoice.
+func WithInstallationNumber(code string) GenerateOption {
+	return func(o *generateOptions) {
+		o.installNumber = code
+	}
+}
+
 // RegisterInvoice prepares a new registration document from the provided invoice
 // inside the GOBL envelope. It will fingerprint and update the registration with
 // the chaining hash and QR code. The resulting document can be persisted for
@@ -190,8 +199,12 @@ func (c *Client) RegisterInvoice(env *gobl.Envelope, prev *ChainData, opts ...Ge
 			return nil, err
 		}
 	}
+	software := c.software // clone
+	if o.installNumber != "" {
+		software.NumeroInstalacion = o.installNumber
+	}
 
-	reg, err := newInvoiceRegistration(inv, c.CurrentTime(), c.software)
+	reg, err := newInvoiceRegistration(inv, c.CurrentTime(), &software)
 	if err != nil {
 		return nil, err
 	}
@@ -216,8 +229,12 @@ func (c *Client) CancelInvoice(env *gobl.Envelope, prev *ChainData, opts ...Gene
 	for _, cb := range opts {
 		cb(o)
 	}
+	software := c.software // clone
+	if o.installNumber != "" {
+		software.NumeroInstalacion = o.installNumber
+	}
 
-	can := newInvoiceCancellation(inv, c.CurrentTime(), c.software)
+	can := newInvoiceCancellation(inv, c.CurrentTime(), &software)
 	can.RechazoPrevio = o.previouslyRejected
 	can.SinRegistroPrevio = o.noPriorRecord
 	can.fingerprint(prev)
@@ -243,8 +260,8 @@ func (c *Client) NewInvoiceRequest(supplier *org.Party) (*InvoiceRequest, error)
 
 // NewEnvelopeInvoiceRequest is a convenience method that prepares a new InvoiceRequest
 // from the GOBL envelope in a single method call.
-func (c *Client) NewEnvelopeInvoiceRequest(env *gobl.Envelope, prev *ChainData) (*InvoiceRequest, error) {
-	req, err := c.RegisterInvoice(env, prev)
+func (c *Client) NewEnvelopeInvoiceRequest(env *gobl.Envelope, prev *ChainData, opts ...GenerateOption) (*InvoiceRequest, error) {
+	req, err := c.RegisterInvoice(env, prev, opts...)
 	if err != nil {
 		return nil, err
 	}
