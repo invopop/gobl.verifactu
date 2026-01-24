@@ -4,7 +4,7 @@
 		"uuid": "8a51fd30-2a27-11ee-be56-0242ac120002",
 		"dig": {
 			"alg": "sha256",
-			"val": "cab44f7761fd498cf54311f4eb9da61c61fdc55070a67086480c48308c51c736"
+			"val": "6756aee0e2b6422fa41755084070df71a2bfbc5a77a22193da60d8430087bf3b"
 		}
 	},
 	"doc": {
@@ -17,7 +17,7 @@
 		"type": "credit-note",
 		"series": "FR",
 		"code": "015",
-		"issue_date": "2025-03-15",
+		"issue_date": "2026-01-15",
 		"currency": "EUR",
 		"preceding": [
 			{

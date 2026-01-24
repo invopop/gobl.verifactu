@@ -14,7 +14,7 @@
           <sum1:IDFactura>
             <sum1:IDEmisorFactura>B85905495</sum1:IDEmisorFactura>
             <sum1:NumSerieFactura>FR-015</sum1:NumSerieFactura>
-            <sum1:FechaExpedicionFactura>15-03-2025</sum1:FechaExpedicionFactura>
+            <sum1:FechaExpedicionFactura>15-01-2026</sum1:FechaExpedicionFactura>
           </sum1:IDFactura>
           <sum1:NombreRazonEmisor>Provide One S.L.</sum1:NombreRazonEmisor>
           <sum1:TipoFactura>R1</sum1:TipoFactura>
@@ -71,7 +71,7 @@
           </sum1:SistemaInformatico>
           <sum1:FechaHoraHusoGenRegistro>2024-11-26T05:00:00+01:00</sum1:FechaHoraHusoGenRegistro>
           <sum1:TipoHuella>01</sum1:TipoHuella>
-          <sum1:Huella>28889109FBED747886333ABBAB989167E791E5B6FB6619846A0790CA0E032A4A</sum1:Huella>
+          <sum1:Huella>B46CDEDFB87A9CE102DA80E02D2885D0C77D1462F6CFE1ABE1B9384258A3E5DF</sum1:Huella>
         </sum1:RegistroAlta>
       </sum:RegistroFactura>
     </sum:RegFactuSistemaFacturacion>
