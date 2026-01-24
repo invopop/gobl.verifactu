@@ -33,10 +33,10 @@ type InvoiceRegistration struct {
 	NombreRazonEmisor                   string                `xml:"sum1:NombreRazonEmisor"`
 	Subsanacion                         string                `xml:"sum1:Subsanacion,omitempty"`
 	RechazoPrevio                       string                `xml:"sum1:RechazoPrevio,omitempty"`
-	TipoFactura                         string                 `xml:"sum1:TipoFactura"`
-	TipoRectificativa                   string                 `xml:"sum1:TipoRectificativa,omitempty"`
-	FacturasRectificadas                *FacturasRectificadas  `xml:"sum1:FacturasRectificadas,omitempty"`
-	FacturasSustituidas                 *FacturasSustituidas   `xml:"sum1:FacturasSustituidas,omitempty"`
+	TipoFactura                         string                `xml:"sum1:TipoFactura"`
+	TipoRectificativa                   string                `xml:"sum1:TipoRectificativa,omitempty"`
+	FacturasRectificadas                *FacturasRectificadas `xml:"sum1:FacturasRectificadas,omitempty"`
+	FacturasSustituidas                 *FacturasSustituidas  `xml:"sum1:FacturasSustituidas,omitempty"`
 	ImporteRectificacion                *ImporteRectificacion `xml:"sum1:ImporteRectificacion,omitempty"`
 	FechaOperacion                      string                `xml:"sum1:FechaOperacion,omitempty"`
 	DescripcionOperacion                string                `xml:"sum1:DescripcionOperacion"`
