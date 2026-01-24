@@ -33,10 +33,10 @@ type InvoiceRegistration struct {
 	NombreRazonEmisor                   string                `xml:"sum1:NombreRazonEmisor"`
 	Subsanacion                         string                `xml:"sum1:Subsanacion,omitempty"`
 	RechazoPrevio                       string                `xml:"sum1:RechazoPrevio,omitempty"`
-	TipoFactura                         string                `xml:"sum1:TipoFactura"`
-	TipoRectificativa                   string                `xml:"sum1:TipoRectificativa,omitempty"`
-	FacturasRectificadas                []*FacturaRectificada `xml:"sum1:FacturasRectificadas,omitempty"`
-	FacturasSustituidas                 []*FacturaSustituida  `xml:"sum1:FacturasSustituidas,omitempty"`
+	TipoFactura                         string                 `xml:"sum1:TipoFactura"`
+	TipoRectificativa                   string                 `xml:"sum1:TipoRectificativa,omitempty"`
+	FacturasRectificadas                *FacturasRectificadas  `xml:"sum1:FacturasRectificadas,omitempty"`
+	FacturasSustituidas                 *FacturasSustituidas   `xml:"sum1:FacturasSustituidas,omitempty"`
 	ImporteRectificacion                *ImporteRectificacion `xml:"sum1:ImporteRectificacion,omitempty"`
 	FechaOperacion                      string                `xml:"sum1:FechaOperacion,omitempty"`
 	DescripcionOperacion                string                `xml:"sum1:DescripcionOperacion"`
@@ -67,14 +67,28 @@ type IDFactura struct {
 	FechaExpedicionFactura string `xml:"sum1:FechaExpedicionFactura"`
 }
 
+// FacturasRectificadas is a wrapper for multiple rectified invoices
+type FacturasRectificadas struct {
+	Items []*FacturaRectificada `xml:"sum1:IDFacturaRectificada"`
+}
+
 // FacturaRectificada represents a rectified invoice
 type FacturaRectificada struct {
-	IDFactura IDFactura `xml:"sum1:IDFacturaRectificada"`
+	IDEmisorFactura        string `xml:"sum1:IDEmisorFactura"`
+	NumSerieFactura        string `xml:"sum1:NumSerieFactura"`
+	FechaExpedicionFactura string `xml:"sum1:FechaExpedicionFactura"`
+}
+
+// FacturasSustituidas is a wrapper for multiple substituted invoices
+type FacturasSustituidas struct {
+	Items []*FacturaSustituida `xml:"sum1:IDFacturaSustituida"`
 }
 
 // FacturaSustituida represents a substituted invoice
 type FacturaSustituida struct {
-	IDFactura IDFactura `xml:"sum1:IDFacturaSustituida"`
+	IDEmisorFactura        string `xml:"sum1:IDEmisorFactura"`
+	NumSerieFactura        string `xml:"sum1:NumSerieFactura"`
+	FechaExpedicionFactura string `xml:"sum1:FechaExpedicionFactura"`
 }
 
 // ImporteRectificacion contains rectification amounts
@@ -206,14 +220,12 @@ func newInvoiceRegistration(inv *bill.Invoice, ts time.Time, s *Software) (*Invo
 				taxes = taxes.Merge(ref.Tax)
 			}
 			list[i] = &FacturaRectificada{
-				IDFactura: IDFactura{
-					IDEmisorFactura:        inv.Supplier.TaxID.Code.String(),
-					NumSerieFactura:        invoiceNumber(ref.Series, ref.Code),
-					FechaExpedicionFactura: ref.IssueDate.Time().Format("02-01-2006"),
-				},
+				IDEmisorFactura:        inv.Supplier.TaxID.Code.String(),
+				NumSerieFactura:        invoiceNumber(ref.Series, ref.Code),
+				FechaExpedicionFactura: ref.IssueDate.Time().Format("02-01-2006"),
 			}
 		}
-		reg.FacturasRectificadas = list
+		reg.FacturasRectificadas = &FacturasRectificadas{Items: list}
 		if k == "S" {
 			// only include in substituted documents
 			reg.ImporteRectificacion = newImporteRectificacion(taxes)
@@ -228,14 +240,12 @@ func newInvoiceRegistration(inv *bill.Invoice, ts time.Time, s *Software) (*Invo
 			subs := make([]*FacturaSustituida, 0, len(inv.Preceding))
 			for _, ref := range inv.Preceding {
 				subs = append(subs, &FacturaSustituida{
-					IDFactura: IDFactura{
-						IDEmisorFactura:        inv.Supplier.TaxID.Code.String(),
-						NumSerieFactura:        invoiceNumber(ref.Series, ref.Code),
-						FechaExpedicionFactura: ref.IssueDate.Time().Format("02-01-2006"),
-					},
+					IDEmisorFactura:        inv.Supplier.TaxID.Code.String(),
+					NumSerieFactura:        invoiceNumber(ref.Series, ref.Code),
+					FechaExpedicionFactura: ref.IssueDate.Time().Format("02-01-2006"),
 				})
 			}
-			reg.FacturasSustituidas = subs
+			reg.FacturasSustituidas = &FacturasSustituidas{Items: subs}
 		}
 	}
 

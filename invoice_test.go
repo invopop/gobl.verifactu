@@ -73,12 +73,12 @@ func TestNewRegistroAlta(t *testing.T) {
 
 		assert.Equal(t, "R1", ra.TipoFactura)
 		assert.Equal(t, "I", ra.TipoRectificativa)
-		require.Len(t, ra.FacturasRectificadas, 1)
+		require.Len(t, ra.FacturasRectificadas.Items, 1)
 
-		rectified := ra.FacturasRectificadas[0]
-		assert.Equal(t, "B85905495", rectified.IDFactura.IDEmisorFactura)
-		assert.Equal(t, "SAMPLE-085", rectified.IDFactura.NumSerieFactura)
-		assert.Equal(t, "10-01-2022", rectified.IDFactura.FechaExpedicionFactura)
+		rectified := ra.FacturasRectificadas.Items[0]
+		assert.Equal(t, "B85905495", rectified.IDEmisorFactura)
+		assert.Equal(t, "SAMPLE-085", rectified.NumSerieFactura)
+		assert.Equal(t, "10-01-2022", rectified.FechaExpedicionFactura)
 		assert.Equal(t, "-1620.00", ra.Desglose.DetalleDesglose[0].BaseImponibleOImporteNoSujeto)
 		assert.Equal(t, "-340.20", ra.Desglose.DetalleDesglose[0].CuotaRepercutida)
 		assert.Equal(t, "-340.20", ra.CuotaTotal.String())
@@ -99,11 +99,11 @@ func TestNewRegistroAlta(t *testing.T) {
 		ra, err := vc.RegisterInvoice(env, nil)
 		require.NoError(t, err)
 
-		require.Len(t, ra.FacturasSustituidas, 1)
-		substituted := ra.FacturasSustituidas[0]
-		assert.Equal(t, "B85905495", substituted.IDFactura.IDEmisorFactura)
-		assert.Equal(t, "SAMPLE-002", substituted.IDFactura.NumSerieFactura)
-		assert.Equal(t, "15-01-2024", substituted.IDFactura.FechaExpedicionFactura)
+		require.Len(t, ra.FacturasSustituidas.Items, 1)
+		substituted := ra.FacturasSustituidas.Items[0]
+		assert.Equal(t, "B85905495", substituted.IDEmisorFactura)
+		assert.Equal(t, "SAMPLE-002", substituted.NumSerieFactura)
+		assert.Equal(t, "15-01-2024", substituted.FechaExpedicionFactura)
 	})
 
 	t.Run("should handle an empty note", func(t *testing.T) {
