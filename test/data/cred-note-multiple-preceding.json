@@ -1,0 +1,180 @@
+{
+	"$schema": "https://gobl.org/draft-0/envelope",
+	"head": {
+		"uuid": "8a51fd30-2a27-11ee-be56-0242ac120002",
+		"dig": {
+			"alg": "sha256",
+			"val": "6756aee0e2b6422fa41755084070df71a2bfbc5a77a22193da60d8430087bf3b"
+		}
+	},
+	"doc": {
+		"$schema": "https://gobl.org/draft-0/bill/invoice",
+		"$regime": "ES",
+		"$addons": [
+			"es-verifactu-v1"
+		],
+		"uuid": "3aea7b56-59d8-4beb-90bd-f8f280d852a0",
+		"type": "credit-note",
+		"series": "FR",
+		"code": "015",
+		"issue_date": "2026-01-15",
+		"currency": "EUR",
+		"preceding": [
+			{
+				"type": "standard",
+				"issue_date": "2024-11-13",
+				"series": "SAMPLE-sett",
+				"code": "000005",
+				"tax": {
+					"categories": [
+						{
+							"code": "VAT",
+							"rates": [
+								{
+									"key": "standard",
+									"base": "800.00",
+									"percent": "21.0%",
+									"amount": "168.00"
+								}
+							],
+							"amount": "168.00"
+						}
+					],
+					"sum": "168.00"
+				}
+			},
+			{
+				"type": "standard",
+				"issue_date": "2025-11-17",
+				"series": "SAMPLE-sett",
+				"code": "000004",
+				"tax": {
+					"categories": [
+						{
+							"code": "VAT",
+							"rates": [
+								{
+									"key": "standard",
+									"base": "820.00",
+									"percent": "21.0%",
+									"amount": "172.20"
+								}
+							],
+							"amount": "172.20"
+						}
+					],
+					"sum": "172.20"
+				}
+			}
+		],
+		"tax": {
+			"ext": {
+				"es-verifactu-correction-type": "I",
+				"es-verifactu-doc-type": "R1"
+			}
+		},
+		"supplier": {
+			"name": "Provide One S.L.",
+			"tax_id": {
+				"country": "ES",
+				"code": "B85905495"
+			},
+			"addresses": [
+				{
+					"num": "42",
+					"street": "San Frantzisko",
+					"locality": "Bilbo",
+					"region": "Bizkaia",
+					"code": "48003",
+					"country": "ES"
+				}
+			],
+			"emails": [
+				{
+					"addr": "billing@example.com"
+				}
+			]
+		},
+		"customer": {
+			"name": "Sample Customer",
+			"tax_id": {
+				"country": "ES",
+				"code": "54387763P"
+			},
+			"addresses": [
+				{
+					"num": "13",
+					"street": "Calle del Barro",
+					"locality": "Alcañiz",
+					"region": "Teruel",
+					"code": "44600",
+					"country": "ES"
+				}
+			],
+			"emails": [
+				{
+					"addr": "customer@example.com"
+				}
+			]
+		},
+		"lines": [
+			{
+				"i": 1,
+				"quantity": "18",
+				"item": {
+					"name": "Development services",
+					"price": "90.00",
+					"unit": "h"
+				},
+				"sum": "1620.00",
+				"taxes": [
+					{
+						"cat": "VAT",
+						"key": "standard",
+						"rate": "general",
+						"percent": "21.0%",
+						"ext": {
+							"es-verifactu-op-class": "S1",
+							"es-verifactu-regime": "01"
+						}
+					}
+				],
+				"total": "1620.00"
+			}
+		],
+		"totals": {
+			"sum": "1620.00",
+			"total": "1620.00",
+			"taxes": {
+				"categories": [
+					{
+						"code": "VAT",
+						"rates": [
+							{
+								"key": "standard",
+								"ext": {
+									"es-verifactu-op-class": "S1",
+									"es-verifactu-regime": "01"
+								},
+								"base": "1620.00",
+								"percent": "21.0%",
+								"amount": "340.20"
+							}
+						],
+						"amount": "340.20"
+					}
+				],
+				"sum": "340.20"
+			},
+			"tax": "340.20",
+			"total_with_tax": "1960.20",
+			"payable": "1960.20"
+		},
+		"notes": [
+			{
+				"key": "general",
+				"text": "This is a credit note rectifying multiple preceding invoices"
+			}
+		]
+	}
+}
