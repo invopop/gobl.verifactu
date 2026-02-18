@@ -213,19 +213,21 @@ func newInvoiceRegistration(inv *bill.Invoice, ts time.Time, s *Software) (*Invo
 		}
 		reg.TipoRectificativa = k
 
-		list := make([]*FacturaRectificada, len(inv.Preceding))
 		taxes := new(tax.Total)
-		for i, ref := range inv.Preceding {
-			if ref.Tax != nil {
-				taxes = taxes.Merge(ref.Tax)
+		if len(inv.Preceding) > 0 {
+			list := make([]*FacturaRectificada, len(inv.Preceding))
+			for i, ref := range inv.Preceding {
+				if ref.Tax != nil {
+					taxes = taxes.Merge(ref.Tax)
+				}
+				list[i] = &FacturaRectificada{
+					IDEmisorFactura:        inv.Supplier.TaxID.Code.String(),
+					NumSerieFactura:        invoiceNumber(ref.Series, ref.Code),
+					FechaExpedicionFactura: ref.IssueDate.Time().Format("02-01-2006"),
+				}
 			}
-			list[i] = &FacturaRectificada{
-				IDEmisorFactura:        inv.Supplier.TaxID.Code.String(),
-				NumSerieFactura:        invoiceNumber(ref.Series, ref.Code),
-				FechaExpedicionFactura: ref.IssueDate.Time().Format("02-01-2006"),
-			}
+			reg.FacturasRectificadas = &FacturasRectificadas{Items: list}
 		}
-		reg.FacturasRectificadas = &FacturasRectificadas{Items: list}
 		if k == "S" {
 			// only include in substituted documents
 			reg.ImporteRectificacion = newImporteRectificacion(taxes)
