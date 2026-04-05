@@ -179,11 +179,15 @@ func newInvoiceRegistration(inv *bill.Invoice, ts time.Time, s *Software) (*Invo
 		reg.FechaOperacion = inv.OperationDate.Time().Format("02-01-2006")
 	}
 
-	// Remove any charges that do not have taxes from the total, these are
-	// likely to be related to payments or other non-taxable items.
+	// Remove untaxed charges from the total. For regimes where ImporteTotal
+	// does not need to match sum(Desglose) (03, 05, 06, 08, 09), only
+	// subtract outlay charges so the total reflects the full sale price.
+	partialBreakdown := hasPartialBreakdownRegime(inv)
 	for _, charge := range inv.Charges {
 		if len(charge.Taxes) == 0 {
-			reg.ImporteTotal = reg.ImporteTotal.Sub(charge.Amount)
+			if !partialBreakdown || charge.Key == bill.ChargeKeyOutlay {
+				reg.ImporteTotal = reg.ImporteTotal.Sub(charge.Amount)
+			}
 		}
 	}
 
@@ -392,4 +396,31 @@ func (r *InvoiceRegistration) ChainData() *ChainData {
 // Bytes prepares an indendented XML document suitable for persistence.
 func (r *InvoiceRegistration) Bytes() ([]byte, error) {
 	return toBytesIndent(r)
+}
+
+// partialBreakdownRegimes lists the ClaveRegimen values where the Desglose
+// only reflects part of the operation (e.g. margin in REBU, markup in travel
+// agencies), so ImporteTotal is not required to match sum(Desglose).
+var partialBreakdownRegimes = []string{"03", "05", "06", "08", "09"}
+
+// hasPartialBreakdownRegime returns true when any non-retained tax rate in
+// the invoice uses a regime where the breakdown is partial.
+func hasPartialBreakdownRegime(inv *bill.Invoice) bool {
+	if inv.Totals == nil || inv.Totals.Taxes == nil {
+		return false
+	}
+	for _, c := range inv.Totals.Taxes.Categories {
+		if c.Retained {
+			continue
+		}
+		for _, r := range c.Rates {
+			regime := r.Ext.Get(verifactu.ExtKeyRegime).String()
+			for _, sr := range partialBreakdownRegimes {
+				if regime == sr {
+					return true
+				}
+			}
+		}
+	}
+	return false
 }

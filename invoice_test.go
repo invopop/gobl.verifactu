@@ -7,7 +7,9 @@ import (
 	verifactu "github.com/invopop/gobl.verifactu"
 	"github.com/invopop/gobl.verifactu/test"
 	addon "github.com/invopop/gobl/addons/es/verifactu"
+	"github.com/invopop/gobl/bill"
 	"github.com/invopop/gobl/cal"
+	"github.com/invopop/gobl/num"
 	"github.com/invopop/gobl/org"
 	"github.com/invopop/gobl/tax"
 	"github.com/stretchr/testify/assert"
@@ -144,5 +146,86 @@ func TestNewRegistroAlta(t *testing.T) {
 		require.NoError(t, err)
 
 		assert.Equal(t, "10-11-2024", ra.FechaOperacion)
+	})
+}
+
+func TestPartialBreakdownRegime(t *testing.T) {
+	ts, err := time.Parse(time.RFC3339, "2022-02-01T04:00:00Z")
+	require.NoError(t, err)
+	vc, err := verifactu.New(
+		verifactu.Software{},
+		verifactu.WithCurrentTime(ts),
+	)
+	require.NoError(t, err)
+
+	t.Run("REBU keeps untaxed charge in total", func(t *testing.T) {
+		env := test.LoadEnvelope("inv-rebu.json")
+		ra, err := vc.RegisterInvoice(env, nil)
+		require.NoError(t, err)
+
+		assert.Equal(t, "10.00", ra.ImporteTotal.String())
+		assert.Equal(t, "0.17", ra.CuotaTotal.String())
+		require.Len(t, ra.Desglose.DetalleDesglose, 1)
+		assert.Equal(t, "03", ra.Desglose.DetalleDesglose[0].ClaveRegimen)
+		assert.Equal(t, "0.83", ra.Desglose.DetalleDesglose[0].BaseImponibleOImporteNoSujeto)
+		assert.Equal(t, "0.17", ra.Desglose.DetalleDesglose[0].CuotaRepercutida)
+	})
+
+	t.Run("REBU with outlay subtracts only the outlay", func(t *testing.T) {
+		env, inv := test.LoadInvoice("inv-rebu.json")
+		inv.Charges = append(inv.Charges, &bill.Charge{
+			Key:    bill.ChargeKeyOutlay,
+			Reason: "Notary fees",
+			Amount: num.MakeAmount(5000, 2),
+		})
+		require.NoError(t, inv.Calculate())
+
+		ra, err := vc.RegisterInvoice(env, nil)
+		require.NoError(t, err)
+
+		// 10.00 (total_with_tax) + 50.00 (outlay) - 50.00 (outlay subtracted) = 10.00
+		assert.Equal(t, "10.00", ra.ImporteTotal.String())
+	})
+
+	t.Run("REBU with multiple untaxed charges keeps all non-outlay", func(t *testing.T) {
+		env, inv := test.LoadInvoice("inv-rebu.json")
+		inv.Charges = append(inv.Charges, &bill.Charge{
+			Reason: "Additional cost component",
+			Amount: num.MakeAmount(2000, 2),
+		})
+		require.NoError(t, inv.Calculate())
+
+		ra, err := vc.RegisterInvoice(env, nil)
+		require.NoError(t, err)
+
+		// Both untaxed charges (9.00 + 20.00) stay in total
+		assert.Equal(t, "30.00", ra.ImporteTotal.String())
+	})
+
+	t.Run("non-partial regime subtracts all untaxed charges", func(t *testing.T) {
+		env := test.LoadEnvelope("inv-base-outlay.json")
+		ra, err := vc.RegisterInvoice(env, nil)
+		require.NoError(t, err)
+
+		// Regime 01: outlay (100.00) subtracted from total_with_tax (2278.00)
+		assert.Equal(t, "2178.00", ra.ImporteTotal.String())
+		assert.Equal(t, "01", ra.Desglose.DetalleDesglose[0].ClaveRegimen)
+	})
+
+	t.Run("non-partial regime subtracts untaxed charge without key", func(t *testing.T) {
+		env, inv := test.LoadInvoice("inv-base.json")
+		inv.Charges = []*bill.Charge{
+			{
+				Reason: "Some non-taxable fee",
+				Amount: num.MakeAmount(10000, 2),
+			},
+		}
+		require.NoError(t, inv.Calculate())
+
+		ra, err := vc.RegisterInvoice(env, nil)
+		require.NoError(t, err)
+
+		// Regime 01: untaxed charge (100.00) subtracted from total_with_tax (2278.00)
+		assert.Equal(t, "2178.00", ra.ImporteTotal.String())
 	})
 }
