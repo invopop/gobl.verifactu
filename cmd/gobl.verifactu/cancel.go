@@ -56,11 +56,15 @@ func (c *cancelOpts) runE(cmd *cobra.Command, args []string) error {
 
 	cert, err := xmldsig.LoadCertificate(c.cert, c.password)
 	if err != nil {
-		panic(err)
+		return fmt.Errorf("loading certificate: %w", err)
 	}
 
 	opts := []verifactu.Option{
 		verifactu.WithCertificate(cert),
+	}
+
+	if c.sign {
+		opts = append(opts, verifactu.WithSigning())
 	}
 
 	if c.production {

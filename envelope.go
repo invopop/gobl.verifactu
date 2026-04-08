@@ -7,10 +7,11 @@ import (
 	"time"
 )
 
-// SUM is the namespace for the main VeriFactu schema
+// VeriFactu XML namespace constants
 const (
 	SUM          = "https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/tike/cont/ws/SuministroLR.xsd"
 	SUM1         = "https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/tike/cont/ws/SuministroInformacion.xsd"
+	DS           = "http://www.w3.org/2000/09/xmldsig#"
 	EnvNamespace = "http://schemas.xmlsoap.org/soap/envelope/"
 )
 
@@ -37,6 +38,7 @@ type Envelope struct {
 	XMLNs   string   `xml:"xmlns:soapenv,attr"`
 	SUM     string   `xml:"xmlns:sum,attr,omitempty"`
 	SUM1    string   `xml:"xmlns:sum1,attr,omitempty"`
+	DS      string   `xml:"xmlns:ds,attr,omitempty"`
 	Body    struct {
 		ID             string          `xml:"soapenv:Id,attr,omitempty"`
 		InvoiceRequest *InvoiceRequest `xml:"sum:RegFactuSistemaFacturacion,omitempty"`
@@ -65,6 +67,7 @@ func newEnvelope() *Envelope {
 		XMLNs: EnvNamespace,
 		SUM:   SUM,
 		SUM1:  SUM1,
+		DS:    DS,
 	}
 	return env
 }

@@ -3,6 +3,7 @@ package verifactu
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/invopop/gobl"
@@ -30,6 +31,8 @@ type Client struct {
 	cert     *xmldsig.Certificate
 	conn     *connection
 	withSeal bool
+	signing  bool
+	signOpts []xmldsig.Option
 }
 
 // Option is used to configure the client.
@@ -83,6 +86,16 @@ func InSandbox() Option {
 // individuals. In Spanish these are called "Sello de Entidad".
 var WithCorporateSeal Option = func(c *Client) {
 	c.withSeal = true
+}
+
+// WithSigning sets additional xmldsig options that will be passed
+// through to SignDocument for each record. This is useful for controlling
+// the document ID and signing time in tests.
+func WithSigning(opts ...xmldsig.Option) Option {
+	return func(c *Client) {
+		c.signing = true
+		c.signOpts = opts
+	}
 }
 
 // New creates a new VeriFactu client with shared software and configuration
@@ -211,6 +224,13 @@ func (c *Client) RegisterInvoice(env *gobl.Envelope, prev *ChainData, opts ...Ge
 	reg.Subsanacion = o.amendment
 	reg.RechazoPrevio = o.previouslyRejected
 	reg.fingerprint(prev)
+	if c.signing && c.cert != nil {
+		sig, err := SignDocument(reg, c.cert, c.signOpts...)
+		if err != nil {
+			return nil, fmt.Errorf("signing registration: %w", err)
+		}
+		reg.Signature = sig
+	}
 	c.addRegistrationStamps(env, reg)
 
 	return reg, nil
@@ -238,6 +258,13 @@ func (c *Client) CancelInvoice(env *gobl.Envelope, prev *ChainData, opts ...Gene
 	can.RechazoPrevio = o.previouslyRejected
 	can.SinRegistroPrevio = o.noPriorRecord
 	can.fingerprint(prev)
+	if c.signing && c.cert != nil {
+		sig, err := SignDocument(can, c.cert, c.signOpts...)
+		if err != nil {
+			return nil, fmt.Errorf("signing cancellation: %w", err)
+		}
+		can.Signature = sig
+	}
 
 	return can, nil
 }

@@ -8,6 +8,7 @@ import (
 
 	"github.com/invopop/gobl"
 	verifactu "github.com/invopop/gobl.verifactu"
+	"github.com/invopop/xmldsig"
 	"github.com/spf13/cobra"
 )
 
@@ -25,6 +26,9 @@ func (c *convertOpts) cmd() *cobra.Command {
 		Short: "Convert a GOBL JSON into a VeriFactu XML",
 		RunE:  c.runE,
 	}
+
+	f := cmd.Flags()
+	c.prepareFlags(f)
 
 	return cmd
 }
@@ -52,7 +56,21 @@ func (c *convertOpts) runE(cmd *cobra.Command, args []string) error {
 		return fmt.Errorf("unmarshaling gobl envelope: %w", err)
 	}
 
-	vc, err := verifactu.New(c.software())
+	var opts []verifactu.Option
+
+	if c.cert != "" {
+		cert, err := xmldsig.LoadCertificate(c.cert, c.password)
+		if err != nil {
+			return err
+		}
+		opts = append(opts, verifactu.WithCertificate(cert))
+
+		if c.sign {
+			opts = append(opts, verifactu.WithSigning())
+		}
+	}
+
+	vc, err := verifactu.New(c.software(), opts...)
 	if err != nil {
 		return fmt.Errorf("creating verifactu client: %w", err)
 	}

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sum="https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/tike/cont/ws/SuministroLR.xsd" xmlns:sum1="https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/tike/cont/ws/SuministroInformacion.xsd">
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sum="https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/tike/cont/ws/SuministroLR.xsd" xmlns:sum1="https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/tike/cont/ws/SuministroInformacion.xsd" xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
   <soapenv:Body>
     <sum:RegFactuSistemaFacturacion>
       <sum:Cabecera>
@@ -59,6 +59,84 @@
           <sum1:FechaHoraHusoGenRegistro>2024-11-26T05:00:00+01:00</sum1:FechaHoraHusoGenRegistro>
           <sum1:TipoHuella>01</sum1:TipoHuella>
           <sum1:Huella>2DA08A0C1741B9975EC8634714F5F205C0825DF7C21142F69E8BEE9EF27BF8B9</sum1:Huella>
+          <ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" Id="Signature-test-doc-id-Signature">
+            <ds:SignedInfo>
+              <ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"></ds:CanonicalizationMethod>
+              <ds:SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"></ds:SignatureMethod>
+              <ds:Reference Id="Reference-test-doc-id" URI="">
+                <ds:Transforms>
+                  <ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"></ds:Transform>
+                </ds:Transforms>
+                <ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"></ds:DigestMethod>
+                <ds:DigestValue>0oE4z4bEtBS9HkXVvC2U43285mI2JdQswCMfPYd7pp8=</ds:DigestValue>
+              </ds:Reference>
+              <ds:Reference Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature-test-doc-id-SignedProperties">
+                <ds:Transforms>
+                  <ds:Transform Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"></ds:Transform>
+                </ds:Transforms>
+                <ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"></ds:DigestMethod>
+                <ds:DigestValue>3G92E0NveZL9A2c34x0rlVE3xHJs8HnJ1SN69pM10i8=</ds:DigestValue>
+              </ds:Reference>
+            </ds:SignedInfo>
+            <ds:SignatureValue Id="Signature-test-doc-id-SignatureValue">USA+p5UFsAn/Y3jEVJO8NqcDa0qoXeZbOhRl6HNymvGVhka2nFBzIgvuxfiltqV/jU/Yi5xiJNhshdLPBlLUyogyhHi0tYOYhxbRnA2WO2gLTncmONP9KZS8KQDvqZZBmTjUUJA4RWitYTcZKRyyPIu9CGiP/QpjtjxstevRIH15p0ZmRK9y55y5A9veYBWnoNbxCHmtemfASVhgpehxFVkM4lUACmTNKof2c65F2VdZ/7ukDxIoV1EiDEVuzVCTSLObcqDRYvEJCKK7ZfrQ6Ng36vrET/0hg7ZvRGsj0i0X17oncQNYtQ+SJ12FJyKcaTvuiqQute0dxl2vGpQtsQ==</ds:SignatureValue>
+            <ds:KeyInfo Id="Certificate-test-doc-id">
+              <ds:X509Data>
+                <ds:X509Certificate>MIIC6TCCAdGgAwIBAgIBATANBgkqhkiG9w0BAQsFADAuMREwDwYDVQQKEwhUZXN0IE9yZzEZMBcGA1UEAxMQVGVzdCBDZXJ0aWZpY2F0ZTAeFw0yNDAxMDEwMDAwMDBaFw0zNDAxMDEwMDAwMDBaMC4xETAPBgNVBAoTCFRlc3QgT3JnMRkwFwYDVQQDExBUZXN0IENlcnRpZmljYXRlMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAs0D/mPSfSSzpiUWxvqYTLjX/IMNafVpm9/aCRiKq+Hr9MwDaXV/jkXht4gyBs4plnBnitpxKKb1JoB2GkO04hVQN46IpbnwI72MukoxpYTsC8iar1WjC40doVHAQVVpmJbAW2y38xPTNHyo+lW+386Ef+PLmhilqYGpWWU1Cpg0snmGozcPtu8tH2eeeOUjy8UNVPycqYOccAzbvclDSF2Lf3yqynRVIxQzdTpGyVw4qUgUVJi5q1tV56x2Tq2IjvIArcFqHQ7rBO9ZT1PEUKGw3bPrhVcBCFO5dFfw+qCWIIRMlWtVrmpV5OCu57/7lP9PL47FllsxxFuzUDAb0ewIDAQABoxIwEDAOBgNVHQ8BAf8EBAMCB4AwDQYJKoZIhvcNAQELBQADggEBAEnkRyRNGU/Ah6pdJ9O+hVVsqjcP3BNuoj152V6kp+yGMiOMnykIeLD9GjSXRnLy28Top2bLQfcf2jJtJB9hyJYVSvyFkw4jqi/eXAWzQhf5lTnddxaAHR8JnCsd7dp5LI65VNjyRrk3lbz4E3is+oadNIOGx0MtdvENwIN6GU9Tp7FufTHXxHuCf+6Ac/7E7RCdiltlYiYWO4laibIvgwOmimXrPHfOSmET9PfI1H49abl1eVkt75Q3kwIo4Et2iuYz3Qa4svmBt36USivnMJOW1+xGmlwVasXTScWCT2iyAWyR8GJT9afB6PoeQi96n/JMbvLmb3p2/26yzaAqbEE=</ds:X509Certificate>
+              </ds:X509Data>
+              <ds:KeyValue>
+                <ds:RSAKeyValue>
+                  <ds:Modulus>s0D/mPSfSSzpiUWxvqYTLjX/IMNafVpm9/aCRiKq+Hr9MwDaXV/jkXht4gyBs4plnBnitpxKKb1JoB2GkO04hVQN46IpbnwI72MukoxpYTsC8iar1WjC40doVHAQVVpmJbAW2y38xPTNHyo+lW+386Ef+PLmhilqYGpWWU1Cpg0snmGozcPtu8tH2eeeOUjy8UNVPycqYOccAzbvclDSF2Lf3yqynRVIxQzdTpGyVw4qUgUVJi5q1tV56x2Tq2IjvIArcFqHQ7rBO9ZT1PEUKGw3bPrhVcBCFO5dFfw+qCWIIRMlWtVrmpV5OCu57/7lP9PL47FllsxxFuzUDAb0ew==</ds:Modulus>
+                  <ds:Exponent>AQAB</ds:Exponent>
+                </ds:RSAKeyValue>
+              </ds:KeyValue>
+            </ds:KeyInfo>
+            <ds:Object>
+              <xades:QualifyingProperties xmlns:xades="http://uri.etsi.org/01903/v1.3.2#" Id="Signature-test-doc-id-QualifyingProperties" Target="#Signature-test-doc-id-Signature">
+                <xades:SignedProperties Id="Signature-test-doc-id-SignedProperties">
+                  <xades:SignedSignatureProperties>
+                    <xades:SigningTime>2024-11-26T04:00:00+00:00</xades:SigningTime>
+                    <xades:SigningCertificate>
+                      <xades:Cert>
+                        <xades:CertDigest>
+                          <ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"></ds:DigestMethod>
+                          <ds:DigestValue>ewsstiGgTfzBoBGrpinBPSrSMvV+sW//gV0WIZdqLY4=</ds:DigestValue>
+                        </xades:CertDigest>
+                        <xades:IssuerSerial>
+                          <ds:X509IssuerName>CN=Test Certificate,O=Test Org</ds:X509IssuerName>
+                          <ds:X509SerialNumber>1</ds:X509SerialNumber>
+                        </xades:IssuerSerial>
+                      </xades:Cert>
+                    </xades:SigningCertificate>
+                    <xades:SignaturePolicyIdentifier>
+                      <xades:SignaturePolicyId>
+                        <xades:SigPolicyId>
+                          <xades:Identifier>urn:oid:2.16.724.1.3.1.1.2.1.9</xades:Identifier>
+                        </xades:SigPolicyId>
+                        <xades:SigPolicyHash>
+                          <ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"></ds:DigestMethod>
+                          <ds:DigestValue>G7roucf600+f03r/o0bAOQ6WAs0=</ds:DigestValue>
+                        </xades:SigPolicyHash>
+                        <xades:SigPolicyQualifiers>
+                          <xades:SigPolicyQualifier>
+                            <xades:SPURI>https://sede.administracion.gob.es/politica_de_firma_anexo_1.pdf</xades:SPURI>
+                          </xades:SigPolicyQualifier>
+                        </xades:SigPolicyQualifiers>
+                      </xades:SignaturePolicyId>
+                    </xades:SignaturePolicyIdentifier>
+                  </xades:SignedSignatureProperties>
+                  <xades:SignedDataObjectProperties>
+                    <xades:DataObjectFormat ObjectReference="#Reference-test-doc-id">
+                      <xades:ObjectIdentifier>
+                        <xades:Identifier>urn:oid:1.2.840.10003.5.109.10</xades:Identifier>
+                      </xades:ObjectIdentifier>
+                      <xades:MimeType>text/xml</xades:MimeType>
+                      <xades:Encoding>UTF-8</xades:Encoding>
+                    </xades:DataObjectFormat>
+                  </xades:SignedDataObjectProperties>
+                </xades:SignedProperties>
+              </xades:QualifyingProperties>
+            </ds:Object>
+          </ds:Signature>
         </sum1:RegistroAlta>
       </sum:RegistroFactura>
     </sum:RegFactuSistemaFacturacion>

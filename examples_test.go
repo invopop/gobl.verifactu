@@ -11,6 +11,7 @@ import (
 	verifactu "github.com/invopop/gobl.verifactu"
 	"github.com/invopop/gobl.verifactu/test"
 
+	"github.com/invopop/xmldsig"
 	"github.com/stretchr/testify/require"
 )
 
@@ -20,14 +21,10 @@ const (
 )
 
 func TestXMLGeneration(t *testing.T) {
-	// schema, err := loadSchema()
-	// require.NoError(t, err)
-
 	examples, err := lookupExamples()
 	require.NoError(t, err)
 
-	c, err := loadClient()
-	require.NoError(t, err)
+	c := loadClient(t)
 
 	for _, example := range examples {
 		name := fmt.Sprintf("should convert %s example file successfully", example)
@@ -68,13 +65,15 @@ func TestXMLGeneration(t *testing.T) {
 	}
 }
 
-func loadClient() (*verifactu.Client, error) {
-	ts, err := time.Parse(time.RFC3339, "2024-11-26T04:00:00Z")
-	if err != nil {
-		return nil, err
-	}
+func loadClient(t *testing.T) *verifactu.Client {
+	t.Helper()
 
-	return verifactu.New(verifactu.Software{
+	ts, err := time.Parse(time.RFC3339, "2024-11-26T04:00:00Z")
+	require.NoError(t, err)
+
+	cert := test.Certificate(t)
+
+	c, err := verifactu.New(verifactu.Software{
 		NombreRazon:                 "My Software",
 		NIF:                         "12345678A",
 		NombreSistemaInformatico:    "My Software",
@@ -86,7 +85,15 @@ func loadClient() (*verifactu.Client, error) {
 		IndicadorMultiplesOT:        "N",
 	},
 		verifactu.WithCurrentTime(ts),
+		verifactu.WithCertificate(cert),
+		verifactu.WithSigning(
+			xmldsig.WithDocID("test-doc-id"),
+			xmldsig.WithCurrentTime(func() time.Time { return ts }),
+		),
 	)
+	require.NoError(t, err)
+
+	return c
 }
 
 func lookupExamples() ([]string, error) {

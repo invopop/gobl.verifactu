@@ -20,6 +20,7 @@ type rootOpts struct {
 	swVersion              string
 	swNumeroInstalacion    string
 	production             bool
+	sign                   bool
 }
 
 func root() *rootOpts {
@@ -51,6 +52,7 @@ func (o *rootOpts) prepareFlags(f *pflag.FlagSet) {
 	f.StringVar(&o.swIDSistemaInformatico, "sw-id", os.Getenv("SOFTWARE_ID_SISTEMA_INFORMATICO"), "ID of the software system")
 	f.StringVar(&o.swNumeroInstalacion, "sw-inst", os.Getenv("SOFTWARE_NUMERO_INSTALACION"), "Number of the software installation")
 	f.BoolVarP(&o.production, "production", "p", false, "Production environment")
+	f.BoolVar(&o.sign, "sign", false, "Enable XML digital signatures on records")
 }
 
 func (o *rootOpts) software() verifactu.Software {

@@ -7,23 +7,27 @@ import (
 	"time"
 
 	"github.com/invopop/gobl/bill"
+	"github.com/invopop/xmldsig"
+	"github.com/nbio/xml"
 )
 
 // InvoiceCancellation contains the details of an invoice cancellation
 type InvoiceCancellation struct {
-	IDVersion                string            `xml:"sum1:IDVersion"`
-	IDFactura                *IDFacturaAnulada `xml:"sum1:IDFactura"`
-	RefExterna               string            `xml:"sum1:RefExterna,omitempty"`
-	SinRegistroPrevio        string            `xml:"sum1:SinRegistroPrevio,omitempty"`
-	RechazoPrevio            string            `xml:"sum1:RechazoPrevio,omitempty"`
-	GeneradoPor              string            `xml:"sum1:GeneradoPor,omitempty"`
-	Generador                *Party            `xml:"sum1:Generador,omitempty"`
-	Encadenamiento           *Encadenamiento   `xml:"sum1:Encadenamiento"`
-	SistemaInformatico       *Software         `xml:"sum1:SistemaInformatico"`
-	FechaHoraHusoGenRegistro string            `xml:"sum1:FechaHoraHusoGenRegistro"`
-	TipoHuella               string            `xml:"sum1:TipoHuella"`
-	Huella                   string            `xml:"sum1:Huella"`
-	// Signature               *xmldsig.Signature            `xml:"sum1:Signature"`
+	XMLName                  xml.Name           `xml:"sum1:RegistroAnulacion"`
+	SUM1                     string             `xml:"xmlns:sum1,attr,omitempty"`
+	IDVersion                string             `xml:"sum1:IDVersion"`
+	IDFactura                *IDFacturaAnulada  `xml:"sum1:IDFactura"`
+	RefExterna               string             `xml:"sum1:RefExterna,omitempty"`
+	SinRegistroPrevio        string             `xml:"sum1:SinRegistroPrevio,omitempty"`
+	RechazoPrevio            string             `xml:"sum1:RechazoPrevio,omitempty"`
+	GeneradoPor              string             `xml:"sum1:GeneradoPor,omitempty"`
+	Generador                *Party             `xml:"sum1:Generador,omitempty"`
+	Encadenamiento           *Encadenamiento    `xml:"sum1:Encadenamiento"`
+	SistemaInformatico       *Software          `xml:"sum1:SistemaInformatico"`
+	FechaHoraHusoGenRegistro string             `xml:"sum1:FechaHoraHusoGenRegistro"`
+	TipoHuella               string             `xml:"sum1:TipoHuella"`
+	Huella                   string             `xml:"sum1:Huella"`
+	Signature                *xmldsig.Signature `xml:"ds:Signature,omitempty"`
 }
 
 // IDFacturaAnulada contains the identifying information for an invoice
@@ -36,6 +40,7 @@ type IDFacturaAnulada struct {
 // newInvoiceCancellation provides support for cancelling invoices
 func newInvoiceCancellation(inv *bill.Invoice, ts time.Time, s *Software) *InvoiceCancellation {
 	reg := &InvoiceCancellation{
+		SUM1:      SUM1,
 		IDVersion: CurrentVersion,
 		IDFactura: &IDFacturaAnulada{
 			IDEmisorFactura:        inv.Supplier.TaxID.Code.String(),
@@ -91,4 +96,10 @@ func (c *InvoiceCancellation) ChainData() *ChainData {
 		IssueDate:   c.IDFactura.FechaExpedicionFactura,
 		Fingerprint: c.Huella,
 	}
+}
+
+// Bytes prepares an XML document suitable for persistence. Signed documents
+// use compact XML to preserve the enveloped signature.
+func (c *InvoiceCancellation) Bytes() ([]byte, error) {
+	return toBytesIndent(c)
 }

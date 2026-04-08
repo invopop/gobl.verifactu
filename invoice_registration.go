@@ -16,6 +16,7 @@ import (
 	"github.com/invopop/gobl/org"
 	"github.com/invopop/gobl/tax"
 	"github.com/invopop/validation"
+	"github.com/invopop/xmldsig"
 	"github.com/nbio/xml"
 )
 
@@ -26,7 +27,7 @@ var correctiveCodes = []cbc.Code{ // Credit or Debit notes
 // InvoiceRegistration contains the details of an invoice registration
 type InvoiceRegistration struct {
 	XMLName                             xml.Name              `xml:"sum1:RegistroAlta"`
-	NS                                  string                `xml:"xmlns:sum1,attr,omitempty"`
+	SUM1                                string                `xml:"xmlns:sum1,attr,omitempty"`
 	IDVersion                           string                `xml:"sum1:IDVersion"`
 	IDFactura                           *IDFactura            `xml:"sum1:IDFactura"`
 	RefExterna                          string                `xml:"sum1:RefExterna,omitempty"`
@@ -57,7 +58,7 @@ type InvoiceRegistration struct {
 	IdAcuerdoSistemaInformatico         string                `xml:"sum1:IdAcuerdoSistemaInformatico,omitempty"` //nolint:revive,staticcheck
 	TipoHuella                          string                `xml:"sum1:TipoHuella"`
 	Huella                              string                `xml:"sum1:Huella"`
-	// Signature                           *xmldsig.Signature   `xml:"sum1:Signature,omitempty"`
+	Signature                           *xmldsig.Signature    `xml:"ds:Signature,omitempty"`
 }
 
 // IDFactura contains the identifying information for an invoice
@@ -155,7 +156,7 @@ func newInvoiceRegistration(inv *bill.Invoice, ts time.Time, s *Software) (*Invo
 	}
 
 	reg := &InvoiceRegistration{
-		NS:        SUM1, // to remove during sending
+		SUM1:      SUM1, // to remove during sending
 		IDVersion: CurrentVersion,
 		IDFactura: &IDFactura{
 			IDEmisorFactura:        inv.Supplier.TaxID.Code.String(),
@@ -389,7 +390,8 @@ func (r *InvoiceRegistration) ChainData() *ChainData {
 	}
 }
 
-// Bytes prepares an indendented XML document suitable for persistence.
+// Bytes prepares an XML document suitable for persistence. Signed documents
+// use compact XML to preserve the enveloped signature.
 func (r *InvoiceRegistration) Bytes() ([]byte, error) {
 	return toBytesIndent(r)
 }
