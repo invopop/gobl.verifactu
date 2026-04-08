@@ -12,6 +12,7 @@ require (
 	github.com/invopop/validation v0.8.0
 	github.com/invopop/xmldsig v0.14.0
 	github.com/joho/godotenv v1.5.1
+	github.com/lestrrat-go/libxml2 v0.0.0-20260304224138-bb3877930cf7
 	github.com/magefile/mage v1.15.0
 	github.com/nbio/xml v0.0.0-20241028124227-eac89c735a80
 	github.com/spf13/cobra v1.9.1
@@ -34,6 +35,7 @@ require (
 	github.com/invopop/yaml v0.3.1 // indirect
 	github.com/jonboulle/clockwork v0.5.0 // indirect
 	github.com/mailru/easyjson v0.9.1 // indirect
+	github.com/pkg/errors v0.9.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/russellhaering/goxmldsig v1.5.0 // indirect
 	github.com/wk8/go-ordered-map/v2 v2.1.8 // indirect

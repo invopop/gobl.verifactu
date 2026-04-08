@@ -12,6 +12,7 @@ import (
 	"github.com/invopop/gobl.verifactu/test"
 
 	"github.com/invopop/xmldsig"
+	"github.com/lestrrat-go/libxml2/xsd"
 	"github.com/stretchr/testify/require"
 )
 
@@ -25,6 +26,12 @@ func TestXMLGeneration(t *testing.T) {
 	require.NoError(t, err)
 
 	c := loadClient(t)
+
+	var schema *xsd.Schema
+	if *test.UpdateOut {
+		schema, err = test.LoadSchema("main.xsd")
+		require.NoError(t, err)
+	}
 
 	for _, example := range examples {
 		name := fmt.Sprintf("should convert %s example file successfully", example)
@@ -51,6 +58,11 @@ func TestXMLGeneration(t *testing.T) {
 			require.NoError(t, err)
 
 			if *test.UpdateOut {
+				errs := test.ValidateXML(schema, data)
+				for _, e := range errs {
+					require.NoError(t, e)
+				}
+
 				err = os.WriteFile(outPath, data, 0644)
 				require.NoError(t, err)
 				return
