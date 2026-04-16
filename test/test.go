@@ -77,9 +77,20 @@ func LoadInvoice(name string) (*gobl.Envelope, *bill.Invoice) {
 	env := LoadEnvelope(name)
 	inv, ok := env.Extract().(*bill.Invoice)
 	if !ok {
-		panic("envelope does not contain an invoice")
+		panic("envelope does not contain a bill invoice")
 	}
 	return env, inv
+}
+
+// LoadStatus will load the GOBL Envelope and extract the status, returning
+// both the Envelope and Status objects.
+func LoadStatus(name string) (*gobl.Envelope, *bill.Status) {
+	env := LoadEnvelope(name)
+	st, ok := env.Extract().(*bill.Status)
+	if !ok {
+		panic("envelope does not contain a bill status")
+	}
+	return env, st
 }
 
 // Path joins the provided elements to the project root

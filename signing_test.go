@@ -54,7 +54,7 @@ func TestSignDocument(t *testing.T) {
 		Encadenamiento:           &Encadenamiento{PrimerRegistro: "S"},
 		SistemaInformatico:       &Software{},
 		FechaHoraHusoGenRegistro: "2024-11-20T19:00:55+01:00",
-		TipoHuella:               TipoHuella,
+		TipoHuella:               FingerprintType,
 		Huella:                   "0000000000000000000000000000000000000000000000000000000000000000",
 	}
 
@@ -121,7 +121,7 @@ func TestSignDocumentPolicy(t *testing.T) {
 		Encadenamiento:           &Encadenamiento{PrimerRegistro: "S"},
 		SistemaInformatico:       &Software{},
 		FechaHoraHusoGenRegistro: "2024-11-20T19:00:55+01:00",
-		TipoHuella:               TipoHuella,
+		TipoHuella:               FingerprintType,
 		Huella:                   "0000000000000000000000000000000000000000000000000000000000000000",
 	}
 

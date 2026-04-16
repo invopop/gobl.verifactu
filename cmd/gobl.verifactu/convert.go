@@ -8,6 +8,7 @@ import (
 
 	"github.com/invopop/gobl"
 	verifactu "github.com/invopop/gobl.verifactu"
+	"github.com/invopop/gobl/bill"
 	"github.com/invopop/xmldsig"
 	"github.com/spf13/cobra"
 )
@@ -75,9 +76,18 @@ func (c *convertOpts) runE(cmd *cobra.Command, args []string) error {
 		return fmt.Errorf("creating verifactu client: %w", err)
 	}
 
-	reg, err := vc.RegisterInvoice(env, nil)
+	var reg interface{ Bytes() ([]byte, error) }
+	switch env.Extract().(type) {
+	case *bill.Invoice:
+		reg, err = vc.RegisterInvoice(env, nil)
+	case *bill.Status:
+		reg, err = vc.RegisterEvent(env, nil)
+	default:
+		return fmt.Errorf("unsupported document type")
+	}
+
 	if err != nil {
-		return fmt.Errorf("generating invoice registration: %w", err)
+		return fmt.Errorf("generating registration: %w", err)
 	}
 
 	data, err := reg.Bytes()

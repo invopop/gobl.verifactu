@@ -1,0 +1,53 @@
+{
+	"$schema": "https://gobl.org/draft-0/envelope",
+	"head": {
+		"uuid": "b8362556-3338-11f1-8ec8-fab5e3d05da9",
+		"dig": {
+			"alg": "sha256",
+			"val": "861ab201714a84ebdbc62a14e8d2dee592fd1bb46008277926eb370f0b76a91e"
+		}
+	},
+	"doc": {
+		"$schema": "https://gobl.org/draft-0/bill/status",
+		"$regime": "ES",
+		"$addons": [
+			"es-verifactu-v1"
+		],
+		"uuid": "2df95b14-cd9b-44e9-8ca6-9c06251eb981",
+		"type": "system",
+		"issue_date": "2026-04-16",
+		"code": "EV-001",
+		"supplier": {
+			"name": "Invopop S.L.",
+			"tax_id": {
+				"country": "ES",
+				"code": "B85905495"
+			}
+		},
+		"lines": [
+			{
+				"index": 1,
+				"key": "event-export",
+				"complements": [
+					{
+						"$schema": "https://verifactu.gobl.org/v0/event-export",
+						"start": "2024-11-01T00:00:00+01:00",
+						"end": "2024-11-20T23:59:59+01:00",
+						"first": {
+							"type": "01",
+							"timestamp": "2024-11-01T08:00:00+01:00",
+							"fingerprint": "CCCC000000000000000000000000000000000000000000000000000000000001"
+						},
+						"last": {
+							"type": "10",
+							"timestamp": "2024-11-20T20:00:00+01:00",
+							"fingerprint": "DDDD000000000000000000000000000000000000000000000000000000000030"
+						},
+						"count": 30,
+						"discarded": "N"
+					}
+				]
+			}
+		]
+	}
+}

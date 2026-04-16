@@ -8,7 +8,7 @@ go 1.24.0
 
 require (
 	github.com/go-resty/resty/v2 v2.15.3
-	github.com/invopop/gobl v0.309.0
+	github.com/invopop/gobl v0.401.0
 	github.com/invopop/validation v0.8.0
 	github.com/invopop/xmldsig v0.14.0
 	github.com/joho/godotenv v1.5.1
@@ -28,10 +28,11 @@ require (
 	github.com/beevik/etree v1.6.0 // indirect
 	github.com/buger/jsonparser v1.1.2 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
-	github.com/go-jose/go-jose/v4 v4.0.5 // indirect
+	github.com/expr-lang/expr v1.17.8 // indirect
+	github.com/go-jose/go-jose/v4 v4.1.4 // indirect
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
-	github.com/invopop/jsonschema v0.13.0 // indirect
+	github.com/invopop/jsonschema v0.13.1-0.20260331224545-b36d455c19d3 // indirect
 	github.com/invopop/yaml v0.3.1 // indirect
 	github.com/jonboulle/clockwork v0.5.0 // indirect
 	github.com/mailru/easyjson v0.9.1 // indirect

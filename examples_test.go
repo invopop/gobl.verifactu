@@ -11,6 +11,7 @@ import (
 	verifactu "github.com/invopop/gobl.verifactu"
 	"github.com/invopop/gobl.verifactu/test"
 
+	"github.com/invopop/gobl/bill"
 	"github.com/invopop/xmldsig"
 	"github.com/lestrrat-go/libxml2/xsd"
 	"github.com/stretchr/testify/require"
@@ -39,22 +40,36 @@ func TestXMLGeneration(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			env := test.LoadEnvelope(example)
 
-			// Example Data to Test the Fingerprint.
-			prev := &verifactu.ChainData{
-				IDIssuer:    "B12345678",
-				NumSeries:   "SAMPLE-001",
-				IssueDate:   "26-11-2024",
-				Fingerprint: "0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF",
-			}
-
-			ir, err := c.NewEnvelopeInvoiceRequest(env, prev)
-			require.NoError(t, err)
-
 			outPath := test.Path("test", "data", "out",
 				strings.TrimSuffix(example, ".json")+".xml",
 			)
 
-			data, err := ir.Envelop().BytesIndent()
+			var data []byte
+			var err error
+
+			switch env.Extract().(type) {
+			case *bill.Invoice:
+				prev := &verifactu.ChainData{
+					IDIssuer:    "B12345678",
+					NumSeries:   "SAMPLE-001",
+					IssueDate:   "26-11-2024",
+					Fingerprint: "0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF",
+				}
+				ir, err2 := c.NewEnvelopeInvoiceRequest(env, prev)
+				require.NoError(t, err2)
+				data, err = ir.Envelop().BytesIndent()
+			case *bill.Status:
+				prev := &verifactu.EventChainData{
+					EventType:           "01",
+					GenerationTimestamp: "2024-11-20T18:00:00+01:00",
+					Fingerprint:         "0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF",
+				}
+				reg, err2 := c.RegisterEvent(env, prev)
+				require.NoError(t, err2)
+				data, err = reg.Bytes()
+			default:
+				t.Fatalf("unsupported document type in %s", example)
+			}
 			require.NoError(t, err)
 
 			if *test.UpdateOut {

@@ -1,11 +1,8 @@
 package verifactu
 
 import (
-	"crypto/sha256"
-	"encoding/hex"
 	"errors"
 	"fmt"
-	"strings"
 	"time"
 
 	"github.com/invopop/gobl/addons/es/verifactu"
@@ -171,7 +168,7 @@ func newInvoiceRegistration(inv *bill.Invoice, ts time.Time, s *Software) (*Invo
 		ImporteTotal:                   inv.Totals.TotalWithTax, // no retained taxes here
 		SistemaInformatico:             s,
 		FechaHoraHusoGenRegistro:       formatDateTimeZone(ts),
-		TipoHuella:                     TipoHuella,
+		TipoHuella:                     FingerprintType,
 		FacturaSimplificadaArt7273:     itax.Ext.Get(verifactu.ExtKeySimplifiedArt7273).String(),
 		EmitidaPorTerceroODestinatario: itax.Ext.Get(verifactu.ExtKeyIssuerType).String(),
 	}
@@ -343,7 +340,7 @@ func getTaxExtKey(inv *bill.Invoice, k cbc.Key) (string, error) {
 	return inv.Tax.Ext[k].String(), nil
 }
 
-// fingerprint will add a fingerprint to the regisration line using the previous
+// fingerprint will add a fingerprint to the registration line using the previous
 // chain data entry details.
 func (r *InvoiceRegistration) fingerprint(prev *ChainData) {
 	h := ""
@@ -363,7 +360,7 @@ func (r *InvoiceRegistration) fingerprint(prev *ChainData) {
 		h = prev.Fingerprint
 	}
 
-	f := []string{
+	r.Huella = computeFingerprint([]string{
 		formatChainField("IDEmisorFactura", r.IDFactura.IDEmisorFactura),
 		formatChainField("NumSerieFactura", r.IDFactura.NumSerieFactura),
 		formatChainField("FechaExpedicionFactura", r.IDFactura.FechaExpedicionFactura),
@@ -372,12 +369,7 @@ func (r *InvoiceRegistration) fingerprint(prev *ChainData) {
 		formatChainField("ImporteTotal", r.ImporteTotal.String()),
 		formatChainField("Huella", h),
 		formatChainField("FechaHoraHusoGenRegistro", r.FechaHoraHusoGenRegistro),
-	}
-	st := strings.Join(f, "&")
-	hash := sha256.New()
-	hash.Write([]byte(st))
-
-	r.Huella = strings.ToUpper(hex.EncodeToString(hash.Sum(nil)))
+	})
 }
 
 // ChainData provides the details for this registration entry.

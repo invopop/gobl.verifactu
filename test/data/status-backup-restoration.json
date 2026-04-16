@@ -1,0 +1,40 @@
+{
+	"$schema": "https://gobl.org/draft-0/envelope",
+	"head": {
+		"uuid": "b8362538-3338-11f1-8ec8-fab5e3d05da9",
+		"dig": {
+			"alg": "sha256",
+			"val": "34708eea2e22862caf2db7ea3925c1f3c0fe236e87a135bf896f7fba9d643bd1"
+		}
+	},
+	"doc": {
+		"$schema": "https://gobl.org/draft-0/bill/status",
+		"$regime": "ES",
+		"$addons": [
+			"es-verifactu-v1"
+		],
+		"uuid": "163872bd-e648-41f9-aea4-0c4256fc1a95",
+		"type": "system",
+		"issue_date": "2026-04-16",
+		"code": "EV-001",
+		"supplier": {
+			"name": "Invopop S.L.",
+			"tax_id": {
+				"country": "ES",
+				"code": "B85905495"
+			}
+		},
+		"lines": [
+			{
+				"index": 1,
+				"key": "backup-restoration"
+			}
+		],
+		"notes": [
+			{
+				"key": "other",
+				"text": "Backup restored from 2024-11-18"
+			}
+		]
+	}
+}

@@ -1,0 +1,58 @@
+{
+	"$schema": "https://gobl.org/draft-0/envelope",
+	"head": {
+		"uuid": "b8362542-3338-11f1-8ec8-fab5e3d05da9",
+		"dig": {
+			"alg": "sha256",
+			"val": "98ddf8d1277f322a78d3c5668ecc01500239fcfb1a60bedcf34a1184df279949"
+		}
+	},
+	"doc": {
+		"$schema": "https://gobl.org/draft-0/bill/status",
+		"$regime": "ES",
+		"$addons": [
+			"es-verifactu-v1"
+		],
+		"uuid": "2a6cea41-9f6f-44a6-aa34-dde843e8c648",
+		"type": "system",
+		"issue_date": "2026-04-16",
+		"code": "EV-001",
+		"supplier": {
+			"name": "Invopop S.L.",
+			"tax_id": {
+				"country": "ES",
+				"code": "B85905495"
+			}
+		},
+		"lines": [
+			{
+				"index": 1,
+				"key": "invoice-export",
+				"complements": [
+					{
+						"$schema": "https://verifactu.gobl.org/v0/invoice-export",
+						"start": "2024-11-01T00:00:00+01:00",
+						"end": "2024-11-20T23:59:59+01:00",
+						"first": {
+							"issuer_tax_code": "B85905495",
+							"code": "SAMPLE-001",
+							"issue_date": "2024-11-01",
+							"fingerprint": "AAAA000000000000000000000000000000000000000000000000000000000001"
+						},
+						"last": {
+							"issuer_tax_code": "B85905495",
+							"code": "SAMPLE-050",
+							"issue_date": "2024-11-20",
+							"fingerprint": "BBBB000000000000000000000000000000000000000000000000000000000050"
+						},
+						"registration_count": 45,
+						"tax_total": "9450.00",
+						"amount_total": "54450.00",
+						"cancellation_count": 5,
+						"discarded": "N"
+					}
+				]
+			}
+		]
+	}
+}

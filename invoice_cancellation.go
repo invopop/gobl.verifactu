@@ -1,9 +1,6 @@
 package verifactu
 
 import (
-	"crypto/sha256"
-	"encoding/hex"
-	"strings"
 	"time"
 
 	"github.com/invopop/gobl/bill"
@@ -49,7 +46,7 @@ func newInvoiceCancellation(inv *bill.Invoice, ts time.Time, s *Software) *Invoi
 		},
 		SistemaInformatico:       s,
 		FechaHoraHusoGenRegistro: formatDateTimeZone(ts),
-		TipoHuella:               TipoHuella,
+		TipoHuella:               FingerprintType,
 	}
 	return reg
 }
@@ -74,18 +71,13 @@ func (c *InvoiceCancellation) fingerprint(prev *ChainData) {
 		h = prev.Fingerprint
 	}
 
-	f := []string{
+	c.Huella = computeFingerprint([]string{
 		formatChainField("IDEmisorFacturaAnulada", c.IDFactura.IDEmisorFactura),
 		formatChainField("NumSerieFacturaAnulada", c.IDFactura.NumSerieFactura),
 		formatChainField("FechaExpedicionFacturaAnulada", c.IDFactura.FechaExpedicionFactura),
 		formatChainField("Huella", h),
 		formatChainField("FechaHoraHusoGenRegistro", c.FechaHoraHusoGenRegistro),
-	}
-	st := strings.Join(f, "&")
-	hash := sha256.New()
-	hash.Write([]byte(st))
-
-	c.Huella = strings.ToUpper(hex.EncodeToString(hash.Sum(nil)))
+	})
 }
 
 // ChainData provides the details for this cancellation entry.
