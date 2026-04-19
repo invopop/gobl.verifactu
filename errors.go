@@ -18,6 +18,7 @@ var (
 	ErrNotSpanish       = ErrValidation.WithMessage("only spanish invoices are supported")
 	ErrAlreadyProcessed = ErrValidation.WithMessage("already processed")
 	ErrOnlyInvoices     = ErrValidation.WithMessage("only invoices are supported")
+	ErrOnlyStatuses     = ErrValidation.WithMessage("only bill status documents are supported")
 )
 
 // Error allows for structured responses from the gateway to be able to

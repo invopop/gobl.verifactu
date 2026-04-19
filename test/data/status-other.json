@@ -1,0 +1,40 @@
+{
+	"$schema": "https://gobl.org/draft-0/envelope",
+	"head": {
+		"uuid": "b8362574-3338-11f1-8ec8-fab5e3d05da9",
+		"dig": {
+			"alg": "sha256",
+			"val": "1c2e28b215e7adf373c1afc5ba1c084f9394049d3c4a098cfefa0e35dff0fd70"
+		}
+	},
+	"doc": {
+		"$schema": "https://gobl.org/draft-0/bill/status",
+		"$regime": "ES",
+		"$addons": [
+			"es-verifactu-v1"
+		],
+		"uuid": "cab32c2d-e81c-44f4-bd39-30b042769c29",
+		"type": "system",
+		"issue_date": "2026-04-16",
+		"code": "EV-001",
+		"supplier": {
+			"name": "Invopop S.L.",
+			"tax_id": {
+				"country": "ES",
+				"code": "B85905495"
+			}
+		},
+		"lines": [
+			{
+				"index": 1,
+				"key": "other"
+			}
+		],
+		"notes": [
+			{
+				"key": "other",
+				"text": "Scheduled system maintenance completed"
+			}
+		]
+	}
+}

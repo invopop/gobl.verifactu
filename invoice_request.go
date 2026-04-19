@@ -37,7 +37,7 @@ type InvoiceRequestLine struct {
 
 // AddRegistration adds the provided document to the list of registrations.
 func (req *InvoiceRequest) AddRegistration(d *InvoiceRegistration) {
-	d.NS = "" // Remove namespace
+	d.SUM1 = ""
 	req.addRow(&InvoiceRequestLine{
 		Registration: d,
 	})
@@ -45,6 +45,7 @@ func (req *InvoiceRequest) AddRegistration(d *InvoiceRegistration) {
 
 // AddCancellation adds the requested document to the request body.
 func (req *InvoiceRequest) AddCancellation(d *InvoiceCancellation) {
+	d.SUM1 = ""
 	req.addRow(&InvoiceRequestLine{
 		Cancellation: d,
 	})

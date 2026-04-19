@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Wrapper schema that imports all Verifactu-related schemas for validation. -->
+<schema xmlns="http://www.w3.org/2001/XMLSchema">
+	<import namespace="http://www.w3.org/2000/09/xmldsig#" schemaLocation="xmldsig-core-schema.xsd"/>
+	<import namespace="http://schemas.xmlsoap.org/soap/envelope/" schemaLocation="soap-envelope.xsd"/>
+	<import namespace="https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/tike/cont/ws/SuministroLR.xsd" schemaLocation="SuministroLR.xsd"/>
+	<import namespace="https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/tike/cont/ws/EventosSIF.xsd" schemaLocation="EventosSIF.xsd"/>
+</schema>

@@ -8,6 +8,8 @@ import (
 
 	"github.com/invopop/gobl"
 	verifactu "github.com/invopop/gobl.verifactu"
+	"github.com/invopop/gobl/bill"
+	"github.com/invopop/xmldsig"
 	"github.com/spf13/cobra"
 )
 
@@ -25,6 +27,9 @@ func (c *convertOpts) cmd() *cobra.Command {
 		Short: "Convert a GOBL JSON into a VeriFactu XML",
 		RunE:  c.runE,
 	}
+
+	f := cmd.Flags()
+	c.prepareFlags(f)
 
 	return cmd
 }
@@ -52,14 +57,37 @@ func (c *convertOpts) runE(cmd *cobra.Command, args []string) error {
 		return fmt.Errorf("unmarshaling gobl envelope: %w", err)
 	}
 
-	vc, err := verifactu.New(c.software())
+	var opts []verifactu.Option
+
+	if c.cert != "" {
+		cert, err := xmldsig.LoadCertificate(c.cert, c.password)
+		if err != nil {
+			return err
+		}
+		opts = append(opts, verifactu.WithCertificate(cert))
+
+		if c.sign {
+			opts = append(opts, verifactu.WithSigning())
+		}
+	}
+
+	vc, err := verifactu.New(c.software(), opts...)
 	if err != nil {
 		return fmt.Errorf("creating verifactu client: %w", err)
 	}
 
-	reg, err := vc.RegisterInvoice(env, nil)
+	var reg interface{ Bytes() ([]byte, error) }
+	switch env.Extract().(type) {
+	case *bill.Invoice:
+		reg, err = vc.RegisterInvoice(env, nil)
+	case *bill.Status:
+		reg, err = vc.RegisterEvent(env, nil)
+	default:
+		return fmt.Errorf("unsupported document type")
+	}
+
 	if err != nil {
-		return fmt.Errorf("generating invoice registration: %w", err)
+		return fmt.Errorf("generating registration: %w", err)
 	}
 
 	data, err := reg.Bytes()

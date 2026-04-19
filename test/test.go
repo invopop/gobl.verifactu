@@ -12,6 +12,8 @@ import (
 
 	"github.com/invopop/gobl"
 	"github.com/invopop/gobl/bill"
+	"github.com/lestrrat-go/libxml2"
+	"github.com/lestrrat-go/libxml2/xsd"
 )
 
 // UpdateOut is a flag that can be set to update example files
@@ -75,9 +77,20 @@ func LoadInvoice(name string) (*gobl.Envelope, *bill.Invoice) {
 	env := LoadEnvelope(name)
 	inv, ok := env.Extract().(*bill.Invoice)
 	if !ok {
-		panic("envelope does not contain an invoice")
+		panic("envelope does not contain a bill invoice")
 	}
 	return env, inv
+}
+
+// LoadStatus will load the GOBL Envelope and extract the status, returning
+// both the Envelope and Status objects.
+func LoadStatus(name string) (*gobl.Envelope, *bill.Status) {
+	env := LoadEnvelope(name)
+	st, ok := env.Extract().(*bill.Status)
+	if !ok {
+		panic("envelope does not contain a bill status")
+	}
+	return env, st
 }
 
 // Path joins the provided elements to the project root
@@ -108,6 +121,26 @@ func isRootFolder(dir string) bool {
 	}
 
 	return false
+}
+
+// LoadSchema loads an XSD schema from the test/schema directory
+func LoadSchema(name string) (*xsd.Schema, error) {
+	schemaPath := filepath.Join(RootPath(), "test", "schema", name)
+	return xsd.ParseFromFile(schemaPath)
+}
+
+// ValidateXML validates an XML document against an XSD schema
+func ValidateXML(schema *xsd.Schema, doc []byte) []error {
+	xmlDoc, err := libxml2.Parse(doc)
+	if err != nil {
+		return []error{err}
+	}
+	defer xmlDoc.Free()
+
+	if err := schema.Validate(xmlDoc); err != nil {
+		return err.(xsd.SchemaValidationError).Errors()
+	}
+	return nil
 }
 
 func removeLastEntry(dir string) string {

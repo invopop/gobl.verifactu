@@ -1,0 +1,46 @@
+{
+	"$schema": "https://gobl.org/draft-0/envelope",
+	"head": {
+		"uuid": "b836251a-3338-11f1-8ec8-fab5e3d05da9",
+		"dig": {
+			"alg": "sha256",
+			"val": "45b9308d2f16e2056de4610f1034e7efb55cb50f83ba91a10e3a67019355b497"
+		}
+	},
+	"doc": {
+		"$schema": "https://gobl.org/draft-0/bill/status",
+		"$regime": "ES",
+		"$addons": [
+			"es-verifactu-v1"
+		],
+		"uuid": "27d64bbf-e230-40cb-b1fc-908238556039",
+		"type": "system",
+		"issue_date": "2026-04-16",
+		"code": "EV-001",
+		"supplier": {
+			"name": "Invopop S.L.",
+			"tax_id": {
+				"country": "ES",
+				"code": "B85905495"
+			}
+		},
+		"lines": [
+			{
+				"index": 1,
+				"key": "event-anomaly-launch",
+				"complements": [
+					{
+						"$schema": "https://verifactu.gobl.org/v0/event-anomaly-launch",
+						"fingerprint_check": true,
+						"fingerprint_count": 50,
+						"signature_check": false,
+						"chain_check": true,
+						"chain_count": 50,
+						"date_check": true,
+						"date_count": 50
+					}
+				]
+			}
+		]
+	}
+}

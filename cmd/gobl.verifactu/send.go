@@ -62,6 +62,10 @@ func (c *sendOpts) runE(cmd *cobra.Command, args []string) error {
 		verifactu.WithCertificate(cert),
 	}
 
+	if c.sign {
+		opts = append(opts, verifactu.WithSigning())
+	}
+
 	if c.production {
 		opts = append(opts, verifactu.InProduction())
 	} else {

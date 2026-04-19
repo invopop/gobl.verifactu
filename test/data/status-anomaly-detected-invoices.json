@@ -1,0 +1,46 @@
+{
+	"$schema": "https://gobl.org/draft-0/envelope",
+	"head": {
+		"uuid": "b8362506-3338-11f1-8ec8-fab5e3d05da9",
+		"dig": {
+			"alg": "sha256",
+			"val": "80047679ea77080246cf17f8928fa87acb26580a205850d1bc1080d97f4dffc4"
+		}
+	},
+	"doc": {
+		"$schema": "https://gobl.org/draft-0/bill/status",
+		"$regime": "ES",
+		"$addons": [
+			"es-verifactu-v1"
+		],
+		"uuid": "55569358-1bb6-4d6f-97ad-2207c52b5ec1",
+		"type": "system",
+		"issue_date": "2026-04-16",
+		"code": "EV-001",
+		"supplier": {
+			"name": "Invopop S.L.",
+			"tax_id": {
+				"country": "ES",
+				"code": "B85905495"
+			}
+		},
+		"lines": [
+			{
+				"index": 1,
+				"key": "invoice-anomaly",
+				"description": "Fingerprint mismatch in invoice record",
+				"complements": [
+					{
+						"$schema": "https://verifactu.gobl.org/v0/invoice-anomaly",
+						"type": "01",
+						"invoice": {
+							"issuer_tax_code": "B85905495",
+							"code": "SAMPLE-001",
+							"issue_date": "2024-11-15"
+						}
+					}
+				]
+			}
+		]
+	}
+}

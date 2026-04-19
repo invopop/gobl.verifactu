@@ -1,0 +1,46 @@
+{
+	"$schema": "https://gobl.org/draft-0/envelope",
+	"head": {
+		"uuid": "b8362524-3338-11f1-8ec8-fab5e3d05da9",
+		"dig": {
+			"alg": "sha256",
+			"val": "7e5c65fe3e4de646292b953eefd6ec3df1bb99ca1cb66863eaaf448e2ca0564e"
+		}
+	},
+	"doc": {
+		"$schema": "https://gobl.org/draft-0/bill/status",
+		"$regime": "ES",
+		"$addons": [
+			"es-verifactu-v1"
+		],
+		"uuid": "e70c6c8f-a0ef-4ad8-9f1e-7c797067cf9b",
+		"type": "system",
+		"issue_date": "2026-04-16",
+		"code": "EV-001",
+		"supplier": {
+			"name": "Invopop S.L.",
+			"tax_id": {
+				"country": "ES",
+				"code": "B85905495"
+			}
+		},
+		"lines": [
+			{
+				"index": 1,
+				"key": "event-anomaly",
+				"description": "Chain traceability issue detected",
+				"complements": [
+					{
+						"$schema": "https://verifactu.gobl.org/v0/event-anomaly",
+						"type": "07",
+						"event": {
+							"type": "01",
+							"timestamp": "2024-11-19T10:00:00+01:00",
+							"fingerprint": "ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789"
+						}
+					}
+				]
+			}
+		]
+	}
+}

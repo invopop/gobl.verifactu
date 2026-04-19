@@ -11,6 +11,9 @@ import (
 	verifactu "github.com/invopop/gobl.verifactu"
 	"github.com/invopop/gobl.verifactu/test"
 
+	"github.com/invopop/gobl/bill"
+	"github.com/invopop/xmldsig"
+	"github.com/lestrrat-go/libxml2/xsd"
 	"github.com/stretchr/testify/require"
 )
 
@@ -20,14 +23,16 @@ const (
 )
 
 func TestXMLGeneration(t *testing.T) {
-	// schema, err := loadSchema()
-	// require.NoError(t, err)
-
 	examples, err := lookupExamples()
 	require.NoError(t, err)
 
-	c, err := loadClient()
-	require.NoError(t, err)
+	c := loadClient(t)
+
+	var schema *xsd.Schema
+	if *test.UpdateOut {
+		schema, err = test.LoadSchema("main.xsd")
+		require.NoError(t, err)
+	}
 
 	for _, example := range examples {
 		name := fmt.Sprintf("should convert %s example file successfully", example)
@@ -35,25 +40,44 @@ func TestXMLGeneration(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			env := test.LoadEnvelope(example)
 
-			// Example Data to Test the Fingerprint.
-			prev := &verifactu.ChainData{
-				IDIssuer:    "B12345678",
-				NumSeries:   "SAMPLE-001",
-				IssueDate:   "26-11-2024",
-				Fingerprint: "0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF",
-			}
-
-			ir, err := c.NewEnvelopeInvoiceRequest(env, prev)
-			require.NoError(t, err)
-
 			outPath := test.Path("test", "data", "out",
 				strings.TrimSuffix(example, ".json")+".xml",
 			)
 
-			data, err := ir.Envelop().BytesIndent()
+			var data []byte
+			var err error
+
+			switch env.Extract().(type) {
+			case *bill.Invoice:
+				prev := &verifactu.ChainData{
+					IDIssuer:    "B12345678",
+					NumSeries:   "SAMPLE-001",
+					IssueDate:   "26-11-2024",
+					Fingerprint: "0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF",
+				}
+				ir, err2 := c.NewEnvelopeInvoiceRequest(env, prev)
+				require.NoError(t, err2)
+				data, err = ir.Envelop().BytesIndent()
+			case *bill.Status:
+				prev := &verifactu.EventChainData{
+					EventType:           "01",
+					GenerationTimestamp: "2024-11-20T18:00:00+01:00",
+					Fingerprint:         "0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF",
+				}
+				reg, err2 := c.RegisterEvent(env, prev)
+				require.NoError(t, err2)
+				data, err = reg.Bytes()
+			default:
+				t.Fatalf("unsupported document type in %s", example)
+			}
 			require.NoError(t, err)
 
 			if *test.UpdateOut {
+				errs := test.ValidateXML(schema, data)
+				for _, e := range errs {
+					require.NoError(t, e)
+				}
+
 				err = os.WriteFile(outPath, data, 0644)
 				require.NoError(t, err)
 				return
@@ -68,13 +92,15 @@ func TestXMLGeneration(t *testing.T) {
 	}
 }
 
-func loadClient() (*verifactu.Client, error) {
-	ts, err := time.Parse(time.RFC3339, "2024-11-26T04:00:00Z")
-	if err != nil {
-		return nil, err
-	}
+func loadClient(t *testing.T) *verifactu.Client {
+	t.Helper()
 
-	return verifactu.New(verifactu.Software{
+	ts, err := time.Parse(time.RFC3339, "2024-11-26T04:00:00Z")
+	require.NoError(t, err)
+
+	cert := test.Certificate(t)
+
+	c, err := verifactu.New(verifactu.Software{
 		NombreRazon:                 "My Software",
 		NIF:                         "12345678A",
 		NombreSistemaInformatico:    "My Software",
@@ -86,7 +112,15 @@ func loadClient() (*verifactu.Client, error) {
 		IndicadorMultiplesOT:        "N",
 	},
 		verifactu.WithCurrentTime(ts),
+		verifactu.WithCertificate(cert),
+		verifactu.WithSigning(
+			xmldsig.WithDocID("test-doc-id"),
+			xmldsig.WithCurrentTime(func() time.Time { return ts }),
+		),
 	)
+	require.NoError(t, err)
+
+	return c
 }
 
 func lookupExamples() ([]string, error) {

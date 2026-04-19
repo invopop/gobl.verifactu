@@ -1,11 +1,8 @@
 package verifactu
 
 import (
-	"crypto/sha256"
-	"encoding/hex"
 	"errors"
 	"fmt"
-	"strings"
 	"time"
 
 	"github.com/invopop/gobl/addons/es/verifactu"
@@ -16,6 +13,7 @@ import (
 	"github.com/invopop/gobl/org"
 	"github.com/invopop/gobl/tax"
 	"github.com/invopop/validation"
+	"github.com/invopop/xmldsig"
 	"github.com/nbio/xml"
 )
 
@@ -26,7 +24,7 @@ var correctiveCodes = []cbc.Code{ // Credit or Debit notes
 // InvoiceRegistration contains the details of an invoice registration
 type InvoiceRegistration struct {
 	XMLName                             xml.Name              `xml:"sum1:RegistroAlta"`
-	NS                                  string                `xml:"xmlns:sum1,attr,omitempty"`
+	SUM1                                string                `xml:"xmlns:sum1,attr,omitempty"`
 	IDVersion                           string                `xml:"sum1:IDVersion"`
 	IDFactura                           *IDFactura            `xml:"sum1:IDFactura"`
 	RefExterna                          string                `xml:"sum1:RefExterna,omitempty"`
@@ -57,7 +55,7 @@ type InvoiceRegistration struct {
 	IdAcuerdoSistemaInformatico         string                `xml:"sum1:IdAcuerdoSistemaInformatico,omitempty"` //nolint:revive,staticcheck
 	TipoHuella                          string                `xml:"sum1:TipoHuella"`
 	Huella                              string                `xml:"sum1:Huella"`
-	// Signature                           *xmldsig.Signature   `xml:"sum1:Signature,omitempty"`
+	Signature                           *xmldsig.Signature    `xml:"ds:Signature,omitempty"`
 }
 
 // IDFactura contains the identifying information for an invoice
@@ -155,7 +153,7 @@ func newInvoiceRegistration(inv *bill.Invoice, ts time.Time, s *Software) (*Invo
 	}
 
 	reg := &InvoiceRegistration{
-		NS:        SUM1, // to remove during sending
+		SUM1:      SUM1, // to remove during sending
 		IDVersion: CurrentVersion,
 		IDFactura: &IDFactura{
 			IDEmisorFactura:        inv.Supplier.TaxID.Code.String(),
@@ -170,7 +168,7 @@ func newInvoiceRegistration(inv *bill.Invoice, ts time.Time, s *Software) (*Invo
 		ImporteTotal:                   inv.Totals.TotalWithTax, // no retained taxes here
 		SistemaInformatico:             s,
 		FechaHoraHusoGenRegistro:       formatDateTimeZone(ts),
-		TipoHuella:                     TipoHuella,
+		TipoHuella:                     FingerprintType,
 		FacturaSimplificadaArt7273:     itax.Ext.Get(verifactu.ExtKeySimplifiedArt7273).String(),
 		EmitidaPorTerceroODestinatario: itax.Ext.Get(verifactu.ExtKeyIssuerType).String(),
 	}
@@ -342,7 +340,7 @@ func getTaxExtKey(inv *bill.Invoice, k cbc.Key) (string, error) {
 	return inv.Tax.Ext[k].String(), nil
 }
 
-// fingerprint will add a fingerprint to the regisration line using the previous
+// fingerprint will add a fingerprint to the registration line using the previous
 // chain data entry details.
 func (r *InvoiceRegistration) fingerprint(prev *ChainData) {
 	h := ""
@@ -362,7 +360,7 @@ func (r *InvoiceRegistration) fingerprint(prev *ChainData) {
 		h = prev.Fingerprint
 	}
 
-	f := []string{
+	r.Huella = computeFingerprint([]string{
 		formatChainField("IDEmisorFactura", r.IDFactura.IDEmisorFactura),
 		formatChainField("NumSerieFactura", r.IDFactura.NumSerieFactura),
 		formatChainField("FechaExpedicionFactura", r.IDFactura.FechaExpedicionFactura),
@@ -371,12 +369,7 @@ func (r *InvoiceRegistration) fingerprint(prev *ChainData) {
 		formatChainField("ImporteTotal", r.ImporteTotal.String()),
 		formatChainField("Huella", h),
 		formatChainField("FechaHoraHusoGenRegistro", r.FechaHoraHusoGenRegistro),
-	}
-	st := strings.Join(f, "&")
-	hash := sha256.New()
-	hash.Write([]byte(st))
-
-	r.Huella = strings.ToUpper(hex.EncodeToString(hash.Sum(nil)))
+	})
 }
 
 // ChainData provides the details for this registration entry.
@@ -389,7 +382,8 @@ func (r *InvoiceRegistration) ChainData() *ChainData {
 	}
 }
 
-// Bytes prepares an indendented XML document suitable for persistence.
+// Bytes prepares an XML document suitable for persistence. Signed documents
+// use compact XML to preserve the enveloped signature.
 func (r *InvoiceRegistration) Bytes() ([]byte, error) {
 	return toBytesIndent(r)
 }
