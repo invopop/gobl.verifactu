@@ -1,0 +1,123 @@
+{
+	"$schema": "https://gobl.org/draft-0/envelope",
+	"head": {
+		"uuid": "8a51fd30-2a27-11ee-be56-0242ac120002",
+		"dig": {
+			"alg": "sha256",
+			"val": "1b03601e8975726d3af55a4bccebc6890c55a453271230b419e97e292fd57e34"
+		}
+	},
+	"doc": {
+		"$schema": "https://gobl.org/draft-0/bill/invoice",
+		"$regime": "ES",
+		"$addons": [
+			"es-verifactu-v1"
+		],
+		"uuid": "3aea7b56-59d8-4beb-90bd-f8f280d852a0",
+		"type": "standard",
+		"series": "SAMPLE",
+		"code": "004",
+		"issue_date": "2024-11-13",
+		"currency": "EUR",
+		"tax": {
+			"ext": {
+				"es-verifactu-doc-type": "F1"
+			}
+		},
+		"supplier": {
+			"name": "Invopop S.L.",
+			"tax_id": {
+				"country": "ES",
+				"code": "B85905495"
+			},
+			"addresses": [
+				{
+					"num": "42",
+					"street": "Calle Pradillo",
+					"locality": "Madrid",
+					"region": "Madrid",
+					"code": "28002",
+					"country": "ES"
+				}
+			],
+			"emails": [
+				{
+					"addr": "billing@example.com"
+				}
+			]
+		},
+		"customer": {
+			"name": "Sample Consumer",
+			"tax_id": {
+				"country": "ES",
+				"code": "B63272603"
+			}
+		},
+		"lines": [
+			{
+				"i": 1,
+				"quantity": "1",
+				"item": {
+					"name": "Used goods profit margin",
+					"price": "0.83"
+				},
+				"sum": "0.83",
+				"taxes": [
+					{
+						"cat": "VAT",
+						"key": "standard",
+						"rate": "general",
+						"percent": "21.0%",
+						"ext": {
+							"es-verifactu-op-class": "S1",
+							"es-verifactu-regime": "03"
+						}
+					}
+				],
+				"total": "0.83"
+			}
+		],
+		"charges": [
+			{
+				"i": 1,
+				"reason": "Purchase cost of used goods",
+				"amount": "9.00"
+			}
+		],
+		"totals": {
+			"sum": "0.83",
+			"charge": "9.00",
+			"total": "9.83",
+			"taxes": {
+				"categories": [
+					{
+						"code": "VAT",
+						"rates": [
+							{
+								"key": "standard",
+								"ext": {
+									"es-verifactu-op-class": "S1",
+									"es-verifactu-regime": "03"
+								},
+								"base": "0.83",
+								"percent": "21.0%",
+								"amount": "0.17"
+							}
+						],
+						"amount": "0.17"
+					}
+				],
+				"sum": "0.17"
+			},
+			"tax": "0.17",
+			"total_with_tax": "10.00",
+			"payable": "10.00"
+		},
+		"notes": [
+			{
+				"key": "general",
+				"text": "REBU invoice for used goods with regime 03"
+			}
+		]
+	}
+}
