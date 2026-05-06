@@ -56,10 +56,9 @@ func TestBreakdownConversion(t *testing.T) {
 				Taxes: tax.Set{
 					&tax.Combo{
 						Category: "VAT",
-						Ext: tax.Extensions{
-							addon.ExtKeyExempt: "E1",
-							addon.ExtKeyRegime: "01",
-						},
+						Ext: tax.MakeExtensions().
+							Set(addon.ExtKeyExempt, "E1").
+							Set(addon.ExtKeyRegime, "01"),
 					},
 				},
 			},
@@ -88,10 +87,9 @@ func TestBreakdownConversion(t *testing.T) {
 					&tax.Combo{
 						Category: "VAT",
 						Rate:     "standard",
-						Ext: tax.Extensions{
-							addon.ExtKeyOpClass: "S1",
-							addon.ExtKeyRegime:  "01",
-						},
+						Ext: tax.MakeExtensions().
+							Set(addon.ExtKeyOpClass, "S1").
+							Set(addon.ExtKeyRegime, "01"),
 					},
 				},
 			},
@@ -104,9 +102,8 @@ func TestBreakdownConversion(t *testing.T) {
 					&tax.Combo{
 						Category: "VAT",
 						Rate:     "reduced",
-						Ext: tax.Extensions{
-							addon.ExtKeyOpClass: "S1",
-						},
+						Ext: tax.MakeExtensions().
+							Set(addon.ExtKeyOpClass, "S1"),
 					},
 				},
 			},
@@ -142,10 +139,9 @@ func TestBreakdownConversion(t *testing.T) {
 					&tax.Combo{
 						Category: "VAT",
 						Rate:     "exempt",
-						Ext: tax.Extensions{
-							addon.ExtKeyExempt: "E1",
-							addon.ExtKeyRegime: "01",
-						},
+						Ext: tax.MakeExtensions().
+							Set(addon.ExtKeyExempt, "E1").
+							Set(addon.ExtKeyRegime, "01"),
 					},
 				},
 			},
@@ -175,10 +171,9 @@ func TestBreakdownConversion(t *testing.T) {
 					&tax.Combo{
 						Category: "VAT",
 						Rate:     "standard+eqs",
-						Ext: tax.Extensions{
-							addon.ExtKeyOpClass: "S1",
-							addon.ExtKeyRegime:  "01",
-						},
+						Ext: tax.MakeExtensions().
+							Set(addon.ExtKeyOpClass, "S1").
+							Set(addon.ExtKeyRegime, "01"),
 					},
 				},
 			},
@@ -210,9 +205,8 @@ func TestBreakdownConversion(t *testing.T) {
 					&tax.Combo{
 						Category: es.TaxCategoryIPSI,
 						Percent:  &p,
-						Ext: tax.Extensions{
-							addon.ExtKeyOpClass: "S1",
-						},
+						Ext: tax.MakeExtensions().
+							Set(addon.ExtKeyOpClass, "S1"),
 					},
 				},
 			},
@@ -242,10 +236,9 @@ func TestBreakdownConversion(t *testing.T) {
 					&tax.Combo{
 						Category: "VAT",
 						Rate:     "reduced",
-						Ext: tax.Extensions{
-							addon.ExtKeyOpClass: "S1",
-							addon.ExtKeyRegime:  "04",
-						},
+						Ext: tax.MakeExtensions().
+							Set(addon.ExtKeyOpClass, "S1").
+							Set(addon.ExtKeyRegime, "04"),
 					},
 				},
 			},

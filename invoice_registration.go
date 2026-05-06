@@ -208,7 +208,7 @@ func newInvoiceRegistration(inv *bill.Invoice, ts time.Time, s *Software) (*Invo
 		}
 	}
 
-	if inv.Tax.Ext[verifactu.ExtKeyDocType].In(correctiveCodes...) {
+	if inv.Tax.Ext.Get(verifactu.ExtKeyDocType).In(correctiveCodes...) {
 		k, err := getTaxExtKey(inv, verifactu.ExtKeyCorrectionType)
 		if err != nil {
 			return nil, err
@@ -332,7 +332,7 @@ func newImporteRectificacion(taxes *tax.Total) *ImporteRectificacion {
 }
 
 func getTaxExtKey(inv *bill.Invoice, k cbc.Key) (string, error) {
-	if inv.Tax == nil || inv.Tax.Ext == nil || inv.Tax.Ext[k].String() == "" {
+	if inv.Tax == nil || inv.Tax.Ext.IsZero() || inv.Tax.Ext.Get(k).String() == "" {
 		return "", validation.Errors{
 			"tax": validation.Errors{
 				"ext": validation.Errors{
@@ -341,7 +341,7 @@ func getTaxExtKey(inv *bill.Invoice, k cbc.Key) (string, error) {
 			},
 		}
 	}
-	return inv.Tax.Ext[k].String(), nil
+	return inv.Tax.Ext.Get(k).String(), nil
 }
 
 // fingerprint will add a fingerprint to the registration line using the previous
