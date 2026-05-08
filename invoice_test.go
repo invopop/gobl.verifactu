@@ -96,7 +96,7 @@ func TestNewRegistroAlta(t *testing.T) {
 				IssueDate: cal.NewDate(2024, 1, 15),
 			},
 		}
-		inv.Tax.Ext[addon.ExtKeyDocType] = "F3"
+		inv.Tax.Ext = inv.Tax.Ext.Set(addon.ExtKeyDocType, "F3")
 
 		ra, err := vc.RegisterInvoice(env, nil)
 		require.NoError(t, err)
