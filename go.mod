@@ -8,7 +8,7 @@ go 1.24.0
 
 require (
 	github.com/go-resty/resty/v2 v2.15.3
-	github.com/invopop/gobl v0.402.0
+	github.com/invopop/gobl v0.403.0
 	github.com/invopop/validation v0.8.0
 	github.com/invopop/xmldsig v0.14.0
 	github.com/joho/godotenv v1.5.1
