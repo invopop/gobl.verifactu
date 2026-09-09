@@ -7,10 +7,20 @@ import (
 
 // Standard gateway error responses
 var (
+	// ErrConnection is used when the gateway could not be reached or gave a
+	// response we're unable to understand.
 	ErrConnection = newError("connection")
+	// ErrValidation implies there is something wrong with the contents of the
+	// request that needs to be fixed before sending it again.
 	ErrValidation = newError("validation")
-	ErrDuplicate  = newError("duplicate")
-	ErrWarning    = newError("warning")
+	// ErrDuplicate is used when the gateway has already received the request.
+	ErrDuplicate = newError("duplicate")
+	// ErrWarning means the request was accepted, but the gateway reported
+	// issues that should be reviewed.
+	ErrWarning = newError("warning")
+	// ErrServer indicates the gateway had an internal problem handling the
+	// request, which may succeed if attempted again later.
+	ErrServer = newError("server")
 )
 
 // Standard error responses.

@@ -4,6 +4,8 @@ import (
 	"bytes"
 	"encoding/xml"
 	"fmt"
+	"regexp"
+	"strings"
 	"time"
 )
 
@@ -60,6 +62,60 @@ type EnvelopeResponse struct {
 type Fault struct {
 	Code    string `xml:"faultcode"`
 	Message string `xml:"faultstring"`
+}
+
+// faultCodeRegexp is used to extract the VeriFactu error code embedded inside
+// the fault string. Errors detected in the header of a request are always
+// reported as SOAP faults, and the fault structure has no field available for
+// the code, so the gateway includes it in the human readable message, e.g.
+// `Codigo[4104].Error en la cabecera: ...`.
+var faultCodeRegexp = regexp.MustCompile(`^Codigo\[(\d+)\]\.?\s*`)
+
+// faultWhitespaceRegexp matches the runs of whitespace used by the gateway to
+// indent the details appended to fault strings.
+var faultWhitespaceRegexp = regexp.MustCompile(`\s+`)
+
+// ErrorCode provides the VeriFactu error code of the fault, if one could be
+// extracted from the fault string.
+func (f *Fault) ErrorCode() string {
+	m := faultCodeRegexp.FindStringSubmatch(f.faultString())
+	if m == nil {
+		return ""
+	}
+	return m[1]
+}
+
+// ErrorMessage provides the fault string without the error code prefix and
+// with any indentation reduced to single spaces.
+func (f *Fault) ErrorMessage() string {
+	return strings.TrimSpace(faultCodeRegexp.ReplaceAllString(f.faultString(), ""))
+}
+
+// Err converts the fault into a structured error that the consumer can use to
+// determine how the issue should be handled.
+func (f *Fault) Err() *Error {
+	e := ErrValidation
+	if f.serverSide() {
+		// Something went wrong inside the gateway, the request may be
+		// worth sending again later.
+		e = ErrServer
+	}
+	return e.WithCode(f.ErrorCode()).WithMessage(f.ErrorMessage())
+}
+
+// serverSide determines if the fault was caused by the remote service instead
+// of the contents of our request. The prefix of the fault code is defined by
+// the server, so only the local part can be compared.
+func (f *Fault) serverSide() bool {
+	code := f.Code
+	if _, after, found := strings.Cut(code, ":"); found {
+		code = after
+	}
+	return strings.EqualFold(code, "Server")
+}
+
+func (f *Fault) faultString() string {
+	return strings.TrimSpace(faultWhitespaceRegexp.ReplaceAllString(f.Message, " "))
 }
 
 func newEnvelope() *Envelope {
