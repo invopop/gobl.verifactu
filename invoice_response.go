@@ -94,11 +94,12 @@ func (r *InvoiceResponseLine) Error() error {
 	}
 }
 
-// Message provides a message body, if any.
+// Message provides the description of the issue reported by the gateway, or
+// the status of the line when no description was provided. The status is not
+// included alongside the description as it is already available separately.
 func (r *InvoiceResponseLine) Message() string {
-	txt := r.Description
-	if txt != "" {
-		return r.Status + ": " + txt
+	if r.Description != "" {
+		return r.Description
 	}
 	return r.Status
 }

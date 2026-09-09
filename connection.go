@@ -76,17 +76,27 @@ func (c *connection) post(ctx context.Context, payload []byte) (*EnvelopeRespons
 		SetHeader("Content-Type", "application/xml").
 		SetContentLength(true).
 		SetBody(payload).
-		SetResult(out)
+		SetResult(out).
+		// SOAP faults may also be sent alongside an error status code, and
+		// will only be parsed if we define them as the error result.
+		SetError(out)
 
 	res, err := req.Post("")
 	if err != nil {
 		return nil, err
 	}
-	if res.StatusCode() != http.StatusOK {
-		return nil, ErrValidation.WithCode(strconv.Itoa(res.StatusCode())).WithMessage(res.String())
-	}
+	// Always prefer the fault, it describes the problem in much more detail
+	// than the status code alone.
 	if out.Body.Fault != nil {
-		return nil, ErrValidation.WithMessage(out.Body.Fault.Message).WithCode(out.Body.Fault.Code)
+		return nil, out.Body.Fault.Err()
+	}
+	if res.StatusCode() != http.StatusOK {
+		e := ErrValidation
+		if res.StatusCode() >= http.StatusInternalServerError {
+			// Remote service problem, may be worth trying again later.
+			e = ErrServer
+		}
+		return nil, e.WithCode(strconv.Itoa(res.StatusCode())).WithMessage(res.String())
 	}
 
 	return out, nil
